@@ -14,18 +14,26 @@
         <nav class="navbar">
             <a class="navbar-brand">Kata dekor és esküvőszervezés</a>
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" href="#bemutatkozas">Bemutatkozás</a></li>
-                <li class="nav-item"><a class="nav-link" href="#teremdiszites">Teremdíszítés</a></li>
-                <li class="nav-item"><a class="nav-link" href="#viragkoteszet">Virágkötészet</a></li>
-                <li class="nav-item"><a class="nav-link" href="#autodekoracio">Autódekoráció</a></li>
-                <li class="nav-item"><a class="nav-link" href="#szezonalistermekek">Szezonális termékek</a></li>
-                <li class="nav-item"><a class="nav-link" href="#eskuvoszervezes">Esküvőszervezés</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.html">Bemutatkozás</a></li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle" href="#" onclick="toggleDropdown(event)">Virágkötészet</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#teremdiszites">Teremdíszítés</a></li>
+                        <li><a class="dropdown-item" href="#autodekoracio">Autódekoráció</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="eskuvoszervezes.html">Esküvőszervezés</a></li>
                 <li class="nav-item"><a class="nav-link" href="#rendezvenyszervezes">Rendezvényszervezés</a></li>
                 <li class="nav-item"><a class="nav-link" href="#berelhetotermekek">Bérelhető termékek</a></li>
                 <li class="nav-item"><a class="nav-link" href="#Bemutatoterem">Bemutatótermünk</a></li>
                 <li class="nav-item"><a class="nav-link" href="#arajanlat">Árajánlat kérés</a></li>
                 <li class="nav-item"><a class="nav-link" href="#kapcsolat">Kapcsolat</a></li>
-                <li class="nav-item"><a class="nav-link" href="#egyéb">Egyéb</a></li>
+                <li class="nav-item">
+                    <a class="nav-link dropdown-toggle" href="#" onclick="toggleDropdown(event)">Egyéb</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#szezonalistermekek">Szezonális termékek</a></li>
+                    </ul>
+                </li>
             </ul>
         </nav>
     </header>
