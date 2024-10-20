@@ -34,6 +34,7 @@ header {
 }
 
 .nav-item {
+    position: relative;
     margin-right: 15px; 
 }
 
@@ -41,3 +42,28 @@ header {
     text-decoration: none; 
     color: #000; 
 }
+
+.dropdown-menu {
+    display: none; 
+    position: absolute; 
+    background-color: #f8f8f8; 
+    border: 1px solid #ddd; 
+    z-index: 1; 
+}
+
+.dropdown-menu .dropdown-item {
+    padding: 10px; 
+    color: #000; 
+    text-decoration: none; 
+    display: block; 
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: #e0e0e0; 
+}
+
+.dropdown-toggle:hover + .dropdown-menu {
+    display: block; 
+}
+
+
