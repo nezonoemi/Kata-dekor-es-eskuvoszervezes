@@ -1,20 +1,43 @@
-body{
-    background-color: #A7C7E7;
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
 }
 
 header {
-    position: relative; 
-    height: 100px; 
+    display: flex; 
+    align-items: center; 
+    padding: 10px; 
     background-color: #f8f8f8; 
 }
 
-.logo {
-    position: absolute; 
-    top: 10px;
-    left: 10px; 
+.logo img {
+    max-width: 50px; 
+    height: auto; 
+    margin-right: 15px; 
 }
 
-.logo img {
-    max-width: 100%; 
-    height: auto; 
+.navbar {
+    display: flex; 
+    flex-grow: 1; 
+}
+
+.navbar-brand {
+    font-weight: bold; 
+    margin-right: 20px; 
+}
+
+.navbar-nav {
+    list-style: none; 
+    display: flex;
+    margin: 0; 
+    padding: 0; 
+}
+
+.nav-item {
+    margin-right: 15px; 
+}
+
+.nav-link {
+    text-decoration: none; 
+    color: #000; 
 }
