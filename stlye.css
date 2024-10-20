@@ -16,28 +16,28 @@ header {
     margin-right: 15px; 
 }
 
-.navbar {
+.navbar1 {
     display: flex; 
     flex-grow: 1; 
 }
 
-.navbar-brand {
+.navbar-brand1 {
     font-weight: bold; 
     margin-right: 20px; 
 }
 
-.navbar-nav {
+.navbar-nav1 {
     list-style: none; 
     display: flex;
     margin: 0; 
     padding: 0; 
 }
 
-.nav-item {
+.nav-item2 {
     margin-right: 15px; 
 }
 
-.nav-link {
+.nav-link2 {
     text-decoration: none; 
     color: #000; 
 }
