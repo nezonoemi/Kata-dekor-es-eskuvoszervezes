@@ -1,0 +1,43 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    display: flex; 
+    align-items: center; 
+    padding: 10px; 
+    background-color: #f8f8f8; 
+}
+
+.logo img {
+    max-width: 50px; 
+    height: auto; 
+    margin-right: 15px; 
+}
+
+.navbar {
+    display: flex; 
+    flex-grow: 1; 
+}
+
+.navbar-brand {
+    font-weight: bold; 
+    margin-right: 20px; 
+}
+
+.navbar-nav {
+    list-style: none; 
+    display: flex;
+    margin: 0; 
+    padding: 0; 
+}
+
+.nav-item {
+    margin-right: 15px; 
+}
+
+.nav-link {
+    text-decoration: none; 
+    color: #000; 
+}
