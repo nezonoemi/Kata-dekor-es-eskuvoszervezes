@@ -1,3 +1,20 @@
 body{
     background-color: #A7C7E7;
 }
+
+header {
+    position: relative; 
+    height: 100px; 
+    background-color: #f8f8f8; 
+}
+
+.logo {
+    position: absolute; 
+    top: 10px;
+    left: 10px; 
+}
+
+.logo img {
+    max-width: 100%; 
+    height: auto; 
+}
