@@ -5,9 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository" : {
+  "repository": {
     "type": "git",
-    "url" : "https://github.com/nezonoemi/Kata-dekor-es-eskuvoszervezes"
+    "url": "https://github.com/nezonoemi/Kata-dekor-es-eskuvoszervezes"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +16,11 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.21.1",
-    "mysql2": "^3.11.3"
+    "mysql2": "^3.11.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.15.0",
+    "eslint": "^9.15.0",
+    "globals": "^15.12.0"
   }
 }
