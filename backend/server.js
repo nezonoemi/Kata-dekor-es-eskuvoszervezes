@@ -1,17 +1,20 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
-import pagesRoutes from './routes/pages.js';
-import apiRoutes from './routes/api.js';
+import cors from 'cors';
+import pagesRoutes from './routers/pages.js';
+import apiRoutes from './routers/api.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const __dirname = path.resolve();
+app.use(express.json());
+app.use(cors());
 
 // Statikus fájlok kiszolgálása
-app.use(express.static(path.join(__dirname, 'frontend')));
+app.use(express.static(path.join(__dirname, 'frontend', 'src')));
 
 // Dinamikus oldalak
 app.use('/', pagesRoutes);
