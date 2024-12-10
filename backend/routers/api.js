@@ -4,7 +4,7 @@ import pool from '../config/db.js';
 const router = express.Router();
 
 // Példa: teachers lekérése az adatbázisból
-router.get('/users', async (req, res) => {
+router.get('/teahers', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM teachers');
         res.json(rows);
