@@ -44,5 +44,3 @@ document.querySelectorAll('.remove-btn').forEach(button => {
     removeFromCart(productName);
   });
 });
-
-//

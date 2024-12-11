@@ -13,7 +13,7 @@ const __dirname = path.resolve();
 app.use(express.json());
 app.use(cors());
 
-// Statikus fájlok kiszolgálása
+// Statikus fájlok kiszolgálása 
 app.use(express.static(path.join(__dirname, 'frontend', 'src')));
 
 // Dinamikus oldalak
