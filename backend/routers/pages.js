@@ -43,4 +43,7 @@ router.get('/viragkoteszet', (req, res) => {
 router.get('/berelhetotermekek', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'frontend','src','html', 'berelhetotermekek.html'));
 });
+router.get('/arajanlatkeres', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'frontend','src','html', 'arajanlatkeres.html'));
+});
 export default router;
