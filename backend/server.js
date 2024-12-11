@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cors());
 
 // Statikus fájlok kiszolgálása 
-app.use(express.static(path.join(__dirname, 'frontend', 'src')));
+app.use(express.static('frontend/src'));
 
 // Dinamikus oldalak
 app.use('/', pagesRoutes);

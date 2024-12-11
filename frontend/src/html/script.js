@@ -44,3 +44,31 @@ document.querySelectorAll('.remove-btn').forEach(button => {
     removeFromCart(productName);
   });
 });
+
+//oldalak lekérdezése hogy műküdnek rendesen
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+      // API hívás az oldalak lekéréséhez
+      const response = await fetch('/api/pages');
+      const pages = await response.json();
+
+      // Navigáció dinamikus generálása
+      const nav = document.querySelector('.navbar-nav'); // Bootstrap navigációs menü
+      nav.innerHTML = ''; // Korábbi elemek törlése
+
+      pages.forEach(page => {
+          const li = document.createElement('li');
+          li.className = 'nav-item'; // Bootstrap nav-item osztály
+
+          const a = document.createElement('a');
+          a.className = 'nav-link'; // Bootstrap nav-link osztály
+          a.href = page.path; // Útvonal beállítása
+          a.textContent = page.title; // Cím beállítása
+
+          li.appendChild(a);
+          nav.appendChild(li);
+      });
+  } catch (error) {
+      console.error('Hiba az API hívás során:', error);
+  }
+});
