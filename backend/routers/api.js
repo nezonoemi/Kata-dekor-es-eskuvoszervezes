@@ -37,7 +37,7 @@ router.get("/teachers/:id", async (req, res) =>{
 });
 
 
-// Például egy API az oldalak adataival
+// az oldalak adataival
 router.get('/pages', (req, res) => {
     const pages = [
         { path: '/', title: 'Főoldal' },
