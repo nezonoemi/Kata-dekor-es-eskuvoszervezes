@@ -72,3 +72,4 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.error('Hiba az API hívás során:', error);
   }
 });
+
