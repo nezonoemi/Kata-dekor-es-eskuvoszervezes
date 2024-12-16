@@ -2,18 +2,20 @@ import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import cors from 'cors';
+import https from 'https';
+import fs from 'fs';
+import selfsigned from 'selfsigned';
 import pagesRoutes from './routers/pages.js';
 import apiRoutes from './routers/api.js';
-
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const HTTPS_PORT = process.env.HTTPS_PORT || 3443;
 const __dirname = path.resolve();
 app.use(express.json());
 app.use(cors());
 
-// Statikus fájlok kiszolgálása 
+// Statikus fájlok kiszolgálása
 app.use(express.static('frontend/src'));
 
 // Dinamikus oldalak
@@ -27,7 +29,29 @@ app.use((req, res) => {
     res.status(404).sendFile(path.join(__dirname, 'frontend', '404.html'));
 });
 
-// Szerver indítása
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+// SSL tanúsítvány generálás vagy betöltés
+const certsPath = path.join(__dirname, 'certs');
+if (!fs.existsSync(certsPath)) {
+    fs.mkdirSync(certsPath);
+}
+
+const keyPath = path.join(certsPath, 'key.pem');
+const certPath = path.join(certsPath, 'cert.pem');
+
+if (!fs.existsSync(keyPath) || !fs.existsSync(certPath)) {
+    console.log('SSL certificates not found. Generating new ones...');
+    const pems = selfsigned.generate(null, { days: 365 });
+    fs.writeFileSync(keyPath, pems.private);
+    fs.writeFileSync(certPath, pems.cert);
+    console.log('New SSL certificates generated.');
+}
+
+const sslOptions = {
+    key: fs.readFileSync(keyPath),
+    cert: fs.readFileSync(certPath),
+};
+
+// HTTPS szerver indítása
+https.createServer(sslOptions, app).listen(HTTPS_PORT, () => {
+    console.log(`HTTPS server is running on https://localhost:${HTTPS_PORT}`);
 });
