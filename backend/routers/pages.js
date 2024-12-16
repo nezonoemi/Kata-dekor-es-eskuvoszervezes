@@ -36,9 +36,4 @@ pages.forEach(page => {
     });
 });
 
-// Minden egyéb kérésre alapértelmezett oldal visszaadása
-router.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'frontend', 'src', 'html', 'index.html'));
-});
-
 export default router;
