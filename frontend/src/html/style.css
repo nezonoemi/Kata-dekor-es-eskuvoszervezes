@@ -39,4 +39,8 @@
 .card-body {
   padding: 20px;
 }
+
+.container {
+  flex: 1; 
+}
   

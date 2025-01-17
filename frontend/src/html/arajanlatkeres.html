@@ -65,6 +65,43 @@
     </div>
 </nav>
   </header>
+
+
+  <div class="container">
+    <div class="form-container">
+        <h2 class="text-center mb-4">Árajánlat Kérés</h2>
+        <form action="#" method="POST">
+            <!-- Név mező -->
+            <div class="mb-3">
+                <label for="name" class="form-label">Név</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+
+            <!-- Email mező -->
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+
+            <!-- Telefonszám mező -->
+            <div class="mb-3">
+                <label for="phone" class="form-label">Telefonszám</label>
+                <input type="tel" class="form-control" id="phone" name="phone" required>
+            </div>
+
+            <!-- Üzenet küldési lehetőség -->
+            <div class="mb-3">
+                <label for="message" class="form-label">Üzenet</label>
+                <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+            </div>
+
+            <!-- Küldés gomb -->
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Küldés</button>
+            </div>
+        </form>
+    </div>
+</div>
   <footer class="bg-dark text-white text-center py-4">
     <div class="container">
         <p class="mb-2">&copy; 2024 Kata dekor és esküvőszervezés</p>
