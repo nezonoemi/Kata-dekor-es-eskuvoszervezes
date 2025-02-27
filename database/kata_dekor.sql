@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Feb 25. 16:44
+-- Létrehozás ideje: 2025. Feb 27. 19:46
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -60,6 +60,7 @@ CREATE TABLE `felhasznalo` (
   `vezeteknev` varchar(255) DEFAULT NULL,
   `keresztnev` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
+  `telefonszam` int(11) NOT NULL,
   `megjegyzes` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
