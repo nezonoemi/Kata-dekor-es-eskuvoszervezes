@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Feb 27. 19:46
+-- Létrehozás ideje: 2025. Feb 28. 10:25
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -61,7 +61,17 @@ CREATE TABLE `felhasznalo` (
   `keresztnev` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `telefonszam` int(11) NOT NULL,
-  `megjegyzes` varchar(255) DEFAULT NULL
+  `jelszo` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tábla szerkezet ehhez a táblához `rendeles`
+--
+
+CREATE TABLE `rendeles` (
+  `rendeles_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 --
@@ -88,6 +98,12 @@ ALTER TABLE `felhasznalo`
   ADD PRIMARY KEY (`id`);
 
 --
+-- A tábla indexei `rendeles`
+--
+ALTER TABLE `rendeles`
+  ADD PRIMARY KEY (`rendeles_id`);
+
+--
 -- A kiírt táblák AUTO_INCREMENT értéke
 --
 
@@ -108,6 +124,12 @@ ALTER TABLE `berelhetotermekek`
 --
 ALTER TABLE `felhasznalo`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT a táblához `rendeles`
+--
+ALTER TABLE `rendeles`
+  MODIFY `rendeles_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Megkötések a kiírt táblákhoz

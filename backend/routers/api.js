@@ -6,7 +6,7 @@ const apiRouter = express.Router();
 //get kérés ajanlat kérés lekérdezése
 apiRouter.get("/ajanlatkeres/:id", async (req, res) => {
     try {
-        let id = parseInt(req.params.id); 
+        let id = parseInt(req.query.id); 
 
         if (isNaN(id)) {
             throw new Error("Parameter 'ajanlatkeres' must be a valid integer");
