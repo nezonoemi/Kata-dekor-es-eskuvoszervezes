@@ -110,7 +110,7 @@ apiRouter.post("/qoute_request", async (req, res) => {
             throw new Error("Invalid 'note' field");
         }
         if(body.qoute_request_id < 0){
-            throw new Error("Invalid 'qoute_request_id' field: must be pozitive number");
+            throw new Error("Invalid 'qoute_request_id' must be pozitive number");
         }
        
 
@@ -135,5 +135,65 @@ apiRouter.post("/qoute_request", async (req, res) => {
     }
 });
 
+//put kérés ajanlat kérés módosítása
+apiRouter.put("/qoute_request/:id", async (req, res) => {  
+    try {
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+            throw new Error("Parameter 'id' must be a valid integer");
+        }
+        if (id < 1) {
+            throw new Error("Parameter 'id' must be greater than 0");
+        }
 
+        const body = req.body;
+        if (!body || typeof(body) !== "object" || Object.keys(body).length !== 5) {
+            throw new Error("Invalid request body");
+        }
+        if (!body.first_name || typeof(body.first_name) !== "string") {
+            throw new Error("Invalid 'first_name' field");
+        }
+        if (!body.last_name || typeof(body.last_name) !== "string") {
+            throw new Error("Invalid 'last_name' field");
+        }
+        if (!body.email || typeof(body.email) !== "string") {
+            throw new Error("Invalid 'email' field");
+        }
+        if (!body.note || typeof(body.note) !== "string") {
+            throw new Error("Invalid 'note' field");
+        }
+        if (body.qoute_request_id < 0) {
+            throw new Error("Invalid 'qoute_request_id' must be a positive number");
+        }
+
+        const [result] = await pool.query(
+            "UPDATE qoute_request SET last_name = ?, first_name = ?, email = ?, note = ? WHERE qoute_request_id = ?;",
+            [last_name, first_name, email, note, id]
+        );
+
+        if (result.affectedRows < 1) {
+            throw new Error("No ajanlatkeres found with given id");
+        }
+
+        res.status(200).json({
+            "id": id
+        });
+    } catch (err) {
+        if (err.message.includes("Invalid")) {
+            res.status(400).json({
+                "error": err.message
+            });
+            return;
+        }
+        if (err.message.includes("No ajanlatkeres")) {
+            res.status(404).json({
+                "error": err.message
+            });
+            return;
+        }
+        res.status(500).json({
+            "error": "Couldn't update ajanlatkeres table"
+        });
+    }
+});
 export default apiRouter;
