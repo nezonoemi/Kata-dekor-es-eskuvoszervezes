@@ -521,8 +521,168 @@ apiRouter.put("/user/:id", async (req, res) => {
 //order tábla 
 //get kérés
 
-/*SELECT o.order_id, u.last_name, u.first_name, u.email, u.phone_number, rp.product_name, rp.product_price, rp.product_description, o.order_date FROM `order` o 
-JOIN user u ON o.user_id = u.user_id JOIN rentable_products rp ON o.rentable_id = rp.rentable_id; */
+apiRouter.get("/order/:id?", async (req, res) => {
+    try {
+        let id = req.params.id ? parseInt(req.params.id) : null;
+        
+        if (id !== null && isNaN(id)) {
+            throw new Error("Parameter 'id' must be a valid integer");
+        }
+        if (id !== null && id < 1) {
+            throw new Error("Parameter 'id' must be greater than 0");
+        }
+        
+        if (id === null) {
+            const [results] = await pool.query(`
+                SELECT o.order_id, u.last_name, u.first_name, u.email, u.phone_number, rp.product_name, 
+                rp.product_price, rp.product_description, o.order_date FROM \`order\` o 
+                JOIN user u ON o.user_id = u.user_id JOIN rentable_products rp ON o.rentable_id = rp.rentable_id;
+            `);
+            res.json(results);
+        } else {
+            const [results] = await pool.query(`
+                SELECT o.order_id, u.last_name, u.first_name, u.email, u.phone_number, rp.product_name, 
+                rp.product_price, rp.product_description, o.order_date FROM \`order\` o 
+                JOIN user u ON o.user_id = u.user_id JOIN rentable_products rp ON o.rentable_id = rp.rentable_id
+                WHERE o.order_id = ?;
+            `, [id]);
+            res.json(results);
+        }
+    } catch (err) {
+        res.status(500).json({ 
+            "error": "Couldn't query order" 
+        });
+    }
+});
 
+//delete kérés
+apiRouter.delete("/order/:id", async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+            throw new Error("Invalid 'id' must be a valid integer");
+        }
+        if (id < 1) {
+            throw new Error("Invalid 'id' must be greater than 1");
+        }
+        const [result] = await pool.query(
+            "DELETE FROM `order` WHERE `order`.order_id = ?;",
+            [id]
+        );
+        if (result.affectedRows < 1) {
+            throw new Error("No order found with given id");
+        }
+        res.status(200).json({ 
+            "id": id 
+        });
+    } catch (err) {
+        if (err.message.includes("Invalid")) {
+            res.status(400).json({ 
+                "error": err.message 
+            });
+            return;
+        }
+        if (err.message.includes("No order")) {
+            res.status(404).json({ 
+                "error": err.message 
+            });
+            return;
+        }
+        res.status(500).json({ 
+            "error": "Couldn't delete from order table" 
+        });
+    }
+});
+
+//post kérés
+apiRouter.post("/order", async (req, res) => {
+    try {
+        const body = req.body;
+        if (!body || typeof body !== "object" || Object.keys(body).length !== 3) {
+            throw new Error("Invalid request body");
+        }
+        if (body.user_id === undefined || typeof body.user_id !== "number") {
+            throw new Error("Invalid 'user_id' field");
+        }
+        if (body.rentable_id === undefined || typeof body.rentable_id !== "number") {
+            throw new Error("Invalid 'rentable_id' field");
+        }
+        if (!body.order_date || typeof body.order_date !== "string") {
+            throw new Error("Invalid 'order_date' field");
+        }
+        
+        const { user_id, rentable_id, order_date } = body;
+        const [result] = await pool.query(
+            "INSERT INTO `order` (user_id, rentable_id, order_date) VALUES (?, ?, ?);",
+            [user_id, rentable_id, order_date]
+        );
+        res.status(201).json(result);
+    } catch (err) {
+        if (err.message.includes("Invalid")) {
+            res.status(400).json({ 
+                "error": err.message 
+            });
+            return;
+        }
+        res.status(500).json({ 
+            "error": "Couldn't insert into order table" 
+        });
+    }
+});
+
+//put kérés
+apiRouter.put("/order/:id", async (req, res) => {
+   try {
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+            throw new Error("Parameter 'id' must be a valid integer");
+        }
+        if (id < 1) {
+            throw new Error("Parameter 'id' must be greater than 0");
+        }
+        
+        const body = req.body;
+        if (!body || typeof body !== "object" || Object.keys(body).length !== 3) {
+            throw new Error("Invalid request body");
+        }
+        if (body.user_id === undefined || typeof body.user_id !== "number") {
+            throw new Error("Invalid 'user_id' field");
+        }
+        if (body.rentable_id === undefined || typeof body.rentable_id !== "number") {
+            throw new Error("Invalid 'rentable_id' field");
+        }
+        if (!body.order_date || typeof body.order_date !== "string") {
+            throw new Error("Invalid 'order_date' field");
+        }
+        
+        const { user_id, rentable_id, order_date } = body;
+        const [result] = await pool.query(
+            "UPDATE `order` SET user_id = ?, rentable_id = ?, order_date = ? WHERE order_id = ?;",
+            [user_id, rentable_id, order_date, id]
+        );
+        if (result.affectedRows < 1) {
+            throw new Error("No order found with given id");
+        }
+        res.status(200).json({ 
+            "id": id 
+        });
+    } catch (err) {
+        if (err.message.includes("Invalid")) {
+            res.status(400).json({ 
+                "error": err.message 
+            });
+            return;
+        }
+        if (err.message.includes("No order")) {
+            res.status(404).json({ 
+                "error": err.message 
+            });
+            return;
+        }
+        res.status(500).json({ 
+            "error": "Couldn't update order table" 
+        });
+    } 
+});
 
 export default apiRouter;
