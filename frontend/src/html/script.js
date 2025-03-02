@@ -45,68 +45,80 @@ document.querySelectorAll('.remove-btn').forEach(button => {
 });
 
 
-
-
-// ide irja ki az üzenetet hogyha sikerült vagy nem
+//ajánlat kérés és leadás 
 const target = document.getElementById("target");
 
-// ajánlatkérés gombra kattintáskor
-document.getElementById("submit").addEventListener("click", async () => {
-    const last_name = document.getElementById("vezeteknev").value.trim();
-    const first_name = document.getElementById("keresztnev").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const note = document.getElementById("note").value.trim();
+document.addEventListener("DOMContentLoaded", () => {
+  const offerForm = document.getElementById("offerForm");
+  const deleteButton = document.getElementById("deleteButton");
+  const target = document.getElementById("target");
 
-    if (!last_name || !first_name || !email || !note) {
-        target.innerHTML = `<div class="alert alert-danger">⚠ Minden mezőt ki kell tölteni!</div>`;
-        return;
-    }
+  if (!offerForm || !deleteButton || !target) {
+      console.error("❌ Hiba: Egy vagy több elem nem található az oldalon!");
+      return;
+  }
 
-    try {
-        const response = await fetch("http://localhost:3443/api/quote_request", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ last_name, first_name, email, note })
-        });
+  offerForm.addEventListener("submit", async (event) => {
+      event.preventDefault(); 
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Hiba: ${errorText}`);
-        }
+      const last_name = document.getElementById("vezeteknev").value.trim();
+      const first_name = document.getElementById("keresztnev").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const note = document.getElementById("note").value.trim();
 
-        const data = await response.json();
-        target.innerHTML = `<div class="alert alert-success">✅ Sikeres ajánlatkérés! <br> Rendelés: ${JSON.stringify(data)}</div>`;
+      if (!last_name || !first_name || !email || !note) {
+          target.innerHTML = `<div class="alert alert-danger">⚠ Minden mezőt ki kell tölteni!</div>`;
+          return;
+      }
 
-    } catch (error) {
-        console.error("❌ Hiba történt:", error);
-        target.innerHTML = `<div class="alert alert-danger">❌ Hiba történt: ${error.message}</div>`;
-    }
-});
+      try {
+          const response = await fetch("http://localhost:3443/api/quote_request", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ last_name, first_name, email, note })
+          });
 
-// ajánlat törlése gombra kattintáskor
-document.getElementById("deleteButton").addEventListener("click", async () => {
-    const email = document.getElementById("email").value.trim();
+          if (!response.ok) {
+              const errorText = await response.text();
+              throw new Error(`Hiba: ${errorText}`);
+          }
 
-    if (!email) {
-        target.innerHTML = `<div class="alert alert-danger">⚠ Add meg az e-mail címedet a törléshez!</div>`;
-        return;
-    }
+          const data = await response.json();
+          target.innerHTML = `<div class="alert alert-success">✅ Sikeres ajánlatkérés! <br> Rendelés ID: ${data.id}</div>`;
 
-    try {
-        const response = await fetch(`http://localhost:3443/api/quote_request?email=${email}`, {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" }
-        });
+          offerForm.reset(); 
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Hiba: ${errorText}`);
-        }
+      } catch (error) {
+          console.error("❌ Hiba történt:", error);
+          target.innerHTML = `<div class="alert alert-danger">❌ Hiba történt: ${error.message}</div>`;
+      }
+  });
 
-        target.innerHTML = `<div class="alert alert-warning">🗑 Ajánlat törölve!</div>`;
+  // 🔹 DELETE kérés: Ajánlat törlése
+  deleteButton.addEventListener("click", async () => {
+      const email = document.getElementById("email").value.trim();
 
-    } catch (error) {
-        console.error("❌ Hiba törlésnél:", error);
-        target.innerHTML = `<div class="alert alert-danger">❌ Hiba történt: ${error.message}</div>`;
-    }
+      if (!email) {
+          target.innerHTML = `<div class="alert alert-danger">⚠ Add meg az e-mail címedet a törléshez!</div>`;
+          return;
+      }
+
+      try {
+          const response = await fetch(`http://localhost:3443/api/quote_request?email=${email}`, {
+              method: "DELETE",
+              headers: { "Content-Type": "application/json" }
+          });
+
+          if (!response.ok) {
+              const errorText = await response.text();
+              throw new Error(`Hiba: ${errorText}`);
+          }
+
+          target.innerHTML = `<div class="alert alert-warning">🗑 Ajánlat törölve!</div>`;
+
+      } catch (error) {
+          console.error("❌ Hiba törlésnél:", error);
+          target.innerHTML = `<div class="alert alert-danger">❌ Hiba történt: ${error.message}</div>`;
+      }
+  });
 });
