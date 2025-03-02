@@ -3,6 +3,7 @@ import pool from '../config/db.js';
 
 const apiRouter = express.Router();
 
+// quote_request lekérdezése
 // get kérés ajánlat lekérdezése
 apiRouter.get("/quote_request/:id?", async (req, res) => {
     try {
@@ -68,11 +69,15 @@ apiRouter.delete("/quote_request/:id", async (req, res) => {
         });
     } catch (err) {
         if (err.message.includes("Invalid")) {
-            res.status(400).json({ "error": err.message });
+            res.status(400).json({ 
+                "error": err.message 
+            });
             return;
         }
         if (err.message.includes("No ajanlatkeres")) {
-            res.status(404).json({ "error": err.message });
+            res.status(404).json({ 
+                "error": err.message 
+            });
             return;
         }
         res.status(500).json({
@@ -110,7 +115,9 @@ apiRouter.post("/quote_request", async (req, res) => {
         res.status(201).json(result);
     } catch (err) {
         if (err.message.includes("Invalid")) {
-            res.status(400).json({ "error": err.message });
+            res.status(400).json({ 
+                "error": err.message 
+            });
             return;
         }
         res.status(500).json({
@@ -180,5 +187,172 @@ apiRouter.put("/quote_request/:id", async (req, res) => {
         });
     }
 });
+
+
+// rentable_pruducts lekérdezése
+// get kérés
+apiRouter.get("/rentable_products/:id?", async (req, res) => {
+    try {
+        let id = req.params.id ? parseInt(req.params.id) : null;
+
+        if (id !== null && isNaN(id)) {
+            throw new Error("Parameter 'id' must be a valid integer");
+        }
+        if (id !== null && id < 1) {
+            throw new Error("Parameter 'id' must be greater than 0");
+        }
+
+        if (id === null) {
+            const [results] = await pool.query(`
+                SELECT * FROM rentable_products;
+            `);
+            res.json(results);
+        } else {
+            const [results] = await pool.query(`
+                SELECT * FROM rentable_products WHERE rentable_products.rentable_id = ?;`, 
+                [id]);
+            res.json(results);
+        }
+    } catch (err) {
+        res.status(500).json({
+            "error": "Couldn't query rentable_products"
+        });
+    }
+});
+
+// delet kérés
+apiRouter.delete("/rentable_products/:id", async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+            throw new Error("Invalid 'id' must be a valid integer");
+        }
+        if (id < 1) {
+            throw new Error("Invalid 'id' must be greater than 1");
+        }
+        const [result] = await pool.query(
+            "DELETE FROM rentable_products WHERE rentable_products.rentable_id = ?;",
+            [id]
+        );
+        if (result.affectedRows < 1) {
+            throw new Error("No rentable_products found with given id");
+        }
+        res.status(200).json({ 
+            "id": id 
+        });
+    } catch (err) {
+        if (err.message.includes("Invalid")) {
+            res.status(400).json({ 
+                "error": err.message 
+            });
+            return;
+        }
+        if (err.message.includes("No rentable_products")) {
+             res.status(404).json({ 
+                "error": err.message 
+            });
+            return;
+        }
+        res.status(500).json({
+            "error": "Couldn't delete from rentable_products table"
+        });
+    }
+});
+
+// post kérés
+apiRouter.post("/rentable_products", async (req, res) => {
+    try {
+        const body = req.body;
+        if (!body || typeof body !== "object" || Object.keys(body).length !== 3) {
+            throw new Error("Invalid request body");
+        }
+        if (!body.product_name || typeof body.product_name !== "string") {
+            throw new Error("Invalid 'product_name' field");
+        }
+        if (body.product_price === undefined || typeof body.product_price !== "number") {
+            throw new Error("Invalid 'product_price' field");
+        }
+        if (!body.product_description || typeof body.product_description !== "string") {
+            throw new Error("Invalid 'product_description' field");
+        }
+        
+        const { product_name, product_price, product_description } = body;
+        const [result] = await pool.query(
+            "INSERT INTO rentable_products (rentable_products.product_name, rentable_products.product_price, rentable_products.product_description) VALUES (?, ?, ?);",
+            [product_name, product_price, product_description]
+        );
+
+        res.status(201).json(result);
+    } catch (err) {
+        if (err.message.includes("Invalid")) {
+            res.status(400).json({ 
+                "error": err.message 
+            });
+            return;
+        }
+        res.status(500).json({
+            "error": "Couldn't insert into rentable_products table"
+        });
+    }
+});
+
+// put kérés
+apiRouter.put("/rentable_products/:id", async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+            throw new Error("Parameter 'id' must be a valid integer");
+        }
+        if (id < 1) {
+            throw new Error("Parameter 'id' must be greater than 0");
+        }
+
+        const body = req.body;
+        if (!body || typeof body !== "object" || Object.keys(body).length !== 3) {
+            throw new Error("Invalid request body");
+        }
+        if (!body.product_name || typeof body.product_name !== "string") {
+            throw new Error("Invalid 'product_name' field");
+        }
+        if (body.product_price === undefined || typeof body.product_price !== "number") {
+            throw new Error("Invalid 'product_price' field");
+        }
+        if (!body.product_description || typeof body.product_description !== "string") {
+            throw new Error("Invalid 'product_description' field");
+        }
+        
+        const { product_name, product_price, product_description } = body;
+        const [result] = await pool.query(
+            "UPDATE rentable_products SET rentable_products.product_name = ?, rentable_products.product_price = ?, rentable_products.product_description = ? WHERE rentable_products.rentable_product_id = ?;",
+            [product_name, product_price, product_description, id]
+        );
+        if (result.affectedRows < 1) {
+            throw new Error("No rentable_products found with given id");
+        }
+        res.status(200).json({ 
+            "id": id 
+        });
+    } catch (err) {
+        if (err.message.includes("Invalid")) {
+            res.status(400).json({ 
+                "error": err.message 
+            });
+            return;
+        }
+        if (err.message.includes("No rentable_products")) {
+            res.status(404).json({ 
+                "error": err.message 
+            });
+            return;
+        }
+        res.status(500).json({
+            "error": "Couldn't update rentable_products table"
+        });
+    }
+});
+
+
+
+
 
 export default apiRouter;
