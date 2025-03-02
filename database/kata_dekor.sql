@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Már 02. 10:50
+-- Létrehozás ideje: 2025. Már 02. 17:11
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -29,12 +29,18 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `order` (
   `order_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `rentable_id` int(11) NOT NULL,
-  `create_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `update_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `status` varchar(50) DEFAULT ''
+  `user_id` int(11) DEFAULT NULL,
+  `rentable_id` int(11) DEFAULT NULL,
+  `order_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+--
+-- A tábla adatainak kiíratása `order`
+--
+
+INSERT INTO `order` (`order_id`, `user_id`, `rentable_id`, `order_date`) VALUES
+(1, 1, 1, '2025-03-02 16:03:59'),
+(2, 2, 2, '2025-03-02 16:03:59');
 
 -- --------------------------------------------------------
 
@@ -58,10 +64,18 @@ CREATE TABLE `quote_request` (
 
 CREATE TABLE `rentable_products` (
   `rentable_id` int(11) NOT NULL,
-  `product_name` varchar(255) DEFAULT NULL,
-  `product_price` int(11) NOT NULL,
-  `product_description` varchar(255) DEFAULT NULL
+  `product_name` varchar(100) NOT NULL,
+  `product_price` decimal(10,2) NOT NULL,
+  `product_description` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+--
+-- A tábla adatainak kiíratása `rentable_products`
+--
+
+INSERT INTO `rentable_products` (`rentable_id`, `product_name`, `product_price`, `product_description`) VALUES
+(1, 'Bérelhető autó', 15000.00, 'Egy modern autó bérlésre'),
+(2, 'Bérelhető lakás', 250000.00, 'Egy tágas lakás bérlésre');
 
 -- --------------------------------------------------------
 
@@ -71,12 +85,21 @@ CREATE TABLE `rentable_products` (
 
 CREATE TABLE `user` (
   `user_id` int(11) NOT NULL,
-  `last_name` varchar(255) DEFAULT NULL,
-  `first_name` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `phone_number` int(11) NOT NULL,
-  `password` varchar(255) DEFAULT NULL
+  `last_name` varchar(50) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `phone_number` int(20) DEFAULT NULL,
+  `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+--
+-- A tábla adatainak kiíratása `user`
+--
+
+INSERT INTO `user` (`user_id`, `last_name`, `first_name`, `email`, `phone_number`, `password`) VALUES
+(1, 'Kiss', 'Péter', 'peter.kiss@example.com', 123456789, 'hashed_password1'),
+(2, 'Nagy', 'Anna', 'anna.nagy@example.com', 987654321, 'hashed_password2'),
+(3, 'jjjjjjjj', 'lkdjjdll', 'uj@gmail.com', 2147483647, 'jkennjoeonovfkjfjfjf');
 
 --
 -- Indexek a kiírt táblákhoz
@@ -106,7 +129,8 @@ ALTER TABLE `rentable_products`
 -- A tábla indexei `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`user_id`);
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- A kiírt táblák AUTO_INCREMENT értéke
@@ -116,25 +140,25 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT a táblához `order`
 --
 ALTER TABLE `order`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT a táblához `quote_request`
 --
 ALTER TABLE `quote_request`
-  MODIFY `quote_request_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `quote_request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT a táblához `rentable_products`
 --
 ALTER TABLE `rentable_products`
-  MODIFY `rentable_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `rentable_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT a táblához `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Megkötések a kiírt táblákhoz
@@ -144,8 +168,8 @@ ALTER TABLE `user`
 -- Megkötések a táblához `order`
 --
 ALTER TABLE `order`
-  ADD CONSTRAINT `order_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-  ADD CONSTRAINT `order_ibfk_2` FOREIGN KEY (`rentable_id`) REFERENCES `rentable_products` (`rentable_id`);
+  ADD CONSTRAINT `order_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `order_ibfk_2` FOREIGN KEY (`rentable_id`) REFERENCES `rentable_products` (`rentable_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

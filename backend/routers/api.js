@@ -521,7 +521,8 @@ apiRouter.put("/user/:id", async (req, res) => {
 //order tábla 
 //get kérés
 
-
+/*SELECT o.order_id, u.last_name, u.first_name, u.email, u.phone_number, rp.product_name, rp.product_price, rp.product_description, o.order_date FROM `order` o 
+JOIN user u ON o.user_id = u.user_id JOIN rentable_products rp ON o.rentable_id = rp.rentable_id; */
 
 
 export default apiRouter;
