@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Már 02. 10:34
+-- Létrehozás ideje: 2025. Már 02. 10:50
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -33,7 +33,7 @@ CREATE TABLE `order` (
   `rentable_id` int(11) NOT NULL,
   `create_at` datetime NOT NULL DEFAULT current_timestamp(),
   `update_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `status` varchar(50) DEFAULT 'pending'
+  `status` varchar(50) DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 -- --------------------------------------------------------
@@ -47,8 +47,7 @@ CREATE TABLE `quote_request` (
   `last_name` varchar(255) DEFAULT NULL,
   `first_name` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
-  `note` varchar(255) DEFAULT NULL,
-  `product_id` int(11) NOT NULL
+  `note` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 -- --------------------------------------------------------
@@ -95,8 +94,7 @@ ALTER TABLE `order`
 -- A tábla indexei `quote_request`
 --
 ALTER TABLE `quote_request`
-  ADD PRIMARY KEY (`quote_request_id`),
-  ADD KEY `product_id` (`product_id`);
+  ADD PRIMARY KEY (`quote_request_id`);
 
 --
 -- A tábla indexei `rentable_products`

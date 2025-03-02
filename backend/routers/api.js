@@ -4,7 +4,7 @@ import pool from '../config/db.js';  // Az adatbázis kapcsolat importálása
 const apiRouter = express.Router();
 
 //get kérés ajanlat kérés lekérdezése
-apiRouter.get("/ajanlatkeres/:id", async (req, res) => {
+apiRouter.get("/qoute_request/:id", async (req, res) => {
     try {
         let id = parseInt(req.query.id); 
 
@@ -18,25 +18,25 @@ apiRouter.get("/ajanlatkeres/:id", async (req, res) => {
         // Ha nem adtak meg ajanlatkeres_id-t, akkor az összes ajánlatot kérjük le
         if (!id) {  
             const [results] = await pool.query(`SELECT 
-                ajanlatkeres.ajanlatkeres_id, 
-                ajanlatkeres.vezeteknev, 
-                ajanlatkeres.keresztnev, 
-                ajanlatkeres.ajanlatkeres_email, 
-                ajanlatkeres.ajanlatkeres_megjegyzes, 
-                ajanlatkeres.termek_id 
-                FROM ajanlatkeres;`);
+                qoute_request.qute_request_id,
+                qoute_request.last_name,
+                qoute_request.first_name,
+                qoute_request.email,
+                qoute_request.note,
+                ajanlatkeres.product_id
+                FROM qoute_request;`);
             res.json(results);
         } else {
             // Ha van ajanlatkeres_id, akkor az adott ajánlatot kérjük le
             const [results] = await pool.query(`SELECT 
-                ajanlatkeres.ajanlatkeres_id, 
-                ajanlatkeres.vezeteknev, 
-                ajanlatkeres.keresztnev, 
-                ajanlatkeres.ajanlatkeres_email, 
-                ajanlatkeres.ajanlatkeres_megjegyzes, 
-                ajanlatkeres.termek_id 
-                FROM ajanlatkeres 
-                WHERE ajanlatkeres.ajanlatkeres_id = ?;`, [id]  
+                qoute_request.qute_request_id,
+                qoute_request.last_name,
+                qoute_request.first_name,
+                qoute_request.email,
+                qoute_request.note,
+                ajanlatkeres.product_id
+                FROM qoute_request
+                WHERE qoute_request.qute_request_id = ?;`, [id] 
             );
             res.json(results);  
         }
@@ -48,7 +48,7 @@ apiRouter.get("/ajanlatkeres/:id", async (req, res) => {
 });
 
 //delete hogy töröljük az ajanlatkerest
-apiRouter.delete("/ajanlatkeres/:id", async (req, res)=>{
+apiRouter.delete("/qoute_request/:id", async (req, res)=>{
     try{
         const id = parseInt(req.params.id);
         if(isNaN(id)){
@@ -60,7 +60,7 @@ apiRouter.delete("/ajanlatkeres/:id", async (req, res)=>{
         }
         //törlés
         const [result] = await pool.query(
-            "DELETE FROM ajanlatkeres where ajanlatkeres_id = ?", [id]
+            "DELETE FROM qoute_request where qoute_request.qoute_request_id = ?", [id]
         );
         
         if(result.affectedRows < 1){
@@ -85,6 +85,45 @@ apiRouter.delete("/ajanlatkeres/:id", async (req, res)=>{
         }
         res.status(500).json({
             "error" : "Couldn't ajanlatkeres table"
+        });
+    }
+});
+
+//post kérés ajanlat kérés létrehozása
+apiRouter.post("/qoute_request", async (req, res) => {
+    try {
+        const body = req.body;
+        if(!body || typeof(body) !== "object" || Object.keys(body).length !== 4){
+            throw new Error("Invalid request body");
+        } 
+        if(!body.name  || typeof(body.name) !== "string"){
+            throw new Error("Invalid 'name' field");
+        }
+        if(!body.description || typeof(body.description) !== "string"){
+            throw new Error("Invalid 'description' field");
+
+        }
+        if(!body.length || typeof(body.length) !== "number"){
+            throw new Error("Invalid 'length' field");
+        }
+        if(body.length < 0){
+            throw new Error("Invalid 'length' field: must be pozitive number");
+        }
+        if (!last_name || !first_name || !email || !note) {
+            throw new Error("All fields are required");
+        }
+
+        const [result] = await pool.query(
+            "INSERT INTO qoute_request (last_name, first_name, email, note) VALUES (?, ?, ?, ?);",
+            [last_name, first_name, email, note]
+        );
+
+        res.status(201).json({
+            "id": result.insertId
+        });
+    } catch (err) {
+        res.status(500).json({
+            "error": "Couldn't insert into ajanlatkeres table"
         });
     }
 });
