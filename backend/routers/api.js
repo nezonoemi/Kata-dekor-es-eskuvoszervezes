@@ -106,6 +106,7 @@ apiRouter.post("/quote_request", async (req, res) => {
             throw new Error("Invalid 'note' field");
         }
         
+        
         const { first_name, last_name, email, note } = body;
         const [result, ] = await pool.query(
             "INSERT INTO quote_request (last_name, first_name, email, note) VALUES (?, ?, ?, ?);",
@@ -684,5 +685,8 @@ apiRouter.put("/order/:id", async (req, res) => {
         });
     } 
 });
+
+
+
 
 export default apiRouter;

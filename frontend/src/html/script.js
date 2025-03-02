@@ -1,4 +1,3 @@
-
 //bérelhető termékek rész
 // Kosár tartalmának kezelése
 const cart = [];
@@ -71,5 +70,48 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (error) {
       console.error('Hiba az API hívás során:', error);
   }
+});
+
+
+//ajánlat kérés leadása a frontend oldalról adatbázisban megjelenik
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("offerForm");
+  const target = document.getElementById("target");
+
+  form.addEventListener("submit", async (event) => {
+      event.preventDefault(); // Ne töltse újra az oldalt
+
+      const last_name = document.getElementById("vezeteknev").value.trim();
+      const first_name = document.getElementById("keresztnev").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const message = document.getElementById("message").value.trim();
+
+      if (!last_name || !first_name || !email || !message) {
+          target.innerHTML = `<div class="alert alert-danger">⚠ Minden mezőt ki kell tölteni!</div>`;
+          return;
+      }
+
+      try {
+          const response = await fetch("http://localhost:3443/api/rentable_products", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ last_name, first_name, email, message })
+          });
+
+          if (!response.ok) {
+              const errorText = await response.text();
+              throw new Error(`Hiba: ${errorText}`);
+          }
+
+          const data = await response.json();
+          target.innerHTML = `<div class="alert alert-success">✅ Sikeres ajánlatkérés! <br> Rendelés: ${JSON.stringify(data)}</div>`;
+
+      } catch (error) {
+          console.error("❌ Hiba az API hívás során:", error);
+          target.innerHTML = `<div class="alert alert-danger">❌ Hiba történt: ${error.message}</div>`;
+      }
+  });
 });
 
