@@ -90,11 +90,18 @@
             </div>
 
             <div class="mb-3">
-                <label for="message" class="form-label">Üzenet</label>
-                <textarea class="form-control" id="message" rows="3" required></textarea>
+                <label for="note" class="form-label">Üzenet</label>
+                <textarea class="form-control" id="note" rows="3" required></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100">Ajánlat küldése</button>
+            <div class="row">
+                <div class="col-6">
+                    <button type="submit" class="btn btn-primary w-100">Ajánlat küldése</button>
+                </div>
+                <div class="col-6">
+                    <button type="button" id="deleteButton" class="btn btn-danger w-100">Ajánlat törlése</button>
+                </div>
+            </div>
         </form>
     </div>
 </div>

@@ -47,42 +47,41 @@ apiRouter.get("/quote_request/:id?", async (req, res) => {
 });
 
 // delete ajánlat törlése
-apiRouter.delete("/quote_request/:id", async (req, res) => {
+apiRouter.delete("/quote_request", async (req, res) => {
     try {
-        const id = parseInt(req.params.id);
-        if (isNaN(id)) {
-            throw new Error("Invalid 'id' must be a valid integer");
+        const email = req.query.email; 
+
+        if (!email || typeof email !== "string") {
+            throw new Error("Invalid 'email' must be a valid string");
         }
-        if (id < 1) {
-            throw new Error("Invalid 'id' must be greater than 1");
-        }
+
         // Törlés
-        const [result, ] = await pool.query(
-            "DELETE FROM quote_request WHERE quote_request.quote_request_id = ?", [id]
+        const [result] = await pool.query(
+            "DELETE FROM quote_request WHERE email = ?;", [email]
         );
-        
-        if (result.affectedRows < 1) {
-            throw new Error("No ajanlatkeres found with given id");
+
+        if (result.affectedRows === 0) {
+            throw new Error("No quote_request found with given email");
         }
-        res.status(200).json({
-            "id": id
+
+        res.status(200).json({ 
+            message: "Ajánlat sikeresen törölve", email 
         });
+
     } catch (err) {
         if (err.message.includes("Invalid")) {
             res.status(400).json({ 
-                "error": err.message 
+                error: err.message 
             });
             return;
         }
-        if (err.message.includes("No ajanlatkeres")) {
+        if (err.message.includes("No quote_request")) {
             res.status(404).json({ 
-                "error": err.message 
+                error: err.message 
             });
             return;
         }
-        res.status(500).json({
-            "error": "Couldn't deletion  ajanlatkeres table"
-        });
+        res.status(500).json({ error: "Couldn't delete from quote_request table" });
     }
 });
 
@@ -685,8 +684,5 @@ apiRouter.put("/order/:id", async (req, res) => {
         });
     } 
 });
-
-
-
 
 export default apiRouter;

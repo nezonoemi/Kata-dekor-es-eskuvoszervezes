@@ -44,74 +44,69 @@ document.querySelectorAll('.remove-btn').forEach(button => {
   });
 });
 
-//oldalak lekérdezése hogy műküdnek rendesen
-document.addEventListener('DOMContentLoaded', async () => {
-  try {
-      // API hívás az oldalak lekéréséhez
-      const response = await fetch('/api/pages');
-      const pages = await response.json();
 
-      // Navigáció dinamikus generálása
-      const nav = document.querySelector('.navbar-nav'); // Bootstrap navigációs menü
-      nav.innerHTML = ''; // Korábbi elemek törlése
 
-      pages.forEach(page => {
-          const li = document.createElement('li');
-          li.className = 'nav-item'; // Bootstrap nav-item osztály
 
-          const a = document.createElement('a');
-          a.className = 'nav-link'; // Bootstrap nav-link osztály
-          a.href = page.path; // Útvonal beállítása
-          a.textContent = page.title; // Cím beállítása
+// ide irja ki az üzenetet hogyha sikerült vagy nem
+const target = document.getElementById("target");
 
-          li.appendChild(a);
-          nav.appendChild(li);
-      });
-  } catch (error) {
-      console.error('Hiba az API hívás során:', error);
-  }
+// ajánlatkérés gombra kattintáskor
+document.getElementById("submit").addEventListener("click", async () => {
+    const last_name = document.getElementById("vezeteknev").value.trim();
+    const first_name = document.getElementById("keresztnev").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const note = document.getElementById("note").value.trim();
+
+    if (!last_name || !first_name || !email || !note) {
+        target.innerHTML = `<div class="alert alert-danger">⚠ Minden mezőt ki kell tölteni!</div>`;
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:3443/api/quote_request", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ last_name, first_name, email, note })
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Hiba: ${errorText}`);
+        }
+
+        const data = await response.json();
+        target.innerHTML = `<div class="alert alert-success">✅ Sikeres ajánlatkérés! <br> Rendelés: ${JSON.stringify(data)}</div>`;
+
+    } catch (error) {
+        console.error("❌ Hiba történt:", error);
+        target.innerHTML = `<div class="alert alert-danger">❌ Hiba történt: ${error.message}</div>`;
+    }
 });
 
+// ajánlat törlése gombra kattintáskor
+document.getElementById("deleteButton").addEventListener("click", async () => {
+    const email = document.getElementById("email").value.trim();
 
-//ajánlat kérés leadása a frontend oldalról adatbázisban megjelenik
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("offerForm");
-  const target = document.getElementById("target");
+    if (!email) {
+        target.innerHTML = `<div class="alert alert-danger">⚠ Add meg az e-mail címedet a törléshez!</div>`;
+        return;
+    }
 
-  form.addEventListener("submit", async (event) => {
-      event.preventDefault(); // Ne töltse újra az oldalt
+    try {
+        const response = await fetch(`http://localhost:3443/api/quote_request?email=${email}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+        });
 
-      const last_name = document.getElementById("vezeteknev").value.trim();
-      const first_name = document.getElementById("keresztnev").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const message = document.getElementById("message").value.trim();
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Hiba: ${errorText}`);
+        }
 
-      if (!last_name || !first_name || !email || !message) {
-          target.innerHTML = `<div class="alert alert-danger">⚠ Minden mezőt ki kell tölteni!</div>`;
-          return;
-      }
+        target.innerHTML = `<div class="alert alert-warning">🗑 Ajánlat törölve!</div>`;
 
-      try {
-          const response = await fetch("http://localhost:3443/api/rentable_products", {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json"
-              },
-              body: JSON.stringify({ last_name, first_name, email, message })
-          });
-
-          if (!response.ok) {
-              const errorText = await response.text();
-              throw new Error(`Hiba: ${errorText}`);
-          }
-
-          const data = await response.json();
-          target.innerHTML = `<div class="alert alert-success">✅ Sikeres ajánlatkérés! <br> Rendelés: ${JSON.stringify(data)}</div>`;
-
-      } catch (error) {
-          console.error("❌ Hiba az API hívás során:", error);
-          target.innerHTML = `<div class="alert alert-danger">❌ Hiba történt: ${error.message}</div>`;
-      }
-  });
+    } catch (error) {
+        console.error("❌ Hiba törlésnél:", error);
+        target.innerHTML = `<div class="alert alert-danger">❌ Hiba történt: ${error.message}</div>`;
+    }
 });
-
