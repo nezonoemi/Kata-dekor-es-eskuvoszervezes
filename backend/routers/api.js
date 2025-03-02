@@ -76,7 +76,7 @@ apiRouter.delete("/quote_request/:id", async (req, res) => {
             return;
         }
         res.status(500).json({
-            "error": "Couldn't deletion ajanlatkeres table"
+            "error": "Couldn't deletion  ajanlatkeres table"
         });
     }
 });
