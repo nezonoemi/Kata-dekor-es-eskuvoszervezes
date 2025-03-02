@@ -351,6 +351,172 @@ apiRouter.put("/rentable_products/:id", async (req, res) => {
     }
 });
 
+// user tábla lekérdezések
+// get kérés
+apiRouter.get("/user/:id?", async (req, res) => {
+    try {
+        let id = req.params.id ? parseInt(req.params.id) : null;
+        
+        if (id !== null && isNaN(id)) {
+            throw new Error("Parameter 'id' must be a valid integer");
+        }
+        if (id !== null && id < 1) {
+            throw new Error("Parameter 'id' must be greater than 0");
+        }
+        
+        if (id === null) {
+            const [results] = await pool.query("SELECT * FROM user;");
+            res.json(results);
+        } else {
+            const [results] = await pool.query("SELECT * FROM user WHERE user.user_id = ?;", [id]);
+            res.json(results);
+        }
+    } catch (err) {
+        res.status(500).json({ 
+            "error": "Couldn't query user" 
+        });
+    }
+});
+
+apiRouter.delete("/user/:id", async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+            throw new Error("Invalid 'id' must be a valid integer");
+        }
+        if (id < 1) {
+            throw new Error("Invalid 'id' must be greater than 0");
+        }
+        
+        const [result] = await pool.query("DELETE FROM user WHERE user.user_id = ?;", [id]);
+        
+        if (result.affectedRows < 1) {
+            throw new Error("No user found with given id");
+        }
+        
+        res.status(200).json({ "id": id });
+    } catch (err) {
+        if (err.message.includes("Invalid")) {
+            res.status(400).json({ 
+                "error": err.message 
+            });
+            return;
+        }
+        if (err.message.includes("No user")) {
+            res.status(404).json({ 
+                "error": err.message 
+            });
+            return;
+        }
+        res.status(500).json({ 
+            "error": "Couldn't delete from user table" 
+        });
+    }
+});
+
+apiRouter.post("/user", async (req, res) => {
+    try {
+        const body = req.body;
+        if (!body || typeof body !== "object" || Object.keys(body).length !== 5) {
+            throw new Error("Invalid request body");
+        }
+        if (!body.last_name || typeof body.last_name !== "string") {
+            throw new Error("Invalid 'last_name' field");
+        }
+        if (!body.first_name || typeof body.first_name !== "string") {
+            throw new Error("Invalid 'first_name' field");
+        }
+        if (!body.email || typeof body.email !== "string") {
+            throw new Error("Invalid 'email' field");
+        }
+        if (!body.password || typeof body.password !== "string") {
+            throw new Error("Invalid 'password' field");
+        }
+        if (!body.phone_number || (typeof body.phone_number !== "string" && typeof body.phone_number !== "number")) {
+            throw new Error("Invalid 'phone_number' field");
+        }
+        
+        const { first_name, last_name, password, email, phone_number } = body;
+        const [result] = await pool.query(
+            "INSERT INTO user (first_name, last_name, password, email, phone_number) VALUES (?, ?, ?, ?, ?);",
+            [first_name, last_name, password, email, phone_number]
+        );
+        
+        res.status(201).json(result);
+    } catch (err) {
+        if (err.message.includes("Invalid")) {
+            res.status(400).json({ 
+                "error": err.message 
+            });
+            return;
+        }
+        res.status(500).json({ 
+            "error": "Couldn't insert into user table" 
+        });
+    }
+});
+
+apiRouter.put("/user/:id", async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+            throw new Error("Parameter 'id' must be a valid integer");
+        }
+        if (id < 1) {
+            throw new Error("Parameter 'id' must be greater than 0");
+        }
+        
+        const body = req.body;
+        if (!body || typeof body !== "object" || Object.keys(body).length !== 5) {
+            throw new Error("Invalid request body");
+        }
+        if (!body.last_name || typeof body.last_name !== "string") {
+            throw new Error("Invalid 'last_name' field");
+        }
+        if (!body.first_name || typeof body.first_name !== "string") {
+            throw new Error("Invalid 'first_name' field");
+        }
+        if (!body.email || typeof body.email !== "string") {
+            throw new Error("Invalid 'email' field");
+        }
+        if (!body.password || typeof body.password !== "string") {
+            throw new Error("Invalid 'password' field");
+        }
+        if (!body.phone_number || (typeof body.phone_number !== "string" && typeof body.phone_number !== "number")) {
+            throw new Error("Invalid 'phone_number' field");
+        }
+        
+        const { first_name, last_name, password, email, phone_number } = body;
+        const [result] = await pool.query(
+            "UPDATE user SET first_name = ?, last_name = ?, password = ?, email = ?, phone_number = ? WHERE user_id = ?;",
+            [first_name, last_name, password, email, phone_number, id]
+        );
+        
+        if (result.affectedRows < 1) {
+            throw new Error("No user found with given id");
+        }
+        
+        res.status(200).json({ 
+            "id": id 
+        });
+    } catch (err) {
+        if (err.message.includes("Invalid")) {
+            res.status(400).json({ 
+                "error": err.message 
+            });
+            return;
+        }
+        if (err.message.includes("No user")) {
+            res.status(404).json({ 
+                "error": err.message 
+            });
+            return;
+        }
+        res.status(500).json({ 
+            "error": "Couldn't update user table" 
+        });
+    }
+});
 
 
 
