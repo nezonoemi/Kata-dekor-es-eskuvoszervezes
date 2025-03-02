@@ -93,25 +93,26 @@ apiRouter.delete("/qoute_request/:id", async (req, res)=>{
 apiRouter.post("/qoute_request", async (req, res) => {
     try {
         const body = req.body;
-        if(!body || typeof(body) !== "object" || Object.keys(body).length !== 4){
+        if(!body || typeof(body) !== "object" || Object.keys(body).length !== 5){
             throw new Error("Invalid request body");
-        } 
-        if(!body.name  || typeof(body.name) !== "string"){
-            throw new Error("Invalid 'name' field");
         }
-        if(!body.description || typeof(body.description) !== "string"){
-            throw new Error("Invalid 'description' field");
+        if(!body.first_name || typeof(body.first_name) !== "string"){
+            throw new Error("Invalid 'first_name' field");
 
         }
-        if(!body.length || typeof(body.length) !== "number"){
-            throw new Error("Invalid 'length' field");
+        if(!body.last_name || typeof(body.last_name) !== "string"){
+            throw new Error("Invalid 'last_name' field");
         }
-        if(body.length < 0){
-            throw new Error("Invalid 'length' field: must be pozitive number");
+        if(!body.email || typeof(body.email) !== "string"){
+            throw new Error("Invalid 'email' field");
         }
-        if (!last_name || !first_name || !email || !note) {
-            throw new Error("All fields are required");
+        if(!body.note || typeof(body.note) !== "string"){
+            throw new Error("Invalid 'note' field");
         }
+        if(body.qoute_request_id < 0){
+            throw new Error("Invalid 'qoute_request_id' field: must be pozitive number");
+        }
+       
 
         const [result] = await pool.query(
             "INSERT INTO qoute_request (last_name, first_name, email, note) VALUES (?, ?, ?, ?);",
@@ -119,9 +120,15 @@ apiRouter.post("/qoute_request", async (req, res) => {
         );
 
         res.status(201).json({
-            "id": result.insertId
+            "id": result.qoute_request_id
         });
     } catch (err) {
+        if (err.message.includes("Invalid")){
+            res.status(400).json({
+                "error" : err.message
+            });
+            return;
+        }
         res.status(500).json({
             "error": "Couldn't insert into ajanlatkeres table"
         });
