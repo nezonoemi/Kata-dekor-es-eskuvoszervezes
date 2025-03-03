@@ -9,7 +9,6 @@ const app = express();
 const PORT = process.env.PORT || 3443;
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // API végpontok
