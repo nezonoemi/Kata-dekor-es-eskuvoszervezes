@@ -1,5 +1,8 @@
-import express from 'express';
-import pool from '../config/db.js';  
+import express from "express";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { pool } from "../config/db.js";
+
 
 const apiRouter = express.Router();
 
@@ -685,4 +688,78 @@ apiRouter.put("/order/:id", async (req, res) => {
     } 
 });
 
+// regisztráció és bejelentkezés
+// regisztráció
+apiRouter.post("/api/user", async (req, res) => {
+    const { action, first_name, last_name, phone, email, password } = req.body;
+
+    if (action === "register") {
+        try {
+            // Megnézzük, van-e már ilyen e-mail
+            const [existingUser] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
+            if (existingUser.length > 0) {
+                return res.status(400).json({ message: "⚠ Ez az e-mail már regisztrálva van!" });
+            }
+
+            // Jelszó hash-elése
+            const hashedPassword = await bcrypt.hash(password, 10);
+            await pool.query(
+                "INSERT INTO users (first_name, last_name, phone, email, password) VALUES (?, ?, ?, ?, ?)",
+                [first_name, last_name, phone, email, hashedPassword]
+            );
+
+            return res.status(201).json({ message: "✅ Sikeres regisztráció!" });
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ message: "❌ Hiba történt a regisztráció során!" });
+        }
+    }
+
+    //bejeletkezés
+    if (action === "login") {
+        try {
+            const [users] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
+            if (users.length === 0) {
+                return res.status(400).json({ message: "❌ Hibás e-mail vagy jelszó!" });
+            }
+
+            const user = users[0];
+            const passwordMatch = await bcrypt.compare(password, user.password);
+            if (!passwordMatch) {
+                return res.status(400).json({ message: "❌ Hibás e-mail vagy jelszó!" });
+            }
+
+            // JWT token generálása
+            const token = jwt.sign({ userId: user.id, email: user.email }, "secret_key", { expiresIn: "2h" });
+
+            return res.json({ message: `✅ Bejelentkezve: ${user.first_name}`, token });
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ message: "❌ Hiba történt a bejelentkezés során!" });
+        }
+    }
+
+    return res.status(400).json({ message: "⚠ Hibás kérés!" });
+});
+
+// rendelés létrehozása
+apiRouter.post("/api/order", async (req, res) => {
+    try {
+        const { user_id, rentable_id, order_date } = req.body;
+        
+        if (!user_id || !rentable_id || !order_date) {
+            return res.status(400).json({ error: "⚠ Minden mezőt ki kell tölteni!" });
+        }
+
+        const [result] = await pool.query(
+            "INSERT INTO orders (user_id, rentable_id, order_date) VALUES (?, ?, ?);",
+            [user_id, rentable_id, order_date]
+        );
+
+        res.status(201).json({ message: "✅ Rendelés sikeresen létrehozva!", orderId: result.insertId });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "❌ Hiba történt a rendelés létrehozásakor!" });
+    }
+});
 export default apiRouter;

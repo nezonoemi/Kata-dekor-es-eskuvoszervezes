@@ -1,17 +1,19 @@
-import mysql from 'mysql2/promise';
-import dotenv from 'dotenv';
+import mysql from "mysql2/promise";
+import dotenv from "dotenv";
 
 dotenv.config();
 
-// Adatbázis kapcsolat 
-const pool = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'test',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
+if (!process.env.DB_HOST || !process.env.DB_USER || !process.env.DB_NAME || !process.env.JWT_SECRET) {
+    throw new Error("Hiányzó környezeti változók! Ellenőrizd a .env fájlt.");
+}
+
+// Adatbázis kapcsolat
+export const pool = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD || "",
+    database: process.env.DB_NAME,
 });
 
-export default pool;
+// Titkos kulcs exportálása
+export const jwtSecret = process.env.JWT_SECRET;

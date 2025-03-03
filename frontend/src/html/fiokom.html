@@ -68,54 +68,61 @@
 </header>
 
     
-    <div class="container vh-100 d-flex flex-column justify-content-center align-items-center">
-        <div class="text-center mb-4">
-            <button class="btn btn-primary me-2" onclick="toggleForm('login')">Bejelentkezés</button>
-            <button class="btn btn-secondary" onclick="toggleForm('register')">Regisztráció</button>
+<div class="container vh-100 d-flex flex-column justify-content-center align-items-center">
+    <div class="text-center mb-4">
+        <button class="btn btn-primary me-2" onclick="toggleForm('login')">Bejelentkezés</button>
+        <button class="btn btn-secondary" onclick="toggleForm('register')">Regisztráció</button>
+    </div>
+
+    <div class="row w-100 justify-content-center">
+        <!-- Bejelentkezés -->
+        <div id="login-form" class="col-md-6 d-block">
+            <h2 class="text-center">Bejelentkezés</h2>
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label for="loginEmail" class="form-label">Email cím</label>
+                    <input type="email" class="form-control" id="loginEmail" required>
+                </div>
+                <div class="mb-3">
+                    <label for="loginPassword" class="form-label">Jelszó</label>
+                    <input type="password" class="form-control" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Bejelentkezés</button>
+            </form>
         </div>
-        <div class="row w-100 justify-content-center">
-            <div id="login-form" class="col-md-6 d-block">
-                <h2 class="text-center">Bejelentkezés</h2>
-                <form>
-                    <div class="mb-3">
-                        <label for="loginEmail" class="form-label">Email cím</label>
-                        <input type="email" class="form-control" id="loginEmail" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="loginPassword" class="form-label">Jelszó</label>
-                        <input type="password" class="form-control" id="loginPassword" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Bejelentkezés</button>
-                </form>
-            </div>
-            <div id="register-form" class="col-md-6 d-none">
-                <h2 class="text-center">Regisztráció</h2>
-                <form>
-                    <div class="mb-3">
-                        <label for="firstName" class="form-label">Vezetéknév</label>
-                        <input type="text" class="form-control" id="firstName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="lastName" class="form-label">Keresztnév</label>
-                        <input type="text" class="form-control" id="lastName" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="phoneNumber" class="form-label">Telefon szám</label>
-                        <input type="text" class="form-control" id="phoneNumber" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email cím</label>
-                        <input type="email" class="form-control" id="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Jelszó</label>
-                        <input type="password" class="form-control" id="password" required>
-                    </div>
-                    <button type="submit" class="btn btn-secondary w-100">Regisztráció</button>
-                </form>
-            </div>
+
+        <!-- Regisztráció -->
+        <div id="register-form" class="col-md-6 d-none">
+            <h2 class="text-center">Regisztráció</h2>
+            <form id="registerForm">
+                <div class="mb-3">
+                    <label for="firstName" class="form-label">Vezetéknév</label>
+                    <input type="text" class="form-control" id="firstName" required>
+                </div>
+                <div class="mb-3">
+                    <label for="lastName" class="form-label">Keresztnév</label>
+                    <input type="text" class="form-control" id="lastName" required>
+                </div>
+                <div class="mb-3">
+                    <label for="phoneNumber" class="form-label">Telefon szám</label>
+                    <input type="text" class="form-control" id="phoneNumber" required>
+                </div>
+                <div class="mb-3">
+                    <label for="registerEmail" class="form-label">Email cím</label>
+                    <input type="email" class="form-control" id="registerEmail" required>
+                </div>
+                <div class="mb-3">
+                    <label for="registerPassword" class="form-label">Jelszó</label>
+                    <input type="password" class="form-control" id="registerPassword" required>
+                </div>
+                <button type="submit" class="btn btn-secondary w-100">Regisztráció</button>
+            </form>
         </div>
     </div>
+
+    <div id="user" class="mt-4"></div>
+</div>
+
     
     <footer class="bg-dark text-white text-center py-4">
         <div class="container-fluid">
@@ -129,6 +136,6 @@
         </div>
     </footer>
     
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
 </body>
 </html>
