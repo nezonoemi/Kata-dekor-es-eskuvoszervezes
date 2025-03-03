@@ -136,3 +136,5 @@ document.addEventListener("DOMContentLoaded", () => {
       }
   });
 });
+
+// bejelentkezés és felhasználó adatok megadása adatbázisba
