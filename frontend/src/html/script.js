@@ -109,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
   });
 
-  // 🔹 DELETE kérés: Ajánlat törlése
   deleteButton.addEventListener("click", async () => {
       const email = document.getElementById("email").value.trim();
 
