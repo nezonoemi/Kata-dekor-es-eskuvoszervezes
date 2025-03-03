@@ -45,6 +45,21 @@ document.querySelectorAll('.remove-btn').forEach(button => {
 });
 
 
+//fiókom regiszráció/belépés
+function toggleForm(form) {
+  let loginForm = document.getElementById('login-form');
+  let registerForm = document.getElementById('register-form');
+
+  if (form === 'login') {
+      loginForm.classList.remove('d-none');
+      registerForm.classList.add('d-none');
+  } else if (form === 'register') {
+      registerForm.classList.remove('d-none');
+      loginForm.classList.add('d-none');
+  }
+}
+
+
 //ajánlat kérés és leadás 
 const target = document.getElementById("target");
 
