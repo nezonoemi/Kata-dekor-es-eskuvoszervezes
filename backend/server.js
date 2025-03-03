@@ -20,3 +20,4 @@ app.listen(PORT, () => {
 });
 // a server indítása fontos: ha változtatások változtás akkor megint ájra kell indítani:  npm start
 // de ha auotomatikusan újra initás ha van váétoztatás: npm run dev 
+//npm install -g windows-build-tools
