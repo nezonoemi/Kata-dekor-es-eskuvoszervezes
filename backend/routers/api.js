@@ -689,73 +689,89 @@ apiRouter.put("/order/:id", async (req, res) => {
 });
 
 // regisztráció és bejelentkezés
-apiRouter.post("/api/user", async (req, res) => {
-    console.log("Beérkező kérés:", JSON.stringify(req.body, null, 2)); // Debug log
+apiRouter.post("/user", async (req, res) => {
+    try {
+        const { action, first_name, last_name, phone_number, email, password } = req.body;
 
-    if (!req.body || Object.keys(req.body).length === 0) {
-        return res.status(400).json({ error: "⚠ Üres kérés érkezett!" });
-    }
-
-    const { action, first_name, last_name, phone, email, password } = req.body;
-
-    if (!action) {
-        return res.status(400).json({ error: "⚠ Az 'action' mező kötelező!" });
-    }
-
-    if (action === "register") {
-        if (!first_name || !last_name || !phone || !email || !password) {
+        if (!action || !first_name || !last_name || !phone_number || !email || !password) {
             return res.status(400).json({ error: "⚠ Minden mezőt ki kell tölteni!" });
         }
-        
-        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-            return res.status(400).json({ error: "⚠ Érvénytelen e-mail cím!" });
-        }
 
-        try {
-            const [existingUsers] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
-            if (existingUsers.length > 0) {
+        if (action === "register") {
+            const [existingUser] = await pool.query("SELECT * FROM user WHERE email = ?", [email]);
+            if (existingUser.length > 0) {
                 return res.status(400).json({ error: "⚠ Ez az e-mail már regisztrálva van!" });
             }
 
-            const hashedPassword = await bcrypt.hash(password, 10);
-            await pool.query(
-                "INSERT INTO users (first_name, last_name, phone, email, password) VALUES (?, ?, ?, ?, ?)",
-                [first_name, last_name, phone, email, hashedPassword]
+            const hashedPassword = await bcrypt.hash(password, 14);
+
+            const [insertResult] = await pool.query(
+                "INSERT INTO user (first_name, last_name, phone_number, email, password) VALUES (?, ?, ?, ?, ?)",
+                [first_name, last_name, phone_number, email, hashedPassword]
             );
 
-            return res.status(201).json({ message: "✅ Sikeres regisztráció!" });
-        } catch (err) {
-            console.error(err);
-            return res.status(500).json({ error: "❌ Hiba történt a regisztráció során!" });
-        }
-    }
+            if (insertResult.affectedRows < 1) {
+                throw new Error("❌ Hiba történt a regisztráció során.");
+            }
 
-    if (action === "login") {
-        if (!email || !password) {
-            return res.status(400).json({ error: "⚠ E-mail és jelszó szükséges!" });
+            res.status(201).json({ message: "✅ Sikeres regisztráció!" });
         }
 
-        try {
-            const [users] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
+        if (action === "login") {
+            const [users] = await pool.query("SELECT * FROM user WHERE email = ?", [email]);
             if (users.length === 0) {
                 return res.status(400).json({ error: "❌ Hibás e-mail vagy jelszó!" });
             }
 
             const user = users[0];
-            const passwordMatch = await bcrypt.compare(password, user.password);
-            if (!passwordMatch) {
+
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+            if (!isPasswordValid) {
                 return res.status(400).json({ error: "❌ Hibás e-mail vagy jelszó!" });
             }
 
-            const token = jwt.sign({ userId: user.id, email: user.email }, "secret_key", { expiresIn: "1h" });
-            return res.json({ message: `✅ Bejelentkezve: ${user.first_name}`, token });
-        } catch (err) {
-            console.error(err);
-            return res.status(500).json({ error: "❌ Hiba történt a bejelentkezés során!" });
-        }
-    }
+            const token = jwt.sign(
+                { userId: user.id, email: user.email },
+                process.env.JWT_SECRET || "secret",
+                { expiresIn: "2h" }
+            );
 
-    return res.status(400).json({ error: "⚠ Hibás kérés!" });
+            res.json({
+                message: `✅ Sikeres bejelentkezés, ${user.first_name}!`,
+                token
+            });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "❌ Hiba történt a művelet során!" });
+    }
+});
+
+
+apiRouter.get("/user", async (req, res) => {
+    try {
+        const authHeader = req.headers["authorization"];
+        if (!authHeader) {
+            throw new Error("⚠ Bejelentkezés szükséges!");
+        }
+
+        const token = authHeader.split(" ")[1];
+        if (!token) {
+            throw new Error("⚠ Bejelentkezés szükséges!");
+        }
+
+        const decodedToken = jwt.verify(token, "secret");
+
+        const [user] = await pool.query("SELECT first_name, last_name, phone_number, email FROM user WHERE id = ?", [decodedToken.userId]);
+        if (user.length !== 1) {
+            throw new Error("❌ Hibás token vagy nem létező felhasználó!");
+        }
+
+        res.json(user[0]);
+    } catch (err) {
+        console.error(err);
+        res.status(401).json({ error: err.message });
+    }
 });
 
 export default apiRouter;
