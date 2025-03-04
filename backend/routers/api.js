@@ -689,21 +689,26 @@ apiRouter.put("/order/:id", async (req, res) => {
 });
 
 // regisztráció és bejelentkezés
-// regisztráció
-apiRouter.post("/api/user", async (req, res) => {
+apiRouter.post("/user", async (req, res) => {
+    console.log("Beérkező kérés:", req.body); 
+
     const { action, first_name, last_name, phone, email, password } = req.body;
 
+    if (!action) {
+        return res.status(400).json({ error: "⚠ Az 'action' mező kötelező!" });
+    }
+
     if (action === "register") {
+        if (!first_name || !last_name || !phone || !email || !password) {
+            return res.status(400).json({ error: "⚠ Minden mezőt ki kell tölteni!" });
+        }
+
         try {
-            // Megnézzük, van-e már ilyen e-mail
             const [existingUser] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
             if (existingUser.length > 0) {
-                return res.status(400).json({ 
-                    message: "⚠ Ez az e-mail már regisztrálva van!" 
-                });
+                return res.status(400).json({ error: "⚠ Ez az e-mail már regisztrálva van!" });
             }
 
-            // Jelszó hash-elése
             const hashedPassword = await bcrypt.hash(password, 10);
             await pool.query(
                 "INSERT INTO users (first_name, last_name, phone, email, password) VALUES (?, ?, ?, ?, ?)",
@@ -713,78 +718,37 @@ apiRouter.post("/api/user", async (req, res) => {
             return res.status(201).json({ message: "✅ Sikeres regisztráció!" });
         } catch (err) {
             console.error(err);
-            return res.status(500).json({ 
-                message: "❌ Hiba történt a regisztráció során!" 
-            });
+            return res.status(500).json({ error: "❌ Hiba történt a regisztráció során!" });
         }
     }
 
-    //bejeletkezés
     if (action === "login") {
+        if (!email || !password) {
+            return res.status(400).json({ error: "⚠ E-mail és jelszó szükséges!" });
+        }
+
         try {
             const [users] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
             if (users.length === 0) {
-                return res.status(400).json({ 
-                    message: "❌ Hibás e-mail vagy jelszó!" 
-                });
+                return res.status(400).json({ error: "❌ Hibás e-mail vagy jelszó!" });
             }
 
             const user = users[0];
             const passwordMatch = await bcrypt.compare(password, user.password);
             if (!passwordMatch) {
-                return res.status(400).json({ 
-                    message: "❌ Hibás e-mail vagy jelszó!" 
-                });
+                return res.status(400).json({ error: "❌ Hibás e-mail vagy jelszó!" });
             }
 
-            // JWT token generálása
             const token = jwt.sign({ userId: user.id, email: user.email }, "secret_key", { expiresIn: "1h" });
 
-            return res.json({ 
-                message: `✅ Bejelentkezve: ${user.first_name}`, 
-                token 
-            });
+            return res.json({ message: `✅ Bejelentkezve: ${user.first_name}`, token });
         } catch (err) {
             console.error(err);
-            res.status(500).json({ 
-                message: "❌ Hiba történt a bejelentkezés során!" 
-            });
-            return
+            return res.status(500).json({ error: "❌ Hiba történt a bejelentkezés során!" });
         }
     }
 
-    res.status(400).json({ 
-        message: "⚠ Hibás kérés!" 
-    });
-    return;
+    return res.status(400).json({ error: "⚠ Hibás kérés!" });
 });
 
-// rendelés létrehozása
-apiRouter.post("/api/order", async (req, res) => {
-    try {
-        const { user_id, rentable_id, order_date } = req.body;
-        
-        if (!user_id || !rentable_id || !order_date) {
-            res.status(400).json({ 
-                error: "⚠ Minden mezőt ki kell tölteni!" 
-            });
-            return;
-        }
-
-        const [result] = await pool.query(
-            "INSERT INTO orders (user_id, rentable_id, order_date) VALUES (?, ?, ?);",
-            [user_id, rentable_id, order_date]
-        );
-
-        res.status(201).json({ 
-            message: "✅ Rendelés sikeresen létrehozva!", 
-            orderId: result.insertId 
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ 
-            error: "❌ Hiba történt a rendelés létrehozásakor!" 
-        });
-    }
-});
 export default apiRouter;

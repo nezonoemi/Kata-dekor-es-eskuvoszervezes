@@ -1,4 +1,3 @@
-//bérelhető termékek rész
 // Kosár tartalmának kezelése
 const cart = [];
 const cartCountElement = document.getElementById('cart-count');
@@ -27,7 +26,7 @@ function removeFromCart(productName) {
   }
 }
 
-// Eseménykezelők a kosár gombokhoz
+// Kosár gombok eseménykezelése
 document.querySelectorAll('.cart-btn').forEach(button => {
   button.addEventListener('click', event => {
     const productName = event.target.getAttribute('data-product-name');
@@ -36,7 +35,7 @@ document.querySelectorAll('.cart-btn').forEach(button => {
   });
 });
 
-// Eseménykezelők a Törlés gombokhoz
+// Törlés gombok eseménykezelése
 document.querySelectorAll('.remove-btn').forEach(button => {
   button.addEventListener('click', event => {
     const productName = event.target.getAttribute('data-product-name');
@@ -44,225 +43,175 @@ document.querySelectorAll('.remove-btn').forEach(button => {
   });
 });
 
-
-//fiókom regiszráció/belépés
+// Fiókkezelés: bejelentkezés és regisztráció váltás
 function toggleForm(form) {
   let loginForm = document.getElementById('login-form');
   let registerForm = document.getElementById('register-form');
 
   if (form === 'login') {
-      loginForm.classList.remove('d-none');
-      registerForm.classList.add('d-none');
+    loginForm.classList.remove('d-none');
+    registerForm.classList.add('d-none');
   } else if (form === 'register') {
-      registerForm.classList.remove('d-none');
-      loginForm.classList.add('d-none');
+    registerForm.classList.remove('d-none');
+    loginForm.classList.add('d-none');
   }
 }
 
-
-//ajánlat kérés és leadás 
-const target = document.getElementById("target");
-
+// Ajánlatkérés és törlés
 document.addEventListener("DOMContentLoaded", () => {
   const offerForm = document.getElementById("offerForm");
   const deleteButton = document.getElementById("deleteButton");
   const target = document.getElementById("target");
 
   if (!offerForm || !deleteButton || !target) {
-      console.error("❌ Hiba: Egy vagy több elem nem található az oldalon!");
-      return;
+    console.error("❌ Hiba: Egy vagy több elem nem található az oldalon!");
+    return;
   }
 
   function isValidEmail(email) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(email);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   }
 
   offerForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
+    event.preventDefault();
 
-      const last_name = document.getElementById("vezeteknev").value.trim();
-      const first_name = document.getElementById("keresztnev").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const note = document.getElementById("note").value.trim();
+    const last_name = document.getElementById("vezeteknev").value.trim();
+    const first_name = document.getElementById("keresztnev").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const note = document.getElementById("note").value.trim();
 
-      if (!last_name || !first_name || !email || !note) {
-          target.innerHTML = `<div class="alert alert-danger">⚠ Minden mezőt ki kell tölteni!</div>`;
-          return;
+    if (!last_name || !first_name || !email || !note) {
+      target.innerHTML = `<div class="alert alert-danger">⚠ Minden mezőt ki kell tölteni!</div>`;
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      target.innerHTML = `<div class="alert alert-danger">⚠ Hibás e-mail cím formátum!</div>`;
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3443/api/quote_request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ last_name, first_name, email, note })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Ismeretlen hiba történt.");
       }
 
-      if (!isValidEmail(email)) {
-          target.innerHTML = `<div class="alert alert-danger">⚠ Hibás e-mail cím formátum!</div>`;
-          return;
-      }
-
-      try {
-          const response = await fetch("http://localhost:3443/api/quote_request", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ last_name, first_name, email, note })
-          });
-
-          if (!response.ok) {
-              if (response.status === 400) {
-                  throw new Error("Hibás adatok! Kérlek, ellenőrizd az űrlapot.");
-              } else if (response.status === 500) {
-                  throw new Error("Szerverhiba! Próbáld újra később.");
-              } else {
-                  const errorText = await response.text();
-                  throw new Error(`Hiba: ${errorText}`);
-              }
-          }
-
-          const data = await response.json();
-          target.innerHTML = `<div class="alert alert-success">✅ Sikeres ajánlatkérés! <br> Rendelés ID: ${data.id}</div>`;
-
-          offerForm.reset();
-
-      } catch (error) {
-          console.error("❌ Hiba történt:", error);
-          target.innerHTML = `<div class="alert alert-danger">❌ Hiba történt: ${error.message}</div>`;
-      }
+      const data = await response.json();
+      target.innerHTML = `<div class="alert alert-success">✅ Sikeres ajánlatkérés! <br> Rendelés ID: ${data.id}</div>`;
+      offerForm.reset();
+    } catch (error) {
+      console.error("❌ Hiba történt:", error);
+      target.innerHTML = `<div class="alert alert-danger">❌ Hiba történt: ${error.message}</div>`;
+    }
   });
 
   deleteButton.addEventListener("click", async () => {
-      const email = document.getElementById("email").value.trim();
+    const email = document.getElementById("email").value.trim();
 
-      if (!email) {
-          target.innerHTML = `<div class="alert alert-danger">⚠ Add meg az e-mail címedet a törléshez!</div>`;
-          return;
+    if (!email || !isValidEmail(email)) {
+      target.innerHTML = `<div class="alert alert-danger">⚠ Add meg az érvényes e-mail címedet a törléshez!</div>`;
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3443/api/quote_request?email=${email}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" }
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Ismeretlen hiba történt.");
       }
 
-      if (!isValidEmail(email)) {
-          target.innerHTML = `<div class="alert alert-danger">⚠ Hibás e-mail cím formátum!</div>`;
-          return;
-      }
-
-      try {
-          const response = await fetch(`http://localhost:3443/api/quote_request?email=${email}`, {
-              method: "DELETE",
-              headers: { "Content-Type": "application/json" }
-          });
-
-          if (!response.ok) {
-              if (response.status === 400) {
-                  throw new Error("Hibás e-mail cím vagy nem található ajánlat.");
-              } else if (response.status === 500) {
-                  throw new Error("Szerverhiba! Próbáld újra később.");
-              } else {
-                  const errorText = await response.text();
-                  throw new Error(`Hiba: ${errorText}`);
-              }
-          }
-
-          target.innerHTML = `<div class="alert alert-warning">🗑 Ajánlat törölve!</div>`;
-
-      } catch (error) {
-          console.error("❌ Hiba törlésnél:", error);
-          target.innerHTML = `<div class="alert alert-danger">❌ Hiba történt: ${error.message}</div>`;
-      }
+      target.innerHTML = `<div class="alert alert-warning">🗑 Ajánlat törölve!</div>`;
+    } catch (error) {
+      console.error("❌ Hiba törlésnél:", error);
+      target.innerHTML = `<div class="alert alert-danger">❌ Hiba történt: ${error.message}</div>`;
+    }
   });
 });
 
-//bejelentkezés és regisztráció
-
+// regisztráció bejelentkezés
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("loginForm");
   const registerForm = document.getElementById("registerForm");
   const userDisplay = document.getElementById("user");
 
-  function isValidEmail(email) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(email);
-  }
-
   function showMessage(message, type = "danger") {
-      userDisplay.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
-      setTimeout(() => userDisplay.innerHTML = "", 5000);
+    userDisplay.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+    setTimeout(() => (userDisplay.innerHTML = ""), 5000);
   }
 
-  // ✅ Bejelentkezés egy végponttal (`/api/user`)
+  async function sendRequest(data) {
+    try {
+      console.log("📩 Küldött adatok:", JSON.stringify(data));
+
+      const response = await fetch("http://localhost:3443/api/user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(responseData.error || "Ismeretlen hiba történt.");
+      }
+
+      return responseData;
+    } catch (error) {
+      console.error("❌ API hiba:", error);
+      showMessage(`❌ Hiba történt: ${error.message}`);
+      return null;
+    }
+  }
+
   loginForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
+    event.preventDefault();
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value.trim();
 
-      const email = document.getElementById("loginEmail").value.trim();
-      const password = document.getElementById("loginPassword").value.trim();
+    if (!email || !password) {
+      showMessage("⚠ Minden mezőt helyesen kell kitölteni!");
+      return;
+    }
 
-      if (!email || !password) {
-          showMessage("⚠ Minden mezőt ki kell tölteni!");
-          return;
-      }
-
-      if (!isValidEmail(email)) {
-          showMessage("⚠ Hibás e-mail cím formátum!");
-          return;
-      }
-
-      try {
-          const response = await fetch("http://localhost:3443/api/user", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ action: "login", email, password }) 
-          });
-
-          const data = await response.json();
-          if (!response.ok) {
-              throw new Error(data.message || "Hibás bejelentkezési adatok.");
-          }
-
-          showMessage(`✅ Sikeres bejelentkezés! Üdv, ${data.name}!`, "success");
-          localStorage.setItem("user", JSON.stringify(data)); 
-
-      } catch (error) {
-          console.error("❌ API hiba:", error);
-          showMessage(`❌ Hiba történt: ${error.message}`);
-      }
+    const data = { action: "login", email, password };
+    const response = await sendRequest(data);
+    if (response) {
+      showMessage(`✅ Sikeres bejelentkezés!`, "success");
+      localStorage.setItem("user", JSON.stringify(response));
+    }
   });
 
   registerForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
+    event.preventDefault();
+    const userData = {
+      action: "register",
+      first_name: document.getElementById("firstName").value.trim(),
+      last_name: document.getElementById("lastName").value.trim(),
+      phone: document.getElementById("phoneNumber").value.trim(),
+      email: document.getElementById("registerEmail").value.trim(),
+      password: document.getElementById("registerPassword").value.trim(),
+    };
 
-      const first_name = document.getElementById("firstName").value.trim();
-      const last_name = document.getElementById("lastName").value.trim();
-      const phone = document.getElementById("phoneNumber").value.trim();
-      const email = document.getElementById("registerEmail").value.trim();
-      const password = document.getElementById("registerPassword").value.trim();
+    if (Object.values(userData).some(value => value === "")) {
+      showMessage("⚠ Minden mezőt helyesen kell kitölteni!");
+      return;
+    }
 
-      if (!first_name || !last_name || !phone || !email || !password) {
-          showMessage("⚠ Minden mezőt ki kell tölteni!");
-          return;
-      }
-
-      if (!isValidEmail(email)) {
-          showMessage("⚠ Hibás e-mail cím formátum!");
-          return;
-      }
-
-      try {
-          const response = await fetch("http://localhost:3443/api/user", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ 
-                  action: "register", 
-                  first_name, 
-                  last_name, 
-                  phone, 
-                  email, 
-                  password 
-              })
-          });
-
-          const data = await response.json();
-          if (!response.ok) {
-              throw new Error(data.message || "Hiba a regisztráció során.");
-          }
-
-          showMessage("✅ Sikeres regisztráció! Most már bejelentkezhetsz.", "success");
-          registerForm.reset();
-
-      } catch (error) {
-          console.error("❌ API hiba:", error);
-          showMessage(`❌ Hiba történt: ${error.message}`);
-      }
+    const response = await sendRequest(userData);
+    if (response) {
+      showMessage("✅ Sikeres regisztráció!", "success");
+      registerForm.reset();
+    }
   });
 });
