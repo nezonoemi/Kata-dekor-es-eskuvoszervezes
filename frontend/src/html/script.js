@@ -141,77 +141,64 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // regisztráció bejelentkezés
 document.addEventListener("DOMContentLoaded", () => {
-  const loginForm = document.getElementById("loginForm");
   const registerForm = document.getElementById("registerForm");
   const userDisplay = document.getElementById("user");
 
   function showMessage(message, type = "danger") {
-    userDisplay.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
-    setTimeout(() => (userDisplay.innerHTML = ""), 5000);
+      if (userDisplay) {
+          userDisplay.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+          setTimeout(() => (userDisplay.innerHTML = ""), 5000);
+      }
   }
 
   async function sendRequest(data) {
-    try {
-      console.log("📩 Küldött adatok:", JSON.stringify(data));
+      try {
+          console.log("📩 Küldött adatok:", JSON.stringify(data, null, 2));
 
-      const response = await fetch("http://localhost:3443/api/user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+          if (!data || Object.keys(data).length === 0) {
+              throw new Error("⚠ Üres adatkérés!");
+          }
 
-      const responseData = await response.json();
+          const response = await fetch("http://localhost:3443/api/user", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+          });
 
-      if (!response.ok) {
-        throw new Error(responseData.error || "Ismeretlen hiba történt.");
+          const responseData = await response.json();
+          if (!response.ok) {
+              throw new Error(responseData.error || "Ismeretlen hiba történt.");
+          }
+          return responseData;
+      } catch (error) {
+          console.error("❌ API hiba:", error);
+          showMessage(`❌ Hiba történt: ${error.message}`);
+          return null;
       }
-
-      return responseData;
-    } catch (error) {
-      console.error("❌ API hiba:", error);
-      showMessage(`❌ Hiba történt: ${error.message}`);
-      return null;
-    }
   }
 
-  loginForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const email = document.getElementById("loginEmail").value.trim();
-    const password = document.getElementById("loginPassword").value.trim();
+  if (registerForm) {
+      registerForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const userData = {
+              action: "register",
+              first_name: document.getElementById("firstName").value.trim(),
+              last_name: document.getElementById("lastName").value.trim(),
+              phone: document.getElementById("phoneNumber").value.trim(),
+              email: document.getElementById("registerEmail").value.trim(),
+              password: document.getElementById("registerPassword").value.trim(),
+          };
 
-    if (!email || !password) {
-      showMessage("⚠ Minden mezőt helyesen kell kitölteni!");
-      return;
-    }
+          if (Object.values(userData).some(value => value === "")) {
+              showMessage("⚠ Minden mezőt helyesen kell kitölteni!");
+              return;
+          }
 
-    const data = { action: "login", email, password };
-    const response = await sendRequest(data);
-    if (response) {
-      showMessage(`✅ Sikeres bejelentkezés!`, "success");
-      localStorage.setItem("user", JSON.stringify(response));
-    }
-  });
-
-  registerForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const userData = {
-      action: "register",
-      first_name: document.getElementById("firstName").value.trim(),
-      last_name: document.getElementById("lastName").value.trim(),
-      phone: document.getElementById("phoneNumber").value.trim(),
-      email: document.getElementById("registerEmail").value.trim(),
-      password: document.getElementById("registerPassword").value.trim(),
-    };
-
-    if (Object.values(userData).some(value => value === "")) {
-      showMessage("⚠ Minden mezőt helyesen kell kitölteni!");
-      return;
-    }
-
-    const response = await sendRequest(userData);
-    if (response) {
-      showMessage("✅ Sikeres regisztráció!", "success");
-      registerForm.reset();
-    }
-  });
+          const response = await sendRequest(userData);
+          if (response) {
+              showMessage("✅ Sikeres regisztráció!", "success");
+              registerForm.reset();
+          }
+      });
+  }
 });

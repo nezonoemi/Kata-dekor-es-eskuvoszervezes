@@ -689,8 +689,12 @@ apiRouter.put("/order/:id", async (req, res) => {
 });
 
 // regisztráció és bejelentkezés
-apiRouter.post("/user", async (req, res) => {
-    console.log("Beérkező kérés:", req.body); 
+apiRouter.post("/api/user", async (req, res) => {
+    console.log("Beérkező kérés:", JSON.stringify(req.body, null, 2)); // Debug log
+
+    if (!req.body || Object.keys(req.body).length === 0) {
+        return res.status(400).json({ error: "⚠ Üres kérés érkezett!" });
+    }
 
     const { action, first_name, last_name, phone, email, password } = req.body;
 
@@ -702,10 +706,14 @@ apiRouter.post("/user", async (req, res) => {
         if (!first_name || !last_name || !phone || !email || !password) {
             return res.status(400).json({ error: "⚠ Minden mezőt ki kell tölteni!" });
         }
+        
+        if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+            return res.status(400).json({ error: "⚠ Érvénytelen e-mail cím!" });
+        }
 
         try {
-            const [existingUser] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
-            if (existingUser.length > 0) {
+            const [existingUsers] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
+            if (existingUsers.length > 0) {
                 return res.status(400).json({ error: "⚠ Ez az e-mail már regisztrálva van!" });
             }
 
@@ -740,7 +748,6 @@ apiRouter.post("/user", async (req, res) => {
             }
 
             const token = jwt.sign({ userId: user.id, email: user.email }, "secret_key", { expiresIn: "1h" });
-
             return res.json({ message: `✅ Bejelentkezve: ${user.first_name}`, token });
         } catch (err) {
             console.error(err);
