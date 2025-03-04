@@ -57,7 +57,7 @@ function toggleForm(form) {
   }
 }
 
-// Ajánlatkérés és törlés
+//ajánlatkérés leadás és törlése
 document.addEventListener("DOMContentLoaded", () => {
   const offerForm = document.getElementById("offerForm");
   const deleteButton = document.getElementById("deleteButton");
