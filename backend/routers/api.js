@@ -91,15 +91,14 @@ apiRouter.delete("/quote_request", async (req, res) => {
 
 // post kérés  ajánlat létrehozása
 const transporter = nodemailer.createTransport({
-    service: 'gmail', // Itt Gmailt használunk, de más SMTP szolgáltatót is választhatsz
+    service: "gmail", 
     auth: {
-      user: process.env.EMAIL_USER, // A .env fájlból olvassuk az e-mail címet
-      pass: process.env.EMAIL_PASSWORD, // A .env fájlból olvassuk az e-mail jelszót
+      user: process.env.EMAIL_USER, 
+      pass: process.env.EMAIL_PASSWORD, 
     },
   });
   
   
-  // ✅ 4️⃣ E-mail küldés funkció
   const sendEmail = async (to, subject, text) => {
     const mailOptions = {
       from: process.env.EMAIL_USER, // A feladó e-mail cím a .env-ből
@@ -110,10 +109,10 @@ const transporter = nodemailer.createTransport({
   
     try {
       const info = await transporter.sendMail(mailOptions);
-      console.log('📨 E-mail sikeresen elküldve:', info.response);
+      console.log("E-mail sikeresen elküldve:", info.response);
       return info.response;
     } catch (error) {
-      console.error('❌ Hiba történt az e-mail küldés közben:', error);
+      console.error("Hiba történt az e-mail küldés közben:", error);
       throw new Error('E-mail küldés hiba: ' + error.message);
     }
   };
@@ -122,32 +121,29 @@ apiRouter.post("/quote_request", async (req, res) => {
     try {
       const { first_name, last_name, email, note } = req.body;
   
-      // Ellenőrizzük, hogy minden mező ki van-e töltve
       if (!first_name || !last_name || !email || !note) {
-        return res.status(400).json({ error: 'Minden mező kitöltése kötelező!' });
+        return res.status(400).json({ error: "Minden mező kitöltése kötelező!" });
       }
   
-      // Email validáció
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        return res.status(400).json({ error: 'Érvénytelen e-mail cím!' });
+        return res.status(400).json({ error: "Érvénytelen e-mail cím!" });
       }
   
-      // Értesítés küldése adminnak
       const emailSubject = `Új ajánlatkérés: ${first_name} ${last_name}`;
       const emailText = `Kedves Admin!\n\nÚj ajánlatkérés érkezett:\nNév: ${first_name} ${last_name}\nEmail: ${email}\nÜzenet: ${note}`;
   
       try {
-        await sendEmail('admin-email@example.com', emailSubject, emailText);
+        await sendEmail("katadekoreseskuvoszervezes@gmail.com", emailSubject, emailText);
       } catch (err) {
-        console.error('❌ Hiba történt az értesítés küldésekor:', err);
-        return res.status(500).json({ error: 'Nem sikerült az értesítést elküldeni.' });
+        console.error("Hiba történt az értesítés küldésekor:", err);
+        return res.status(500).json({ error: "Nem sikerült az értesítést elküldeni." });
       }
   
       res.status(201).json({ message: 'Ajánlat sikeresen elküldve!' });
     } catch (err) {
-      console.error('❌ Hiba:', err.message);
-      res.status(500).json({ error: 'Nem sikerült az ajánlatot feldolgozni.' });
+      console.error("Hiba:", err.message);
+      res.status(500).json({ error: "Nem sikerült az ajánlatot feldolgozni." });
     }
   });
   
