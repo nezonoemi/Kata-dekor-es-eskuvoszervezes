@@ -1,6 +1,7 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
 import { pool } from "../config/db.js";
 
 
@@ -89,109 +90,67 @@ apiRouter.delete("/quote_request", async (req, res) => {
 });
 
 // post kérés  ajánlat létrehozása
+const transporter = nodemailer.createTransport({
+    service: 'gmail', // Itt Gmailt használunk, de más SMTP szolgáltatót is választhatsz
+    auth: {
+      user: process.env.EMAIL_USER, // A .env fájlból olvassuk az e-mail címet
+      pass: process.env.EMAIL_PASSWORD, // A .env fájlból olvassuk az e-mail jelszót
+    },
+  });
+  
+  
+  // ✅ 4️⃣ E-mail küldés funkció
+  const sendEmail = async (to, subject, text) => {
+    const mailOptions = {
+      from: process.env.EMAIL_USER, // A feladó e-mail cím a .env-ből
+      to: to,                      // A címzett e-mail cím
+      subject: subject,            // Téma
+      text: text,                  // Üzenet szövege
+    };
+  
+    try {
+      const info = await transporter.sendMail(mailOptions);
+      console.log('📨 E-mail sikeresen elküldve:', info.response);
+      return info.response;
+    } catch (error) {
+      console.error('❌ Hiba történt az e-mail küldés közben:', error);
+      throw new Error('E-mail küldés hiba: ' + error.message);
+    }
+  };
+  
 apiRouter.post("/quote_request", async (req, res) => {
     try {
-        const body = req.body;
-        if (!body || typeof body !== "object" || Object.keys(body).length !== 4) {
-            throw new Error("Invalid request body");
-        }
-        if (!body.first_name || typeof body.first_name !== "string") {
-            throw new Error("Invalid 'first_name' field");
-        }
-        if (!body.last_name || typeof body.last_name !== "string") {
-            throw new Error("Invalid 'last_name' field");
-        }
-        if (!body.email || typeof body.email !== "string") {
-            throw new Error("Invalid 'email' field");
-        }
-        if (!body.note || typeof body.note !== "string") {
-            throw new Error("Invalid 'note' field");
-        }
-        
-        
-        const { first_name, last_name, email, note } = body;
-        const [result, ] = await pool.query(
-            "INSERT INTO quote_request (last_name, first_name, email, note) VALUES (?, ?, ?, ?);",
-            [last_name, first_name, email, note]
-        );
-
-        res.status(201).json(result);
+      const { first_name, last_name, email, note } = req.body;
+  
+      // Ellenőrizzük, hogy minden mező ki van-e töltve
+      if (!first_name || !last_name || !email || !note) {
+        return res.status(400).json({ error: 'Minden mező kitöltése kötelező!' });
+      }
+  
+      // Email validáció
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ error: 'Érvénytelen e-mail cím!' });
+      }
+  
+      // Értesítés küldése adminnak
+      const emailSubject = `Új ajánlatkérés: ${first_name} ${last_name}`;
+      const emailText = `Kedves Admin!\n\nÚj ajánlatkérés érkezett:\nNév: ${first_name} ${last_name}\nEmail: ${email}\nÜzenet: ${note}`;
+  
+      try {
+        await sendEmail('admin-email@example.com', emailSubject, emailText);
+      } catch (err) {
+        console.error('❌ Hiba történt az értesítés küldésekor:', err);
+        return res.status(500).json({ error: 'Nem sikerült az értesítést elküldeni.' });
+      }
+  
+      res.status(201).json({ message: 'Ajánlat sikeresen elküldve!' });
     } catch (err) {
-        if (err.message.includes("Invalid")) {
-            res.status(400).json({ 
-                "error": err.message 
-            });
-            return;
-        }
-        res.status(500).json({
-            "error": "Couldn't insert into ajanlatkeres table"
-        });
+      console.error('❌ Hiba:', err.message);
+      res.status(500).json({ error: 'Nem sikerült az ajánlatot feldolgozni.' });
     }
-});
-
-// put kérés ajánlat módosítása
-apiRouter.put("/quote_request/:id", async (req, res) => {  
-    try {
-        const id = parseInt(req.params.id);
-        if (isNaN(id)) {
-            throw new Error("Parameter 'id' must be a valid integer");
-        }
-        if (id < 1) {
-            throw new Error("Parameter 'id' must be greater than 0");
-        }
-
-        const body = req.body;
-        if (!body || typeof body !== "object" || Object.keys(body).length !== 4) {
-            throw new Error("Invalid request body");
-        }
-        if (!body.first_name || typeof body.first_name !== "string") {
-            throw new Error("Invalid 'first_name' field");
-        }
-        if (!body.last_name || typeof body.last_name !== "string") {
-            throw new Error("Invalid 'last_name' field");
-        }
-        if (!body.email || typeof body.email !== "string") {
-            throw new Error("Invalid 'email' field");
-        }
-        if (!body.note || typeof body.note !== "string") {
-            throw new Error("Invalid 'note' field");
-        }
-        
-        const { first_name, last_name, email, note } = body;
-
-        const [result, ] = await pool.query(
-            "UPDATE quote_request SET last_name = ?, first_name = ?, email = ?, note = ? WHERE quote_request_id = ?;",
-            [last_name, first_name, email, note, id]
-        );
-
-        if (result.affectedRows < 1) {
-            throw new Error("No ajanlatkeres found with given id");
-        }
-
-        res.status(200).json({ 
-            "id": id 
-        });
-    } catch (err) {
-        if (err.message.includes("Invalid")) {
-            res.status(400).json({ 
-                "error": err.message 
-            });
-            return;
-        }
-        if (err.message.includes("No ajanlatkeres")) {
-            res.status(404).json({
-                 "error": err.message 
-
-            });
-            return;
-        }
-        res.status(500).json({
-            "error": "Couldn't update ajanlatkeres table"
-        });
-    }
-});
-
-
+  });
+  
 // rentable_pruducts lekérdezése
 // get kérés
 apiRouter.get("/rentable_products/:id?", async (req, res) => {
