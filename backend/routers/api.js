@@ -89,64 +89,64 @@ apiRouter.delete("/quote_request", async (req, res) => {
     }
 });
 
-// post kérés  ajánlat létrehozása
 const transporter = nodemailer.createTransport({
-    service: "gmail", 
+    service: "gmail",
     auth: {
-      user: process.env.EMAIL_USER, 
-      pass: process.env.EMAIL_PASSWORD, 
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
     },
-  });
-  
-  
-  const sendEmail = async (to, subject, text) => {
+});
+
+// Send email function
+const sendEmail = async (to, subject, text) => {
     const mailOptions = {
-      from: process.env.EMAIL_USER, // A feladó e-mail cím a .env-ből
-      to: to,                      // A címzett e-mail cím
-      subject: subject,            // Téma
-      text: text,                  // Üzenet szövege
+        from: process.env.EMAIL_USER,
+        to: to,
+        subject: subject,
+        text: text,
     };
-  
+
     try {
-      const info = await transporter.sendMail(mailOptions);
-      console.log("E-mail sikeresen elküldve:", info.response);
-      return info.response;
+        const info = await transporter.sendMail(mailOptions);
+        console.log("E-mail sikeresen elküldve:", info.response);
+        return info.response;
     } catch (error) {
-      console.error("Hiba történt az e-mail küldés közben:", error);
-      throw new Error('E-mail küldés hiba: ' + error.message);
+        console.error("Hiba történt az e-mail küldés közben:", error);
+        throw new Error('E-mail küldés hiba: ' + error.message);
     }
-  };
-  
-apiRouter.post("/quote_request", async (req, res) => {
+};
+
+// Quote request endpoint
+apiRouter.post("/api/quote_request", async (req, res) => {
     try {
-      const { first_name, last_name, email, note } = req.body;
-  
-      if (!first_name || !last_name || !email || !note) {
-        return res.status(400).json({ error: "Minden mező kitöltése kötelező!" });
-      }
-  
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        return res.status(400).json({ error: "Érvénytelen e-mail cím!" });
-      }
-  
-      const emailSubject = `Új ajánlatkérés: ${first_name} ${last_name}`;
-      const emailText = `Kedves Admin!\n\nÚj ajánlatkérés érkezett:\nNév: ${first_name} ${last_name}\nEmail: ${email}\nÜzenet: ${note}`;
-  
-      try {
-        await sendEmail("katadekoreseskuvoszervezes@gmail.com", emailSubject, emailText);
-      } catch (err) {
-        console.error("Hiba történt az értesítés küldésekor:", err);
-        return res.status(500).json({ error: "Nem sikerült az értesítést elküldeni." });
-      }
-  
-      res.status(201).json({ message: 'Ajánlat sikeresen elküldve!' });
+        const { vezeteknev, keresztnev, email, note } = req.body;
+
+        if (!vezeteknev || !keresztnev || !email || !note) {
+            return res.status(400).json({ error: "Minden mező kitöltése kötelező!" });
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ error: "Érvénytelen e-mail cím!" });
+        }
+
+        const emailSubject = `Új ajánlatkérés: ${vezeteknev} ${keresztnev}`;
+        const emailText = `Kedves Admin!\n\nÚj ajánlatkérés érkezett:\nNév: ${vezeteknev} ${keresztnev}\nEmail: ${email}\nÜzenet: ${note}`;
+
+        try {
+            await sendEmail("katadekoreseskuvoszervezes@gmail.com", emailSubject, emailText);
+        } catch (err) {
+            console.error("Hiba történt az értesítés küldésekor:", err);
+            return res.status(500).json({ error: "Nem sikerült az értesítést elküldeni." });
+        }
+
+        res.status(201).json({ message: 'Ajánlat sikeresen elküldve!' });
     } catch (err) {
-      console.error("Hiba:", err.message);
-      res.status(500).json({ error: "Nem sikerült az ajánlatot feldolgozni." });
+        console.error("Hiba:", err.message);
+        res.status(500).json({ error: "Nem sikerült az ajánlatot feldolgozni." });
     }
-  });
-  
+});
+
 // rentable_pruducts lekérdezése
 // get kérés
 apiRouter.get("/rentable_products/:id?", async (req, res) => {
