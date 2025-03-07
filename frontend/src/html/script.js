@@ -190,7 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const data = await response.json();
-        target.innerHTML = `<div class="alert alert-success">✅ Sikeres ajánlatkérés! Az admin értesítést kapott.</div>`;
+        target.innerHTML = `<div class="alert alert-success">✅ Sikeres ajánlatkérés! Az Katadekor és esküvőszervező cég értesítést kapott.</div>`;
         offerForm.reset();
       } catch (error) {
         console.error("❌ Hiba történt:", error);

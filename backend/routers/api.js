@@ -121,8 +121,6 @@ const sendEmail = async (to, subject, text) => {
 // Quote request endpoint
 apiRouter.post("/quote_request", async (req, res) => {
     try {
-        console.log("post teszt");
-        
         const { last_name, first_name, email, note } = req.body;
 
         console.log(req.body);
