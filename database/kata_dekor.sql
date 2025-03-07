@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Már 02. 17:11
+-- Létrehozás ideje: 2025. Már 07. 23:04
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -39,8 +39,7 @@ CREATE TABLE `order` (
 --
 
 INSERT INTO `order` (`order_id`, `user_id`, `rentable_id`, `order_date`) VALUES
-(1, 1, 1, '2025-03-02 16:03:59'),
-(2, 2, 2, '2025-03-02 16:03:59');
+(1, 1, 1, '2025-03-02 16:03:59');
 
 -- --------------------------------------------------------
 
@@ -56,6 +55,23 @@ CREATE TABLE `quote_request` (
   `note` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
+--
+-- A tábla adatainak kiíratása `quote_request`
+--
+
+INSERT INTO `quote_request` (`quote_request_id`, `last_name`, `first_name`, `email`, `note`) VALUES
+(112, 'King', 'jj', 'katadekor@gmail.com', 'gjcvzu'),
+(113, 'King', 'jj', 'katadekor@gmail.com', 'gjcvzu'),
+(114, 'Kozma', 'Olivér', 'jf@gmail.com', 'Király weboldal'),
+(115, 'Kozma', 'Olivér', 'jf@gmail.com', 'Király weboldal'),
+(116, 'Noémi', 'Néző', 'nezonoemi2@gmail.com', 'Kedves Katadekor!\nSzeretnék árajánlatot kérni!\nÜdv: Noémi'),
+(117, 'Olivér', 'Kozma', 'kozmao2005@gmail.com', 'fontos'),
+(118, 'King', 'jj', 'katadekoreseskuvoszervees@gmail.com', 'asdasdasd'),
+(119, 'King', 'jj', 'admin@mcitomi.hu', 'hwzw'),
+(120, 'Szoba', 'hello', 'admin@mcitomi.hu', 'hhvg'),
+(121, 'xh', 'jj', 'admin@mcitomi.hu', 'k'),
+(122, 'xh', 'jj', 'admin@mcitomi.hu', 'sdcfasfv');
+
 -- --------------------------------------------------------
 
 --
@@ -65,17 +81,16 @@ CREATE TABLE `quote_request` (
 CREATE TABLE `rentable_products` (
   `rentable_id` int(11) NOT NULL,
   `product_name` varchar(100) NOT NULL,
-  `product_price` decimal(10,2) NOT NULL,
-  `product_description` varchar(100) DEFAULT NULL
+  `product_price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 --
 -- A tábla adatainak kiíratása `rentable_products`
 --
 
-INSERT INTO `rentable_products` (`rentable_id`, `product_name`, `product_price`, `product_description`) VALUES
-(1, 'Bérelhető autó', 15000.00, 'Egy modern autó bérlésre'),
-(2, 'Bérelhető lakás', 250000.00, 'Egy tágas lakás bérlésre');
+INSERT INTO `rentable_products` (`rentable_id`, `product_name`, `product_price`) VALUES
+(1, 'Bérelhető autó', 15000.00),
+(2, 'Bérelhető lakás', 250000.00);
 
 -- --------------------------------------------------------
 
@@ -99,7 +114,8 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`user_id`, `last_name`, `first_name`, `email`, `phone_number`, `password`) VALUES
 (1, 'Kiss', 'Péter', 'peter.kiss@example.com', 123456789, 'hashed_password1'),
 (2, 'Nagy', 'Anna', 'anna.nagy@example.com', 987654321, 'hashed_password2'),
-(3, 'jjjjjjjj', 'lkdjjdll', 'uj@gmail.com', 2147483647, 'jkennjoeonovfkjfjfjf');
+(4, 'Kozma', 'Olivér', 'admin@gmail.com', 2147483647, 'jbewkb161'),
+(5, 'Elek', 'Teszt', 'marcitom33@gmail.com', 2147483647, '$2a$14$KqeKhlY1ZkyoAKhI1tFbzuf52b3cgxQizFxvuMkpxMUnxq0T9uW0W');
 
 --
 -- Indexek a kiírt táblákhoz
@@ -146,7 +162,7 @@ ALTER TABLE `order`
 -- AUTO_INCREMENT a táblához `quote_request`
 --
 ALTER TABLE `quote_request`
-  MODIFY `quote_request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `quote_request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=123;
 
 --
 -- AUTO_INCREMENT a táblához `rentable_products`
@@ -158,7 +174,7 @@ ALTER TABLE `rentable_products`
 -- AUTO_INCREMENT a táblához `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Megkötések a kiírt táblákhoz

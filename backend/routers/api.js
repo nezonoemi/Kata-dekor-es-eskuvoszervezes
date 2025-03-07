@@ -228,7 +228,7 @@ apiRouter.delete("/rentable_products/:id", async (req, res) => {
 apiRouter.post("/rentable_products", async (req, res) => {
     try {
         const body = req.body;
-        if (!body || typeof body !== "object" || Object.keys(body).length !== 3) {
+        if (!body || typeof body !== "object" || Object.keys(body).length !== 2) {
             throw new Error("Invalid request body");
         }
         if (!body.product_name || typeof body.product_name !== "string") {
@@ -237,14 +237,11 @@ apiRouter.post("/rentable_products", async (req, res) => {
         if (body.product_price === undefined || typeof body.product_price !== "number") {
             throw new Error("Invalid 'product_price' field");
         }
-        if (!body.product_description || typeof body.product_description !== "string") {
-            throw new Error("Invalid 'product_description' field");
-        }
 
-        const { product_name, product_price, product_description } = body;
+        const { product_name, product_price } = body;
         const [result] = await pool.query(
-            "INSERT INTO rentable_products (rentable_products.product_name, rentable_products.product_price, rentable_products.product_description) VALUES (?, ?, ?);",
-            [product_name, product_price, product_description]
+            "INSERT INTO rentable_products (rentable_products.product_name, rentable_products.product_price) VALUES (?, ?);",
+            [product_name, product_price]
         );
 
         res.status(201).json(result);
@@ -273,7 +270,7 @@ apiRouter.put("/rentable_products/:id", async (req, res) => {
         }
 
         const body = req.body;
-        if (!body || typeof body !== "object" || Object.keys(body).length !== 3) {
+        if (!body || typeof body !== "object" || Object.keys(body).length !== 2) {
             throw new Error("Invalid request body");
         }
         if (!body.product_name || typeof body.product_name !== "string") {
@@ -282,14 +279,11 @@ apiRouter.put("/rentable_products/:id", async (req, res) => {
         if (body.product_price === undefined || typeof body.product_price !== "number") {
             throw new Error("Invalid 'product_price' field");
         }
-        if (!body.product_description || typeof body.product_description !== "string") {
-            throw new Error("Invalid 'product_description' field");
-        }
 
-        const { product_name, product_price, product_description } = body;
+        const { product_name, product_price } = body;
         const [result] = await pool.query(
-            "UPDATE rentable_products SET rentable_products.product_name = ?, rentable_products.product_price = ?, rentable_products.product_description = ? WHERE rentable_products.rentable_product_id = ?;",
-            [product_name, product_price, product_description, id]
+            "UPDATE rentable_products SET rentable_products.product_name = ?, rentable_products.product_price = ? WHERE rentable_products.rentable_product_id = ?;",
+            [product_name, product_price, id]
         );
         if (result.affectedRows < 1) {
             throw new Error("No rentable_products found with given id");
