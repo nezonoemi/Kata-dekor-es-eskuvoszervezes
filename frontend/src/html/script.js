@@ -146,21 +146,23 @@ document.addEventListener("DOMContentLoaded", () => {
     offerForm.addEventListener("submit", async (event) => {
       event.preventDefault();
 
-      const first_name_input = document.getElementById("first_name");
-      const last_name_input = document.getElementById("last_name");
+      const first_name_input = document.getElementById("vezeteknev");
+      const last_name_input = document.getElementById("keresztnev");
       const email_input = document.getElementById("email");
       const note_input = document.getElementById("note");
 
-      // Check if elements exist before accessing their value
-      if (!first_name_input || !last_name_input || !email_input || !note_input) {
-        target.innerHTML = `<div class="alert alert-danger">⚠ Egy vagy több mező nem található!</div>`;
-        return;
-      }
+      
 
       const first_name = first_name_input.value.trim();
       const last_name = last_name_input.value.trim();
       const email = email_input.value.trim();
       const note = note_input.value.trim();
+
+      // Check if elements exist before accessing their value
+      if (!first_name || !last_name || !email || !note) {
+        target.innerHTML = `<div class="alert alert-danger">⚠ Egy vagy több mező nem található!</div>`;
+        return;
+      }
 
       // Validate fields
       if (!first_name || !last_name || !email || !note) {

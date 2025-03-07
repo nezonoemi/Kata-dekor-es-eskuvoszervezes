@@ -11,6 +11,8 @@ const apiRouter = express.Router();
 // get kérés ajánlat lekérdezése
 apiRouter.get("/quote_request/:id?", async (req, res) => {
     try {
+
+        
         let id = req.params.id ? parseInt(req.params.id) : null; 
 
         if (id !== null && isNaN(id)) {
@@ -117,11 +119,16 @@ const sendEmail = async (to, subject, text) => {
 };
 
 // Quote request endpoint
-apiRouter.post("/api/quote_request", async (req, res) => {
+apiRouter.post("/quote_request", async (req, res) => {
     try {
-        const { vezeteknev, keresztnev, email, note } = req.body;
+        console.log("post teszt");
+        
+        const { last_name, first_name, email, note } = req.body;
 
-        if (!vezeteknev || !keresztnev || !email || !note) {
+        console.log(req.body);
+        
+
+        if (!last_name || !first_name || !email || !note) {
             return res.status(400).json({ error: "Minden mező kitöltése kötelező!" });
         }
 
@@ -130,17 +137,23 @@ apiRouter.post("/api/quote_request", async (req, res) => {
             return res.status(400).json({ error: "Érvénytelen e-mail cím!" });
         }
 
-        const emailSubject = `Új ajánlatkérés: ${vezeteknev} ${keresztnev}`;
-        const emailText = `Kedves Admin!\n\nÚj ajánlatkérés érkezett:\nNév: ${vezeteknev} ${keresztnev}\nEmail: ${email}\nÜzenet: ${note}`;
+        const emailSubject = `Új ajánlatkérés: ${last_name} ${first_name}`;
+        const emailText = `Kedves Admin!\n\nÚj ajánlatkérés érkezett:\nNév: ${last_name} ${first_name}\nEmail: ${email}\nÜzenet: ${note}`;
 
         try {
-            await sendEmail("katadekoreseskuvoszervezes@gmail.com", emailSubject, emailText);
+            await sendEmail(email, emailSubject, emailText);
         } catch (err) {
             console.error("Hiba történt az értesítés küldésekor:", err);
             return res.status(500).json({ error: "Nem sikerült az értesítést elküldeni." });
         }
 
-        res.status(201).json({ message: 'Ajánlat sikeresen elküldve!' });
+        const [result] = await pool.query(
+            "INSERT INTO quote_request (last_name, first_name, email, note) VALUES (?, ?, ?, ?);",
+            [last_name, first_name, email, note]
+        );
+
+
+        res.status(201).json({result, message: 'Ajánlat sikeresen elküldve!' });
     } catch (err) {
         console.error("Hiba:", err.message);
         res.status(500).json({ error: "Nem sikerült az ajánlatot feldolgozni." });
