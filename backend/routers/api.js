@@ -529,14 +529,14 @@ apiRouter.get("/order/:id?", async (req, res) => {
         if (id === null) {
             const [results] = await pool.query(`
                 SELECT o.order_id, u.last_name, u.first_name, u.email, u.phone_number, rp.product_name, 
-                rp.product_price, rp.product_description, o.order_date FROM \`order\` o 
+                rp.product_price, o.order_date FROM \`order\` o 
                 JOIN user u ON o.user_id = u.user_id JOIN rentable_products rp ON o.rentable_id = rp.rentable_id;
             `);
             res.json(results);
         } else {
             const [results] = await pool.query(`
                 SELECT o.order_id, u.last_name, u.first_name, u.email, u.phone_number, rp.product_name, 
-                rp.product_price, rp.product_description, o.order_date FROM \`order\` o 
+                rp.product_price, o.order_date FROM \`order\` o 
                 JOIN user u ON o.user_id = u.user_id JOIN rentable_products rp ON o.rentable_id = rp.rentable_id
                 WHERE o.order_id = ?;
             `, [id]);
