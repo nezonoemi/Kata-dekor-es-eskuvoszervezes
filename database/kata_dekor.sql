@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Már 07. 23:04
+-- Létrehozás ideje: 2025. Már 08. 19:54
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -89,8 +89,31 @@ CREATE TABLE `rentable_products` (
 --
 
 INSERT INTO `rentable_products` (`rentable_id`, `product_name`, `product_price`) VALUES
-(1, 'Bérelhető autó', 15000.00),
-(2, 'Bérelhető lakás', 250000.00);
+(1, 'Makramé hinta', 10000.00),
+(2, 'Hengerváza', 500.00),
+(3, 'Martinis váza', 1500.00),
+(4, 'Martinis váza /kisméretű/', 500.00),
+(5, 'Kocka váza', 550.00),
+(6, 'Gömb váza /kisméretű/', 250.00),
+(7, 'Gömb váza /nagyméretű/', 1400.00),
+(8, 'Konyakos váza', 1600.00),
+(9, 'Tükörlap köralakú /kisméretű/', 450.00),
+(10, 'Türkölap köralakú /közepes méretű/', 650.00),
+(11, 'Tükörlap köralakú /nagy méretű/', 900.00),
+(12, 'Tükörlap négyzetalakú /kisméretű/', 450.00),
+(13, 'Tükörlap négyzetalakú /nagy méretű/', 850.00),
+(14, 'Sziromszóró állvány papírtölcsérekkel', 2700.00),
+(15, 'Macaron fal', 1500.00),
+(16, 'Szívalakú fa bonbon tartó', 1200.00),
+(17, 'Fa fánkfal', 1000.00),
+(18, 'Csipeszes fa ültetőtábla', 1000.00),
+(19, 'Talpas mécsestartó /repesztett/', 1400.00),
+(20, 'Fehér lámások', 1000.00),
+(21, 'Fehér leszúrható kampók', 1000.00),
+(22, 'Üveg mécsestartó /kisméret/', 200.00),
+(23, 'Arany virágállvány', 2600.00),
+(24, 'Plexi üdvözlő arany felirattal', 6500.00),
+(25, 'Ültetési tábla arany felirattal', 5000.00);
 
 -- --------------------------------------------------------
 
@@ -168,7 +191,7 @@ ALTER TABLE `quote_request`
 -- AUTO_INCREMENT a táblához `rentable_products`
 --
 ALTER TABLE `rentable_products`
-  MODIFY `rentable_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `rentable_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT a táblához `user`
