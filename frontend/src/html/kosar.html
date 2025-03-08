@@ -64,51 +64,46 @@
           </div>
       </nav>
 </header>
-<div class="alap">
-    <main class="container mt-5">
-        <h2 class="text-center">Kosár tartalma</h2>
-        <ul id="order-cart-items" class="list-group mb-3"></ul>
-        <p class="font-weight-bold">Összesen: <span id="order-cart-total">0 Ft</span></p>
-        <button class="btn btn-danger mb-3" onclick="clearOrderCart()">Kosár ürítése</button>
+<div class="container mt-5">
+    <h2 class="text-center">Kosár tartalma</h2>
+    <ul id="order-cart-items" class="list-group mb-3"></ul>
+    <p class="font-weight-bold">Összesen: <span id="order-cart-total">0 Ft</span></p>
+    <button class="btn btn-danger mb-3" onclick="clearOrderCart()">Kosár ürítése</button>
 
-        <form id="checkout-form">
-            <div class="form-group">
-                <label for="lastname">Vezetéknév</label>
-                <input type="text" class="form-control" id="lastname" required>
-            </div>
-            <div class="form-group">
-                <label for="firstname">Keresztnév</label>
-                <input type="text" class="form-control" id="firstname" required>
-            </div>
-            <div class="form-group">
-                <label for="phone">Telefonszám</label>
-                <input type="text" class="form-control" id="phone" required>
-            </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" required>
-            </div>
-            <button type="submit" class="btn btn-success">Rendelés leadása</button>
-        </form>
-    </main>
+    <h3>Rendelési adatok</h3>
+    <form id="checkout-form">
+        <div class="form-group">
+            <label for="lastname">Vezetéknév</label>
+            <input type="text" class="form-control" id="lastname" required>
+        </div>
+        <div class="form-group">
+            <label for="firstname">Keresztnév</label>
+            <input type="text" class="form-control" id="firstname" required>
+        </div>
+        <div class="form-group">
+            <label for="phone">Telefonszám</label>
+            <input type="text" class="form-control" id="phone" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" required>
+        </div>
+        <button type="submit" class="btn btn-success">Rendelés leadása</button>
+    </form>
 </div>
 
-<!-- Rendelés visszaigazoló ablak -->
+<!-- Rendelés sikeres Modal -->
 <div class="modal fade" id="successModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Sikeres rendelés</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                Köszönjük, hogy leadta a rendelését! Hamarosan felvesszük Önnel a kapcsolatot.
+                Köszönjük, hogy leadta a rendelését!
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Bezárás</button>
@@ -116,18 +111,6 @@
         </div>
     </div>
 </div>
-   
-<footer class="bg-dark text-white text-center py-4">
-    <div class="container">
-        <p class="mb-2">&copy; 2024 Kata dekor és esküvőszervezés</p>
-        <p class="mb-0">Cím: 2100 Gödöllő, Palotakert 16. fsz-3 | Telefon: +36 20 568 6018 | E-mail: katadekoreskuvo@gmail.com</p>
-        <div class="d-flex justify-content-center mt-3">
-            <a href="#" class="text-white me-3"><a href="https://www.facebook.com/katadekoreskuvo" target="_blank">Facebook <i class="bi bi-facebook"></i></a>
-            <a href="#" class="text-white me-3"><a href="https://www.instagram.com/kata.dekor4/" target="_blank">Instagram <i class="bi bi-instagram"></i></a>
-            <a href="#" class="text-white"><a href="https://www.tiktok.com/@katadekoreskuvo" target="_blank">Tiktok<i class="bi bi-tiktok"></i></a>
-        </div>
-    </div>
-
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="script.js"></script>
 </footer>
