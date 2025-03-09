@@ -248,3 +248,5 @@ document.addEventListener('DOMContentLoaded', function() {
   updateCartCount();
   loadOrderCart();
 });
+
+

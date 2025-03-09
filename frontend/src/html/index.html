@@ -69,11 +69,10 @@
 
 
 
-  <section class="hero bg-cover text-white text-center py-5" style="background-image: url('hero-image.jpg');">
-    <div class="container">
+  <section class=" text-white text-center py-5">
+    <div class="container background-img">
         <h1 class="display-3 fw-bold mb-4 text-light">Üdvözlünk a Kata Dekor és Esküvőszervezésnél!</h1>
         <p class="lead mb-4 text-light">Mi segítünk, hogy a legszebb napod tökéletes legyen. Esküvőszervezés, dekoráció, és minden, ami az álom esküvőhöz kell.</p>
-      
     </div>
 </section>
 
@@ -131,13 +130,104 @@
                 <span>&#10010;</span> 2025-ben folyamatban lévő Csokorkötő tanfolyam és Esküvői Dekoratőr Mesterkurzus<br>
             </ul>     
             <div class="about bg-light py-5">
-                <div class="conatiner text-center">
+                <div class="container text-center">
                     <h2 class="text-primary mb-4">Díjaink:</h2>
-                    <p> 2024-ben Turul díj Esküvő kategóriában</p>
+                    <p>2024-ben Turul díj Esküvő kategóriában</p>
+            
+                    <div class="row">
+                        <div class="col-md-3 mb-4">
+                            <div class="dijcard">
+                                <img src="../img/dijak/20241228_110422.jpg" class="dijcard-img-top" alt="Kép 1">
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="dijcard">
+                                <img src="..//img/dijak/20241228_110430.jpg" class="dijcard-img-top" alt="Kép 2">
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="dijcard">
+                                <img src="..//img/dijak/FB_IMG_1737667618995.jpg" class="dijcard-img-top" alt="Kép 3">
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="dijcard">
+                                <img src="..//img/dijak/FB_IMG_1737667628160.jpg" class="dijcard-img-top" alt="Kép 4">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3 mb-4">
+                            <div class="dijcard">
+                                <img src="../img/dijak/laureat110_black_hu.png" class="dijcard-img-top" alt="Kép 1">
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="dijcard">
+                                <img src="..//img/dijak/logo-eskuvo-200-2024.png" class="dijcard-img-top" alt="Kép 2">
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="dijcard">
+                                <img src="..//img/dijak/Logo_regular_2024_full-1.jpeg" class="dijcard-img-top" alt="Kép 3">
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="dijcard">
+                                <img src="..//img/dijak/Logo_regular_2024_full.jpeg" class="dijcard-img-top" alt="Kép 4">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+            
 </section>
+
+
+<button id="scrollToTop" title="Ugrás a tetejére">&#8679;</button>
+
+
+
+
+<button id="backToTop" class="btn btn-primary" title="Ugrás az elejére">
+    ↑
+</button>
+
+<style>
+#backToTop {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+    width: 50px;
+    height: 50px;
+    
+}
+#backToTop:hover {
+    background-color: #0056b3;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    let backToTopButton = document.getElementById("backToTop");
+
+    window.addEventListener("scroll", function () {
+        if (window.scrollY > 300) {
+            backToTopButton.style.display = "block";
+        } else {
+            backToTopButton.style.display = "none";
+        }
+    });
+
+    backToTopButton.addEventListener("click", function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+});
+</script>
+
+
 
 <footer class="bg-dark text-white text-center py-4">
     <div class="container">

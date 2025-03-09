@@ -60,3 +60,30 @@
   object-fit: cover; 
 }
 
+
+
+
+.background-img {
+  
+  background-image: url('../img/egyeb/FB_IMG_1722459705900.jpg');  
+  background-size: cover;  
+  background-position: center;  
+  background-repeat: no-repeat;  
+  height: 300px;  
+  color: white;  
+  font-family: 'Palace Script', cursive;  
+ 
+}
+
+.dijcard {
+  border: 2px solid #ccc;  /* Kép körüli keret */
+  border-radius: 10px;  /* Kerekített sarkok a keretnél */
+  overflow: hidden;  /* Ha a kép kinéz a keretből, azt eltünteti */
+}
+
+.dijcard-img-top {
+  height: 200px;  /* Kép magassága */
+  object-fit: cover;  /* Kép kitöltése, anélkül, hogy torzulna */
+}
+
+
