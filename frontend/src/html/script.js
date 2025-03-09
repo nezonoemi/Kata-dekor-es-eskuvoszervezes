@@ -1,134 +1,137 @@
 document.addEventListener('DOMContentLoaded', function() {
   // Kosár tartalmának kezelése
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
-  const cartCountElement = document.getElementById('cart-count');
-  const user = JSON.parse(localStorage.getItem("user")); // Felhasználói adatok
+    // Kosár kezelése
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cartCountElement = document.getElementById('cart-count');
+    const user = JSON.parse(localStorage.getItem("user")); // Felhasználó adatai
 
-  // Kosár számláló frissítése
-  function updateCartCount() {
-      if (cartCountElement) {
-          cartCountElement.textContent = cart.length;
-      }
-  }
+    // Kosár számláló frissítése
+    function updateCartCount() {
+        if (cartCountElement) {
+            cartCountElement.textContent = cart.length;
+        }
+    }
 
-  // Kosár gombok eseménykezelése
-  document.querySelectorAll('.cart-btn').forEach(button => {
-      button.addEventListener('click', event => {
-          const productName = event.target.getAttribute('data-product-name');
-          const price = event.target.getAttribute('data-price');
-          const productId = event.target.getAttribute('data-product-id');
-          addToCart(productName, price, productId);
-      });
-  });
+    // Kosárba helyezés gombok figyelése
+    document.querySelectorAll('.cart-btn').forEach(button => {
+        button.addEventListener('click', event => {
+            const productName = event.target.getAttribute('data-product-name');
+            const price = event.target.getAttribute('data-price');
+            const productId = event.target.getAttribute('data-product-id');
+            addToCart(productName, price, productId);
+        });
+    });
 
-  // Kosárhoz való hozzáadás
-  function addToCart(productName, price, productId) {
-      const product = { name: productName, price: parseInt(price, 10), productId: productId, quantity: 1 };
-      cart.push(product);
-      localStorage.setItem('cart', JSON.stringify(cart)); // Kosár mentése
-      alert(`${productName} hozzáadva a kosárhoz!`);
-      updateCartCount();
-      loadOrderCart(); // Frissítjük a kosár oldalt is
-  }
+    // Termék hozzáadása a kosárhoz
+    function addToCart(productName, price, productId) {
+        const product = { name: productName, price: parseInt(price, 10), productId: productId, quantity: 1 };
+        cart.push(product);
+        localStorage.setItem('cart', JSON.stringify(cart)); // Kosár mentése
+        alert(`${productName} hozzáadva a kosárhoz!`);
+        updateCartCount();
+        loadOrderCart(); // Kosár oldal frissítése
+    }
 
-  // Kosár elemek betöltése és összesítés frissítése
-  function loadOrderCart() {
-      cart = JSON.parse(localStorage.getItem('cart')) || [];
-      const cartItemsList = document.getElementById('order-cart-items');
-      const cartTotal = document.getElementById('order-cart-total');
+    // Kosár betöltése és frissítése
+    function loadOrderCart() {
+        cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const cartItemsList = document.getElementById('order-cart-items');
+        const cartTotal = document.getElementById('order-cart-total');
 
-      if (cartItemsList && cartTotal) {
-          cartItemsList.innerHTML = '';
-          let total = 0;
+        if (cartItemsList && cartTotal) {
+            cartItemsList.innerHTML = '';
+            let total = 0;
 
-          cart.forEach((item, index) => {
-              const listItem = document.createElement('li');
-              listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
-              listItem.innerHTML = `${item.name} - ${item.price} Ft 
-                  <button class="btn btn-sm btn-danger remove-from-order" data-index="${index}">Törlés</button>`;
-              cartItemsList.appendChild(listItem);
-              total += item.price;
-          });
+            cart.forEach((item, index) => {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+                listItem.innerHTML = `${item.name} - ${item.price} Ft 
+                    <button class="btn btn-sm btn-danger remove-from-order" data-index="${index}">Törlés</button>`;
+                cartItemsList.appendChild(listItem);
+                total += item.price;
+            });
 
-          cartTotal.textContent = `${total} Ft`;
+            cartTotal.textContent = `${total} Ft`;
 
-          document.querySelectorAll('.remove-from-order').forEach(button => {
-              button.addEventListener('click', function() {
-                  const index = this.getAttribute('data-index');
-                  removeFromCartOrder(index);
-              });
-          });
-      }
-  }
+            // Törlés gombok eseménykezelése
+            document.querySelectorAll('.remove-from-order').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = this.getAttribute('data-index');
+                    removeFromCartOrder(index);
+                });
+            });
+        }
+    }
 
-  // Kosárból termék törlése a rendelési oldalon
-  function removeFromCartOrder(index) {
-      cart.splice(index, 1);
-      localStorage.setItem('cart', JSON.stringify(cart));
-      loadOrderCart();
-      updateCartCount();
-  }
+    // Termék eltávolítása a kosárból
+    function removeFromCartOrder(index) {
+        cart.splice(index, 1);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        loadOrderCart();
+        updateCartCount();
+    }
 
-  // Rendelés leadása
-  const orderForm = document.getElementById("orderForm");
-  if (orderForm) {
-      orderForm.addEventListener("submit", async (event) => {
-          event.preventDefault();
+    // Rendelés leadása
+    const orderForm = document.getElementById("orderForm");
+    if (orderForm) {
+        orderForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
 
-          if (!user) {
-              showMessage("⚠ Be kell jelentkezned a rendelés leadásához!");
-              return;
-          }
+            if (!user) {
+                showMessage("⚠ Be kell jelentkezned a rendelés leadásához!");
+                return;
+            }
 
-          if (cart.length === 0) {
-              showMessage("⚠ A kosarad üres!");
-              return;
-          }
+            if (cart.length === 0) {
+                showMessage("⚠ A kosarad üres!");
+                return;
+            }
 
-          const orderData = {
-              userId: user.id,
-              cart: cart.map(item => ({
-                  productId: item.productId,
-                  price: item.price,
-                  quantity: item.quantity
-              }))
-          };
+            const orderData = {
+                userId: user.id,
+                cart: cart.map(item => ({
+                    productId: item.productId,
+                    price: item.price,
+                    quantity: item.quantity
+                }))
+            };
 
-          try {
-              const response = await fetch("http://localhost:3443/api/order", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify(orderData)
-              });
+            try {
+                const response = await fetch("http://localhost:3443/api/order", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(orderData)
+                });
 
-              const responseData = await response.json();
-              if (!response.ok) throw new Error(responseData.error || "Ismeretlen hiba történt");
+                const responseData = await response.json();
+                if (!response.ok) throw new Error(responseData.error || "Ismeretlen hiba történt");
 
-              showMessage("✅ A rendelés sikeresen leadva!", "success");
-              localStorage.removeItem("cart"); // Kosár kiürítése
-              cart = [];
-              updateCartCount();
-              loadOrderCart();
-          } catch (error) {
-              showMessage(`❌ Hiba történt: ${error.message}`);
-          }
-      });
-  }
+                showMessage("✅ A rendelés sikeresen leadva!", "success");
+                localStorage.removeItem("cart"); // Kosár kiürítése
+                cart = [];
+                updateCartCount();
+                loadOrderCart();
+            } catch (error) {
+                showMessage(`❌ Hiba történt: ${error.message}`);
+            }
+        });
+    }
 
-  // Üzenet megjelenítése
-  function showMessage(message, type = "danger") {
-      const userDisplay = document.getElementById("user");
-      if (userDisplay) {
-          userDisplay.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
-          setTimeout(() => (userDisplay.innerHTML = ""), 5000);
-      }
-  }
+    // Üzenet megjelenítése
+    function showMessage(message, type = "danger") {
+        const userDisplay = document.getElementById("user");
+        if (userDisplay) {
+            userDisplay.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => (userDisplay.innerHTML = ""), 5000);
+        }
+    }
 
-  // Oldal betöltésekor frissítések
-  updateCartCount();
-  loadOrderCart();
+    // Oldal betöltésekor frissítés
+    updateCartCount();
+    loadOrderCart();
 
-  // Fiókkezelés: bejelentkezés és regisztráció váltás
+
+    // Fiókkezelés: bejelentkezés és regisztráció váltás
     window.toggleForm = function (formType) {
         const loginForm = document.getElementById("login-form");
         const registerForm = document.getElementById("register-form");

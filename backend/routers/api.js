@@ -591,18 +591,32 @@ apiRouter.delete("/order/:id", async (req, res) => {
 //post kérés
 apiRouter.post("/order", async (req, res) => {
     try {
-        const { user_id, rentable_id, order_date } = req.body;
+        const { userId, cart } = req.body;
 
-        if (!user_id || !rentable_id || !order_date) {
-            return res.status(400).json({ error: "Hiányzó rendelési adatok!" });
+        if (!userId || !Array.isArray(cart) || cart.length === 0) {
+            return res.status(400).json({ error: "Hiányzó vagy érvénytelen rendelési adatok!" });
         }
 
-        const [result] = await pool.query(
-            "INSERT INTO `order` (user_id, rentable_id, order_date) VALUES (?, ?, ?);",
-            [user_id, rentable_id, order_date]
+        // Rendelés dátuma
+        const orderDate = new Date();
+
+        // Rendelés létrehozása az `order` táblában
+        const [orderResult] = await pool.query(
+            "INSERT INTO `order` (user_id, order_date) VALUES (?, ?);",
+            [userId, orderDate]
         );
 
-        res.status(201).json({ message: "Sikeres rendelés!", order_id: result.insertId });
+        const orderId = orderResult.insertId;
+
+        // A kosár összes termékének mentése az `order_items` köztes táblába
+        for (const item of cart) {
+            await pool.query(
+                "INSERT INTO order_items (order_id, rentable_id, price, quantity) VALUES (?, ?, ?, ?);",
+                [orderId, item.productId, item.price, item.quantity]
+            );
+        }
+
+        res.status(201).json({ message: "Sikeres rendelés!", orderId });
     } catch (err) {
         console.error("Rendelés mentési hiba:", err);
         res.status(500).json({ error: "Nem sikerült menteni a rendelést!" });
