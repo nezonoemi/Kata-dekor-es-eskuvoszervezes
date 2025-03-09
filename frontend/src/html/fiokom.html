@@ -78,8 +78,8 @@
         <div id="login-form" class="col-md-6">
             <h2 class="text-center">Bejelentkezés</h2>
             <form id="loginForm">
-                <input type="email" class="form-control mb-2" id="loginEmail" placeholder="Email" required>
-                <input type="password" class="form-control mb-2" id="loginPassword" placeholder="Jelszó" required>
+                <input type="email" class="form-control mb-2" id="loginEmail" placeholder="Email" autocomplete="email" required>
+                <input type="password" class="form-control mb-2" id="loginPassword" placeholder="Jelszó" autocomplete="new-password" required>
                 <button type="submit" class="btn btn-primary w-100">Bejelentkezés</button>
             </form>
         </div>
@@ -87,11 +87,11 @@
         <div id="register-form" class="col-md-6 d-none">
             <h2 class="text-center">Regisztráció</h2>
             <form id="registerForm">
-                <input type="text" class="form-control mb-2" id="firstName" placeholder="Keresztnév" required>
-                <input type="text" class="form-control mb-2" id="lastName" placeholder="Vezetéknév" required>
-                <input type="text" class="form-control mb-2" id="phoneNumber" placeholder="Telefonszám" required>
-                <input type="email" class="form-control mb-2" id="registerEmail" placeholder="Email cím" required>
-                <input type="password" class="form-control mb-2" id="registerPassword" placeholder="Jelszó" required>
+                <input type="text" class="form-control mb-2" id="firstName" placeholder="Keresztnév" autocomplete="given-name" required>
+                <input type="text" class="form-control mb-2" id="lastName" placeholder="Vezetéknév" autocomplete="family-name" required>
+                <input type="text" class="form-control mb-2" id="phoneNumber" placeholder="Telefonszám" autocomplete="tel"required>
+                <input type="email" class="form-control mb-2" id="registerEmail" placeholder="Email cím" autocomplete="email" required>
+                <input type="password" class="form-control mb-2" id="registerPassword" placeholder="Jelszó" autocomplete="new-password"required>
                 <button type="submit" class="btn btn-secondary w-100">Regisztráció</button>
             </form>
         </div>
