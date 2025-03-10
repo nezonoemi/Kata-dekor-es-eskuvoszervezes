@@ -591,92 +591,37 @@ apiRouter.delete("/order/:id", async (req, res) => {
 //post kérés
 apiRouter.post("/order", async (req, res) => {
     try {
-        const body = req.body;
-        if (!body || typeof body !== "object" || Object.keys(body).length !== 3) {
-            throw new Error("Invalid request body");
-        }
-        if (body.user_id === undefined || typeof body.user_id !== "number") {
-            throw new Error("Invalid 'user_id' field");
-        }
-        if (body.rentable_id === undefined || typeof body.rentable_id !== "number") {
-            throw new Error("Invalid 'rentable_id' field");
-        }
-        if (!body.order_date || typeof body.order_date !== "string") {
-            throw new Error("Invalid 'order_date' field");
+        const { userId, cart } = req.body;
+
+        if (!userId || !Array.isArray(cart) || cart.length === 0) {
+            return res.status(400).json({ error: "Hiányzó vagy érvénytelen rendelési adatok!" });
         }
 
-        const { user_id, rentable_id, order_date } = body;
-        const [result] = await pool.query(
-            "INSERT INTO `order` (user_id, rentable_id, order_date) VALUES (?, ?, ?);",
-            [user_id, rentable_id, order_date]
+        // Rendelés dátuma
+        const orderDate = new Date();
+
+        // Rendelés létrehozása az `order` táblában
+        const [orderResult] = await pool.query(
+            "INSERT INTO `order` (user_id, order_date) VALUES (?, ?);",
+            [userId, orderDate]
         );
-        res.status(201).json(result);
-    } catch (err) {
-        if (err.message.includes("Invalid")) {
-            res.status(400).json({
-                "error": err.message
-            });
-            return;
+
+        const orderId = orderResult.insertId;
+
+        // A kosár összes termékének mentése az `order_items` köztes táblába
+        for (const item of cart) {
+            await pool.query(
+                "INSERT INTO order_items (order_id, rentable_id, price, quantity) VALUES (?, ?, ?, ?);",
+                [orderId, item.productId, item.price, item.quantity]
+            );
         }
-        res.status(500).json({
-            "error": "Couldn't insert into order table"
-        });
+
+        res.status(201).json({ message: "Sikeres rendelés!", orderId });
+    } catch (err) {
+        console.error("Rendelés mentési hiba:", err);
+        res.status(500).json({ error: "Nem sikerült menteni a rendelést!" });
     }
 });
 
-//put kérés
-apiRouter.put("/order/:id", async (req, res) => {
-    try {
-        const id = parseInt(req.params.id);
-        if (isNaN(id)) {
-            throw new Error("Parameter 'id' must be a valid integer");
-        }
-        if (id < 1) {
-            throw new Error("Parameter 'id' must be greater than 0");
-        }
-
-        const body = req.body;
-        if (!body || typeof body !== "object" || Object.keys(body).length !== 3) {
-            throw new Error("Invalid request body");
-        }
-        if (body.user_id === undefined || typeof body.user_id !== "number") {
-            throw new Error("Invalid 'user_id' field");
-        }
-        if (body.rentable_id === undefined || typeof body.rentable_id !== "number") {
-            throw new Error("Invalid 'rentable_id' field");
-        }
-        if (!body.order_date || typeof body.order_date !== "string") {
-            throw new Error("Invalid 'order_date' field");
-        }
-
-        const { user_id, rentable_id, order_date } = body;
-        const [result] = await pool.query(
-            "UPDATE `order` SET user_id = ?, rentable_id = ?, order_date = ? WHERE order_id = ?;",
-            [user_id, rentable_id, order_date, id]
-        );
-        if (result.affectedRows < 1) {
-            throw new Error("No order found with given id");
-        }
-        res.status(200).json({
-            "id": id
-        });
-    } catch (err) {
-        if (err.message.includes("Invalid")) {
-            res.status(400).json({
-                "error": err.message
-            });
-            return;
-        }
-        if (err.message.includes("No order")) {
-            res.status(404).json({
-                "error": err.message
-            });
-            return;
-        }
-        res.status(500).json({
-            "error": "Couldn't update order table"
-        });
-    }
-});
 
 export default apiRouter;
