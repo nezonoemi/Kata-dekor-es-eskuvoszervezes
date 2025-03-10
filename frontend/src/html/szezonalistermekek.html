@@ -75,11 +75,32 @@
     <title>Szezonális Termékek</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <h1>Szezonális Termékek</h1>
+<body >
+    
     
  
-
+    <div class="container my-5">
+        <h1 class="text-center mb-4"> Szezonálistermékek</h1>
+        <div class="reference-box">
+            <div class="row g-4">
+                <!-- Kategória választó gombok -->
+        <div class="text-center mb-4">
+            <button class="btn btn-outline-primary btn-lg mx-2" onclick="kepValt('osszes')">Összes Termék</button>
+            <button class="btn btn-outline-success btn-lg mx-2" onclick="kepValt('koszoruk')">Koszorúk</button>
+            <button class="btn btn-outline-warning btn-lg mx-2" onclick="kepValt('kopogtatok')">Kopogtatók</button>
+            <button class="btn btn-outline-secondary btn-lg mx-2" onclick="kepValt('csokrok')">Csokrok</button>
+        </div>
+        
+        <!-- Kép galéria -->
+        <div class="row" id="kep-galeria">
+            <!-- A képek dinamikusan jelennek meg itt -->
+        </div>
+    </div>
+            </div>
+        </div> 
+    </div>
+       
+   
 
 <footer class="bg-dark text-white text-center py-4">
     <div class="container">

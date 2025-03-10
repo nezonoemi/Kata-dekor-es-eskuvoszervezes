@@ -260,4 +260,56 @@ document.addEventListener('DOMContentLoaded', function() {
     // Oldal betöltésekor frissítések
     updateCartCount();
     loadOrderCart();
+
+
+    
+    
 });
+
+
+const termekKepek = {
+    osszes: [],  // Ez üres lesz, mert itt minden kategória képeit összegyűjtjük
+    koszoruk: [
+        "../img/bemutatoterem/20241016_110649.jpg",
+        "kepek/koszoruk/koszoruk2.jpg",
+        "kepek/koszoruk/koszoruk3.jpg",
+        "kepek/koszoruk/koszoruk4.jpg"
+    ],
+    kopogtatok: [
+        "../img/bemutatoterem/20241016_110738.jpg",
+        "kepek/kopogtatok/kopogtato2.jpg",
+        "kepek/kopogtatok/kopogtato3.jpg",
+        "kepek/kopogtatok/kopogtato4.jpg"
+    ],
+    csokrok: [
+        "../img/bemutatoterem/20241016_110757.jpg",
+        "kepek/csokrok/csokor2.jpg",
+        "kepek/csokrok/csokor3.jpg",
+        "kepek/csokrok/csokor4.jpg"
+    ]
+};
+
+// Az összes kategória képeit hozzáadjuk az "Összes Termék" kategóriához
+termekKepek.osszes = [
+    ...termekKepek.koszoruk,
+    ...termekKepek.kopogtatok,
+    ...termekKepek.csokrok
+];
+
+function kepValt(kategoria) {
+    const galeriaElem = document.getElementById("kep-galeria");
+    galeriaElem.innerHTML = '';  // Előző képek eltávolítása
+
+    termekKepek[kategoria].forEach(kep => {
+        const kepElem = document.createElement("div");
+        kepElem.classList.add("col-3", "mb-4");
+        kepElem.innerHTML = `<img src="${kep}" class="img-fluid" alt="${kategoria}">`;
+        galeriaElem.appendChild(kepElem);
+    });
+}
+
+
+
+
+
+
