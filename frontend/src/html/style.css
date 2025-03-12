@@ -71,9 +71,23 @@
   background-repeat: no-repeat;  
   height: 300px;  
   color: white;  
-  font-family: 'Palace Script', cursive;  
+  font-family: 'Edwardin Script ITC', cursive;  
  
 }
+
+.arbackground-img {
+  
+  background-image: url('../img/eskuvoszervezes/FB_IMG_1729435523136.jpg');  
+  background-size: cover;  
+  background-position: center;  
+  background-repeat: no-repeat;  
+  height: 300px;  
+  color: white;  
+  font-family: 'Edwardin Script ITC', cursive;  
+ 
+}
+
+
 
 .dijcard {
   border: 2px solid #ccc;  /* Kép körüli keret */

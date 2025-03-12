@@ -27,8 +27,8 @@ SET time_zone = "+00:00";
 -- Tábla szerkezet ehhez a táblához `order`
 --
 
-CREATE TABLE `order` (
-  `order_id` int(11) NOT NULL,
+CREATE TABLE `orders` (
+  `order_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
   `rentable_id` int(11) DEFAULT NULL,
   `order_date` timestamp NOT NULL DEFAULT current_timestamp()

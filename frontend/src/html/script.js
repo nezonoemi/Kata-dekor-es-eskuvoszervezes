@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Rendelés leadása
-    const orderForm = document.getElementById("orderForm");
+    const orderForm = document.getElementById("checkout-form");
     if (orderForm) {
         orderForm.addEventListener("submit", async (event) => {
             event.preventDefault();
@@ -88,31 +88,36 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const orderData = {
-                userId: user.id,
                 cart: cart.map(item => ({
                     productId: item.productId,
                     price: item.price,
                     quantity: item.quantity
-                }))
+                })),
+                userData: {
+                    first_name: document.getElementById("firstname").value,
+                    last_name: document.getElementById("lastname").value,
+                    email: document.getElementById("email").value,
+                    phone: document.getElementById("phone").value,
+                }
             };
-
+            const target = document.getElementById("target");
             try {
                 const response = await fetch("http://localhost:3443/api/order", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${user.token}` },
                     body: JSON.stringify(orderData)
                 });
 
                 const responseData = await response.json();
                 if (!response.ok) throw new Error(responseData.error || "Ismeretlen hiba történt");
 
-                showMessage("✅ A rendelés sikeresen leadva!", "success");
+                target.innerHTML = `<div class="alert alert-success">✅ Sikeres rendelés!</div>`;
                 localStorage.removeItem("cart"); // Kosár kiürítése
                 cart = [];
                 updateCartCount();
                 loadOrderCart();
             } catch (error) {
-                showMessage(`❌ Hiba történt: ${error.message}`);
+                target.innerHTML = `<div class="alert alert-danger">❌ Hiba történt:</div>`;
             }
         });
     }

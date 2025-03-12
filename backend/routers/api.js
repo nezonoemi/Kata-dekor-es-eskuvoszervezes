@@ -121,7 +121,6 @@ apiRouter.post("/quote_request", async (req, res) => {
     try {
         const { last_name, first_name, email, note } = req.body;
 
-        // console.log(req.body);
         if (!last_name || !first_name || !email || !note) {
             return res.status(400).json({ error: "Minden mező kitöltése kötelező!" });
         }
@@ -418,14 +417,13 @@ apiRouter.post("/user", async (req, res) => {
             const user = users[0];
 
             const isPasswordValid = await bcrypt.compare(body.password, user.password);
-            // console.log(body.password, user.password, isPasswordValid);
-            
+
             if (!isPasswordValid) {
                 return res.status(400).json({ error: "❌ Hibás e-mail vagy jelszó!" });
             }
 
             const token = jwt.sign(
-                { userId: user.id, email: user.email },
+                { userId: user.user_id, email: user.email },
                 process.env.JWT_SECRET || "secret",
                 { expiresIn: "2h" }
             );
@@ -442,7 +440,6 @@ apiRouter.post("/user", async (req, res) => {
             });
             return;
         }
-        // console.log(err);
         res.status(500).json({
             "error": "Couldn't insert into user table"
         });
@@ -528,14 +525,14 @@ apiRouter.get("/order/:id?", async (req, res) => {
         if (id === null) {
             const [results] = await pool.query(`
                 SELECT o.order_id, u.last_name, u.first_name, u.email, u.phone_number, rp.product_name, 
-                rp.product_price, o.order_date FROM \`order\` o 
+                rp.product_price, o.order_date FROM \`orders\` o 
                 JOIN user u ON o.user_id = u.user_id JOIN rentable_products rp ON o.rentable_id = rp.rentable_id;
             `);
             res.json(results);
         } else {
             const [results] = await pool.query(`
                 SELECT o.order_id, u.last_name, u.first_name, u.email, u.phone_number, rp.product_name, 
-                rp.product_price, o.order_date FROM \`order\` o 
+                rp.product_price, o.order_date FROM \`orders\` o 
                 JOIN user u ON o.user_id = u.user_id JOIN rentable_products rp ON o.rentable_id = rp.rentable_id
                 WHERE o.order_id = ?;
             `, [id]);
@@ -559,7 +556,7 @@ apiRouter.delete("/order/:id", async (req, res) => {
             throw new Error("Invalid 'id' must be greater than 1");
         }
         const [result] = await pool.query(
-            "DELETE FROM `order` WHERE `order`.order_id = ?;",
+            "DELETE FROM `orders` WHERE `orders`.order_id = ?;",
             [id]
         );
         if (result.affectedRows < 1) {
@@ -590,32 +587,50 @@ apiRouter.delete("/order/:id", async (req, res) => {
 //post kérés
 apiRouter.post("/order", async (req, res) => {
     try {
-        const { userId, cart } = req.body;
+        const { cart, userData } = req.body;
 
-        if (!userId || !Array.isArray(cart) || cart.length === 0) {
+        const authHeader = req.headers["authorization"];
+
+        if (!authHeader) {
+            throw new Error("Authentication required.");
+        }
+
+        const token = authHeader.split(" ")[1];
+        if (!token) {
+            throw new Error("Authentication required.");
+        }
+
+        const decodedToken = jwt.decode(token, "secret");
+
+        if (!decodedToken.userId || !Array.isArray(cart) || cart.length === 0) {
             return res.status(400).json({ error: "Hiányzó vagy érvénytelen rendelési adatok!" });
         }
 
         // Rendelés dátuma
         const orderDate = new Date();
 
-        // Rendelés létrehozása az `order` táblában
-        const [orderResult] = await pool.query(
-            "INSERT INTO `order` (user_id, order_date) VALUES (?, ?);",
-            [userId, orderDate]
-        );
+        const orderIds = [];
 
-        const orderId = orderResult.insertId;
-
-        // A kosár összes termékének mentése az `order_items` köztes táblába
+        // A kosár összes termékének mentése az order köztes táblába
         for (const item of cart) {
-            await pool.query(
-                "INSERT INTO order_items (order_id, rentable_id, price, quantity) VALUES (?, ?, ?, ?);",
-                [orderId, item.productId, item.price, item.quantity]
+            // Rendelés létrehozása az `order` táblában
+            const [orderResult] = await pool.query(
+                "INSERT INTO `orders` (user_id, rentable_id, order_date) VALUES (?, ?, ?);",
+                [decodedToken.userId, item.productId, orderDate]
             );
+            orderIds.push(orderResult.insertId);
+            
         }
 
-        res.status(201).json({ message: "Sikeres rendelés!", orderId });
+        try {
+            await sendEmail("katadekoreseskuvoszervezes@gmail.com", "Rendelés érkezett", "Egy újabb felhasználó leadta a rendelés!");
+            await sendEmail([decodedToken.email, userData.email], "A rendelését sikeresen leadta!", "A rendelés feldolgozás alatt van, hamarosan fel vesszük a kapcsolatot Önnel!");
+        } catch (err) {
+            console.error("Hiba történt az értesítés küldésekor:", err);
+            return res.status(500).json({ error: "Nem sikerült az értesítést elküldeni." });
+        }
+
+        res.status(201).json({ message: "Sikeres rendelés!", items: orderIds });
     } catch (err) {
         console.error("Rendelés mentési hiba:", err);
         res.status(500).json({ error: "Nem sikerült menteni a rendelést!" });
