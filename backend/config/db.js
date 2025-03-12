@@ -2,7 +2,7 @@ import mysql from "mysql2/promise";
 import dotenv from "dotenv";
 
 dotenv.config();
-
+//ellenőrzi, hogy minden környezeti változó meg van-e adva
 if (!process.env.DB_HOST || !process.env.DB_USER || !process.env.DB_NAME || !process.env.JWT_SECRET) {
     throw new Error("Hiányzó környezeti változók! Ellenőrizd a .env fájlt.");
 }

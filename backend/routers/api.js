@@ -443,7 +443,6 @@ apiRouter.post("/user", async (req, res) => {
             return;
         }
         // console.log(err);
-        
         res.status(500).json({
             "error": "Couldn't insert into user table"
         });
