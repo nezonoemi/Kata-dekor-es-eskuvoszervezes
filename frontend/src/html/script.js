@@ -146,7 +146,6 @@ document.addEventListener('DOMContentLoaded', function() {
             registerForm.classList.toggle("d-none", formType !== "register");
         }
     };
-
     // Üzenet megjelenítése
     const userDisplay = document.getElementById("user");
 
@@ -196,6 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (response) {
                 showMessage("✅ Sikeres bejelentkezés!", "success");
                 localStorage.setItem("user", JSON.stringify(response));
+                window.location.href = "index.html";
             }
         });
     }
@@ -252,9 +252,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: JSON.stringify({ first_name, last_name, email, note })
                 });
 
-                if (!response.ok) throw new Error(await response.text());
+                if (!response.ok) throw new Error(await response.text());               
 
-                target.innerHTML = `<div class="alert alert-success">✅ Sikeres ajánlatkérés!</div>`;
+                target.innerHTML = `<div class="alert alert-success">✅ Sikeres ajánlatkérés!</div>`; 
                 offerForm.reset();
             } catch (error) {
                 target.innerHTML = `<div class="alert alert-danger">❌ Hiba történt: ${error.message}</div>`;
