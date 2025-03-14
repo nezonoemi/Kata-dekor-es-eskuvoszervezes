@@ -65,19 +65,14 @@ footer {
   z-index: 2; /* Biztosítja, hogy a kép felül legyen */
 }
 
-
-
-
-
 .background-img {
   background-image: url('../img/egyeb/FB_IMG_1722459705900.jpg');  
   background-size: cover;  
   background-position: center;  
-  background-repeat: no-repeat;  
-  height: 300px;  
+  background-repeat: no-repeat;   
+  height: 500px;
   color: white;  
   font-family: 'Edwardin Script ITC', cursive;  
- 
 }
 
 .arbackground-img {
