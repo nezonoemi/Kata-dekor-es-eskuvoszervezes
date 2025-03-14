@@ -76,17 +76,22 @@ footer {
 }
 
 .arbackground-img {
-  
   background-image: url('../img/eskuvoszervezes/FB_IMG_1729435523136.jpg');  
-  background-size: cover;  
-  background-position: center;  
-  background-repeat: no-repeat;  
-  height: 300px;  
-  color: white;  
-  font-family: 'Edwardin Script ITC', cursive;  
-  
- 
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  padding: 60px 0;
 }
+
+.form-container {
+    background: rgba(255, 255, 255, 0.8); /* Fehér, 80%-os átlátszóság */
+    border-radius: 10px;
+    max-width: 600px; /* Form méretének korlátozása */
+    margin: 0 auto; /* Középre igazítás */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
 
 .esbackground-img {
     background-image: url('../img/eskuvoszervezes/Screenshot_20210911-201707_Facebook.jpg');  
