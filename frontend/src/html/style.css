@@ -27,7 +27,13 @@
   height: 200px; 
   object-fit: cover; 
   border-radius: 10px; 
+  
 }
+
+footer {
+  margin-top: auto;
+}
+
 
 
 .card {
@@ -45,20 +51,20 @@
 }
   
 
-.reference-box {
-  border: 2px solid #ddd;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-}
-
 .reference-box img {
   border: 2px solid #ccc;
   border-radius: 8px;
   width: 100%; 
   height: 200px; 
-  object-fit: cover; 
+  object-fit: cover;
+  transition: transform 0.3s ease; /* Szép átmenet */
 }
+
+.reference-box img:hover {
+  transform: scale(2.1); /* 10%-kal nagyobb lesz */
+  z-index: 2; /* Biztosítja, hogy a kép felül legyen */
+}
+
 
 
 
@@ -84,6 +90,7 @@
   height: 300px;  
   color: white;  
   font-family: 'Edwardin Script ITC', cursive;  
+  
  
 }
 
