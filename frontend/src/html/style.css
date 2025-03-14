@@ -65,11 +65,6 @@ footer {
   z-index: 2; /* Biztosítja, hogy a kép felül legyen */
 }
 
-.transparent-box {
-    background-color: rgba(0, 0, 0, 0); /* Átlátszó háttér */
-    opacity: 0.5; /* Az egész box átlátszósága */
-    color: white;
-
 .background-img {
   background-image: url('../img/egyeb/FB_IMG_1722459705900.jpg');  
   background-size: cover;  
@@ -77,11 +72,6 @@ footer {
   background-repeat: no-repeat;   
   color: white;  
   font-family: 'Edwardin Script ITC', cursive;  
-  object-fit: cover;
-  width: 100vw;
-  height: 100vh;
-  display: block;
- 
 }
 
 .arbackground-img {
