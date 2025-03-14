@@ -70,6 +70,7 @@ footer {
   background-size: cover;  
   background-position: center;  
   background-repeat: no-repeat;   
+  height: 100px;
   color: white;  
   font-family: 'Edwardin Script ITC', cursive;  
 }
