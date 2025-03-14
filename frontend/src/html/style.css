@@ -73,10 +73,13 @@ footer {
   background-image: url('../img/egyeb/FB_IMG_1722459705900.jpg');  
   background-size: cover;  
   background-position: center;  
-  background-repeat: no-repeat;  
-  height: 500px;  
+  background-repeat: no-repeat;   
   color: white;  
   font-family: 'Edwardin Script ITC', cursive;  
+  object-fit: cover;
+  width: 100vw;
+  height: 100vh;
+  display: block;
  
 }
 
