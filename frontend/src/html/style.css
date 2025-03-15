@@ -171,3 +171,16 @@ footer {
 #backToTop:hover {
   background-color: #0056b3;
 }
+
+.map-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.small-map {
+  width: 800px;
+  height: 600px;
+  border: 0;
+  max-width: 100%;
+}
