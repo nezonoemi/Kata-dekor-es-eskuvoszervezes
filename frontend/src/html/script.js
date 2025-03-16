@@ -325,7 +325,7 @@ const termekKepek = {
     "../img/szezonalis_termekek/5.jpg",
     "../img/szezonalis_termekek/11.jpg",
     "../img/szezonalis_termekek/17.jpg",
-    "../img/szezonalis_termekek/18.jpg",
+    "../img/szezonalis_termekek/20.jpg",
     "../img/szezonalis_termekek/30.jpg",
     //"../img/szezonali_termekek/",
     //"../img/szezonali_termekek/",
