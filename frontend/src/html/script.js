@@ -280,9 +280,8 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 const termekKepek = {
-  osszes: [], // Ez üres lesz, mert itt minden kategória képeit összegyűjtjük
   koszoruk: [
-    "../img/bemutatoterem/20241016_110649.jpg",
+    "../img/",
     "kepek/koszoruk/koszoruk2.jpg",
     "kepek/koszoruk/koszoruk3.jpg",
     "kepek/koszoruk/koszoruk4.jpg",
