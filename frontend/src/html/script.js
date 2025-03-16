@@ -280,23 +280,39 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 const termekKepek = {
-  koszoruk: [
-    "../img/",
-    "kepek/koszoruk/koszoruk2.jpg",
-    "kepek/koszoruk/koszoruk3.jpg",
-    "kepek/koszoruk/koszoruk4.jpg",
-  ],
-  kopogtatok: [
+  advent: [
     "../img/bemutatoterem/20241016_110738.jpg",
     "kepek/kopogtatok/kopogtato2.jpg",
     "kepek/kopogtatok/kopogtato3.jpg",
     "kepek/kopogtatok/kopogtato4.jpg",
   ],
   csokrok: [
+    "../img/szezonalis_termekek/1.jpg",
+    "../img/szezonalis_termekek/2.jpg",
+    "../img/szezonalis_termekek/10.jpg",
+    "../img/szezonalis_termekek/18.jpg",
+    "../img/szezonalis_termekek/19.jpg",
+    "../img/szezonalis_termekek/21.jpg",
+    "../img/szezonalis_termekek/22.jpg",
+    "../img/szezonalis_termekek/32.jpg"
+  ],
+  szulokoszontok: [
+    "../img/bemutatoterem/20241016_110738.jpg",
+    "kepek/kopogtatok/kopogtato2.jpg",
+    "kepek/kopogtatok/kopogtato3.jpg",
+    "kepek/kopogtatok/kopogtato4.jpg",
+  ],
+  kulonleges: [
     "../img/bemutatoterem/20241016_110757.jpg",
     "kepek/csokrok/csokor2.jpg",
     "kepek/csokrok/csokor3.jpg",
     "kepek/csokrok/csokor4.jpg",
+  ],
+  papirviragok: [
+    "../img/bemutatoterem/20241016_110738.jpg",
+    "kepek/kopogtatok/kopogtato2.jpg",
+    "kepek/kopogtatok/kopogtato3.jpg",
+    "kepek/kopogtatok/kopogtato4.jpg",
   ],
 };
 
