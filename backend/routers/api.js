@@ -656,7 +656,7 @@ apiRouter.post("/order", async (req, res) => {
       await sendEmail(
         "katadekoreseskuvoszervezes@gmail.com",
         "Rendelés érkezett",
-        "Egy újabb felhasználó leadta a rendelés!",
+        "Egy újabb felhasználó leadta a rendelést!",
       );
       await sendEmail(
         [decodedToken.email, userData.email],
