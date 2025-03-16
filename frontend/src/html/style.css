@@ -1,44 +1,41 @@
 /* Kosár ikon stílusa */
 .cart-icon {
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #007bff;
-    transition: color 0.3s ease;
-  }
-  
-  .cart-icon:hover {
-    color: #0056b3;
-  }
-  
-  /* Kosár számláló (badge) */
-  #cart-count {
-    font-size: 0.8rem;
-    padding: 0.3em 0.6em;
-    border-radius: 50%;
-    color: white;
-  }
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #007bff;
+  transition: color 0.3s ease;
+}
 
-  .hero {
-    background-color: rgba(0, 0, 0, 0.5); 
+.cart-icon:hover {
+  color: #0056b3;
+}
+
+/* Kosár számláló (badge) */
+#cart-count {
+  font-size: 0.8rem;
+  padding: 0.3em 0.6em;
+  border-radius: 50%;
+  color: white;
+}
+
+.hero {
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .image-style {
-  width: 100%; 
-  height: 200px; 
-  object-fit: cover; 
-  border-radius: 10px; 
-  
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
 }
 
 footer {
   margin-top: auto;
 }
 
-
-
 .card {
-  border: none; 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  border: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
 }
 
@@ -47,15 +44,14 @@ footer {
 }
 
 .container {
-  flex: 1; 
+  flex: 1;
 }
-  
 
 .reference-box img {
   border: 2px solid #ccc;
   border-radius: 8px;
-  width: 100%; 
-  height: 200px; 
+  width: 100%;
+  height: 200px;
   object-fit: cover;
   transition: transform 0.3s ease; /* Szép átmenet */
 }
@@ -66,17 +62,17 @@ footer {
 }
 
 .background-img {
-  background-image: url('../img/egyeb/FB_IMG_1722459705900.jpg');  
-  background-size: cover;  
-  background-position: center;  
-  background-repeat: no-repeat;   
+  background-image: url("../img/egyeb/FB_IMG_1722459705900.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   height: 500px;
-  color: white;  
-  font-family: 'Edwardin Script ITC', cursive;  
+  color: white;
+  font-family: "Edwardin Script ITC", cursive;
 }
 
 .arbackground-img {
-  background-image: url('../img/eskuvoszervezes/FB_IMG_1729435523136.jpg');  
+  background-image: url("../img/eskuvoszervezes/FB_IMG_1729435523136.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -84,37 +80,33 @@ footer {
 }
 
 .form-container {
-    background: rgba(255, 255, 255, 0.8); /* Fehér, 80%-os átlátszóság */
-    border-radius: 10px;
-    max-width: 600px; /* Form méretének korlátozása */
-    margin: 0 auto; /* Középre igazítás */
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.8); /* Fehér, 80%-os átlátszóság */
+  border-radius: 10px;
+  max-width: 600px; /* Form méretének korlátozása */
+  margin: 0 auto; /* Középre igazítás */
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
 
 .esbackground-img {
-    background-image: url('../img/eskuvoszervezes/Screenshot_20210911-201707_Facebook.jpg');  
-    background-size: cover;  
-    background-position: center;  
-    background-repeat: no-repeat;  
-    height: 100%;  
-    color: white;
+  background-image: url("../img/eskuvoszervezes/Screenshot_20210911-201707_Facebook.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100%;
+  color: white;
 }
 
-
-
 .dijcard {
-  border: 2px solid #ccc;  /* Kép körüli keret */
-  border-radius: 10px;  /* Kerekített sarkok a keretnél */
-  overflow: hidden;  /* Ha a kép kinéz a keretből, azt eltünteti */
+  border: 2px solid #ccc; /* Kép körüli keret */
+  border-radius: 10px; /* Kerekített sarkok a keretnél */
+  overflow: hidden; /* Ha a kép kinéz a keretből, azt eltünteti */
 }
 
 .dijcard-img-top {
-  height: 200px;  /* Kép magassága */
-  object-fit: cover;  /* Kép kitöltése, anélkül, hogy torzulna */
+  height: 200px; /* Kép magassága */
+  object-fit: cover; /* Kép kitöltése, anélkül, hogy torzulna */
 }
-
 
 .oldal-hatter {
   font-family: Arial, sans-serif;
@@ -166,7 +158,6 @@ footer {
   display: none;
   width: 50px;
   height: 50px;
-  
 }
 #backToTop:hover {
   background-color: #0056b3;
