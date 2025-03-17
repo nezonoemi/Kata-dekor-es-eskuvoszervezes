@@ -66,21 +66,6 @@ body, html {
   margin: 0;
 }
 
-
-.background {
-  background-image: url("../img/egyeb/FB_IMG_1722459705900.jpg"); 
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  height: 70vh; /* Magasság beállítása */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: white;
-}
-
-
 .arbackground-img {
   background-image: url("../img/eskuvoszervezes/FB_IMG_1729435523136.jpg");
   background-size: cover;
@@ -187,3 +172,79 @@ body, html {
 }
 
 
+/* Csak a Home oldalon legyen háttérkép */
+.home-page {
+  background-image: url("../img/egyeb/FB_IMG_1722459705900.jpg"); /* Cseréld ki a pontos elérési útvonalra */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Navigációs sáv áttetszővé tétele */
+.home-page .navbar {
+  background: rgba(255, 255, 255, 0.2) !important; /* Átlátszó fehér */
+  backdrop-filter: blur(10px); /* Üveghatás */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Lenínó menü (dropdown) áttetsző háttere */
+.home-page .dropdown-menu {
+  background: rgba(255, 255, 255, 0.3) !important; /* Átlátszó háttér */
+  backdrop-filter: blur(10px); /* Üveghatás */
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Lenyíló menü elemei */
+.home-page .dropdown-item {
+  color: #222 !important; /* Sötétszürke szöveg */
+}
+
+.home-page .dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.5) !important; /* Erősebb fehér háttér hoverre */
+  color: #000 !important;
+}
+
+/* Tartalom áttetszőbbé tétele */
+.home-page section,
+.home-page footer,
+.home-page .about,
+.home-page .card,
+.home-page .container-fluid,
+.home-page .tanulmanyok,
+.home-page .dijak {
+  background: rgba(255, 255, 255, 0.2); /* Még átlátszóbb fehér háttér */
+  backdrop-filter: blur(8px); /* Erősebb üveghatás */
+  border-radius: 10px;
+  padding: 20px;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Footer áttetsző háttere */
+.home-page footer {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  backdrop-filter: blur(5px);
+  padding: 10px 0;
+}
+
+/* Gombok üveghatású dizájnja */
+.home-page .btn {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #222 !important;
+}
+
+.home-page .btn:hover {
+  background: rgba(255, 255, 255, 0.4) !important;
+  color: #000 !important;
+}
+
+/* Hover effekt a kártyákra */
+.home-page .card:hover {
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  transform: scale(1.02);
+}
