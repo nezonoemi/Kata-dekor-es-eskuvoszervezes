@@ -110,7 +110,7 @@ body, html {
 .dijcard {
   border: 2px solid #ccc; /* Kép körüli keret */
   border-radius: 10px; /* Kerekített sarkok a keretnél */
-  /*overflow: hidden; /* Ha a kép kinéz a keretből, azt eltünteti */
+  overflow: hidden; /* Ha a kép kinéz a keretből, azt eltünteti */
 }
 
 .dijcard-img-top {
