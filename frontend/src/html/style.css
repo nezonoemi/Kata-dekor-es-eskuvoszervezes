@@ -72,7 +72,7 @@ body, html {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  height: 100vh; /* Magasság beállítása */
+  height: 70vh; /* Magasság beállítása */
   display: flex;
   align-items: center;
   justify-content: center;
