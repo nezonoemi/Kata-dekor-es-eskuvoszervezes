@@ -1,15 +1,15 @@
 import dotenv from "dotenv";
-dotenv.config();
-
 import express from "express";
 import cors from "cors";
+import apiRoutes from "./routers/api.js";
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3443;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 app.use(cors());
 
 app.use("/api", apiRoutes);
