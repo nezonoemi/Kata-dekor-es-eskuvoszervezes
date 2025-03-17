@@ -66,15 +66,20 @@ body, html {
   margin: 0;
 }
 
-.background-img {
-  background-image: url("../img/egyeb/FB_IMG_1722459705900.jpg");
+
+.background {
+  background-image: url("../img/egyeb/FB_IMG_1722459705900.jpg"); /* Cseréld ki a kívánt képre */
   background-size: cover;
-  background-position: center center;
+  background-position: center;
   background-repeat: no-repeat;
-  height: 500px;
+  height: 70vh; /* Magasság beállítása */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   color: white;
-  font-family: "Edwardin Script ITC", cursive;
 }
+
 
 .arbackground-img {
   background-image: url("../img/eskuvoszervezes/FB_IMG_1729435523136.jpg");
