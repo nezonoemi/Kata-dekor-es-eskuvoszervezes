@@ -68,7 +68,7 @@ body, html {
 
 
 .background {
-  background-image: url("../img/egyeb/FB_IMG_1722459705900.jpg"); /* Cseréld ki a kívánt képre */
+  background-image: url("../img/egyeb/FB_IMG_1722459705900.jpg"); 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
