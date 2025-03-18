@@ -275,21 +275,41 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function updateNavBarProfile() {
-    const token = localStorage.getItem("user");
-    if (token) {
-      document.getElementById("loggedIn").innerHTML = "Kijelentkezés";
-      document.getElementById("loggedIn").href = "kijelentkezes.html";
-      localStorage.removeItem("token");
-    } else {
-      document.getElementById("loggedIn").innerHTML = "Bejelentkezés";
+    const user = JSON.parse(localStorage.getItem("user"));
+    const loggedInLink = document.getElementById("loggedIn");
+  
+    if (loggedInLink) {
+      if (user) {
+        loggedInLink.innerHTML = "Kijelentkezés";
+        loggedInLink.href = "#";
+        loggedInLink.addEventListener("click", function (event) {
+          event.preventDefault();
+          logoutUser();
+        });
+      } else {
+        loggedInLink.innerHTML = "Fiókom";
+        loggedInLink.href = "fiokom.html";
+      }
     }
   }
-
+  
+  function logoutUser() {
+    localStorage.removeItem("user");
+    const loggedInLink = document.getElementById("loggedIn");
+    
+    if (loggedInLink) {
+      loggedInLink.innerHTML = "Bejelentkezve";
+      loggedInLink.href = "fiokom.html";
+    }
+    
+    alert("Sikeresen kijelentkeztél!");
+    location.reload(); 
+  }
   // Oldal betöltésekor frissítések
   updateCartCount();
   loadOrderCart();
   updateNavBarProfile(); 
-  outNavBarProfile();
+
 });
 
 const termekKepek = {
