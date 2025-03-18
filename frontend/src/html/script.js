@@ -274,9 +274,22 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  function updateNavBarProfile() {
+    const token = localStorage.getItem("user");
+    if (token) {
+      document.getElementById("loggedIn").innerHTML = "Kijelentkezés";
+      document.getElementById("loggedIn").href = "kijelentkezes.html";
+      localStorage.removeItem("token");
+    } else {
+      document.getElementById("loggedIn").innerHTML = "Bejelentkezés";
+    }
+  }
+
   // Oldal betöltésekor frissítések
   updateCartCount();
   loadOrderCart();
+  updateNavBarProfile(); 
+  outNavBarProfile();
 });
 
 const termekKepek = {
