@@ -181,31 +181,6 @@ body, html {
   background-repeat: no-repeat;
 }
 
-/* Navigációs sáv áttetszővé tétele */
-.home-page .navbar {
-  background: rgba(255, 255, 255, 0.2) !important; /* Átlátszó fehér */
-  backdrop-filter: blur(10px); /* Üveghatás */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-}
-
-/* Lenínó menü (dropdown) áttetsző háttere */
-.home-page .dropdown-menu {
-  background: rgba(255, 255, 255, 0.3) !important; /* Átlátszó háttér */
-  backdrop-filter: blur(10px); /* Üveghatás */
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-}
-
-/* Lenyíló menü elemei */
-.home-page .dropdown-item {
-  color: #222 !important; /* Sötétszürke szöveg */
-}
-
-.home-page .dropdown-item:hover {
-  background: rgba(255, 255, 255, 0.5) !important; /* Erősebb fehér háttér hoverre */
-  color: #000 !important;
-}
-
 /* Tartalom áttetszőbbé tétele */
 .home-page section,
 .home-page footer,
@@ -219,14 +194,6 @@ body, html {
   border-radius: 10px;
   padding: 20px;
   transition: all 0.3s ease-in-out;
-}
-
-/* Footer áttetsző háttere */
-.home-page footer {
-  background: rgba(255, 255, 255, 0.15) !important;
-  color: white !important;
-  backdrop-filter: blur(5px);
-  padding: 10px 0;
 }
 
 /* Gombok üveghatású dizájnja */
