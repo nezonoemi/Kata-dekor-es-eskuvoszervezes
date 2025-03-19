@@ -174,7 +174,7 @@ body, html {
 
 /* Csak a Home oldalon legyen háttérkép */
 .home-page {
-  background-image: url("../img/egyeb/FB_IMG_1722459705900.jpg"); 
+  background-image: url("../img/egyeb/FB_IMG_1722459705900.jpg"); /* Cseréld ki a pontos elérési útvonalra */
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -183,6 +183,8 @@ body, html {
 
 /* Tartalom áttetszőbbé tétele */
 .home-page section,
+.home-page footer,
+.home-page .about,
 .home-page .card,
 .home-page .container-fluid,
 .home-page .tanulmanyok,
@@ -192,6 +194,14 @@ body, html {
   border-radius: 10px;
   padding: 20px;
   transition: all 0.3s ease-in-out;
+}
+
+/* Footer áttetsző háttere */
+.home-page footer {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  backdrop-filter: blur(5px);
+  padding: 10px 0;
 }
 
 /* Gombok üveghatású dizájnja */
