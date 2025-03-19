@@ -174,7 +174,7 @@ body, html {
 
 /* Csak a Home oldalon legyen háttérkép */
 .home-page {
-  background-image: url("../img/egyeb/FB_IMG_1722459705900.jpg"); /* Cseréld ki a pontos elérési útvonalra */
+  background-image: url("../img/egyeb/FB_IMG_1722459705900.jpg"); 
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -183,8 +183,6 @@ body, html {
 
 /* Tartalom áttetszőbbé tétele */
 .home-page section,
-.home-page footer,
-.home-page .about,
 .home-page .card,
 .home-page .container-fluid,
 .home-page .tanulmanyok,
