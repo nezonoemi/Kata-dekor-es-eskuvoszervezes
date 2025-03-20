@@ -171,29 +171,13 @@ body, html {
   max-width: 100%;
 }
 
-
 /* Csak a Home oldalon legyen háttérkép */
 .home-page {
-  background-image: url("../img/egyeb/FB_IMG_1722459705900.jpg"); /* Cseréld ki a pontos elérési útvonalra */
+  background-image: url("../img/egyeb/FB_IMG_1722459705900.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
   background-repeat: no-repeat;
-}
-
-/* Tartalom áttetszőbbé tétele */
-.home-page section,
-.home-page footer,
-.home-page .about,
-.home-page .card,
-.home-page .container-fluid,
-.home-page .tanulmanyok,
-.home-page .dijak {
-  background: rgba(255, 255, 255, 0.2); /* Még átlátszóbb fehér háttér */
-  backdrop-filter: blur(8px); /* Erősebb üveghatás */
-  border-radius: 10px;
-  padding: 20px;
-  transition: all 0.3s ease-in-out;
 }
 
 /* Footer áttetsző háttere */
