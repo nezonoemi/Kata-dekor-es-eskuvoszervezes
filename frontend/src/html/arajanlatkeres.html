@@ -6,7 +6,7 @@
     <link
       rel="icon"
       type="image/png"
-      href="../img/Pink and White Minimalist Initial Makeup Artist Logo_20240923_001746_0000.png"
+      href="img/Pink_and_White_Minimalist_Initial_Makeup_Artist_Logo.png"
     />
     <title>Kata dekor és esküvőszervezés</title>
     <link
@@ -17,124 +17,144 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   </head>
-  <body class="d-flex flex-column min-vh-100">
-    <header>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">
-            <img
-              src="../img/Pink and White Minimalist Initial Makeup Artist Logo_20240923_001746_0000.png"
-              alt="Logó"
-              height="50"
-            />
-          </a>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <!-- Logo -->
+        <a class="navbar-brand" href="#">
+          <img
+            src="../img/Pink and White Minimalist Initial Makeup Artist Logo_20240923_001746_0000.png"
+            alt="Logó"
+            height="50"
+          />
+        </a>
 
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-          <!-- Navbar linkek -->
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-auto">
-              <li class="nav-item">
-                <a class="nav-link" href="index.html">Kezdőlap</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  id="navbarDropdown"
-                  data-bs-toggle="dropdown"
-                >
-                  Virágkötészet
-                </a>
-                <ul class="dropdown-menu">
-                  <li>
-                    <a class="dropdown-item" href="viragkoteszet.html"
-                      >Virágcsokrok</a
-                    >
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="teremdiszites.html"
-                      >Teremdíszítés</a
-                    >
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="autodekoracio.html"
-                      >Autódekoráció</a
-                    >
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="eskuvoszervezes.html"
-                  >Esküvőszervezés</a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="rendezvenyszervezes.html"
-                  >Rendezvényszervezés</a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="berelhetotermekek.html"
-                  >Bérelhető termékek</a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="bemutatotermunk.html"
-                  >Bemutatótermünk</a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="kapcsolat.html">Kapcsolat</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="arajanlatkeres.html"
-                  >Árajánlat kérés</a
-                >
-              </li>
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  id="navbarDropdown2"
-                  data-bs-toggle="dropdown"
-                >
-                  Egyéb
-                </a>
-                <ul class="dropdown-menu">
-                  <li>
-                    <a class="dropdown-item" href="szezonalistermekek.html"
-                      >Szezonális termékek</a
-                    >
-                  </li>
-                </ul>
-              </li>
-            </ul>
-            <div class="d-flex align-items-center">
-              <a href="fiokom.html"               
-                  id="loggedIn"
-                  class="nav-link text-dark me-3">Fiókom</a>
-              <a href="kosar.html" class="nav-link text-dark position-relative">
-                Kosár
-                <span
-                  id="cart-count"
-                  class="badge bg-danger position-absolute top-0 start-100 translate-middle"
-                  >0</span
-                >
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav mx-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Kezdőlap</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href=""
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Virágkötészet
               </a>
-            </div>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li>
+                  <a class="dropdown-item" href="viragkoteszet.html"
+                    >Virágcsokrok</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="teremdiszites.html"
+                    >Teremdíszítés</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="autodekoracio.html"
+                    >Autódekoráció</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="eskuvoszervezes.html"
+                >Esküvőszervezés</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="rendezvenyszervezes.html"
+                >Rendezvényszervezés</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="berelhetotermekek.html"
+                >Bérelhető termékek</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="bemutatotermunk.html"
+                >Bemutatótermünk</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="kapcsolat.html">Kapcsolat</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="arajanlatkeres.html"
+                >Árajánlat kérés</a
+              >
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown2"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Egyéb
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown2">
+                <li>
+                  <a class="dropdown-item" href="szezonalistermekek.html"
+                    >Szezonális termékek</a
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <div class="d-flex align-items-center">
+            <a
+            id="loggedIn"
+              href="fiokom.html"
+              class="nav-link text-dark d-flex align-items-center me-3"
+              id="loggedIn"
+
+            >
+              Fiókom
+            </a>
+            <a
+              href="kosar.html"
+              class="nav-link text-dark d-flex align-items-center position-relative"
+              id="navbar-kosar"
+            >
+              Kosár
+              <span
+                id="cart-count"
+                class="badge bg-danger position-absolute top-0 start-100 translate-middle"
+                >0</span
+              >
+            </a>
           </div>
         </div>
-      </nav>
-    </header>
-    <div class="container-fluid arbackground-img mt-0">
+      </div>
+    </nav>
+  </header>
+  
+  <body class="d-flex flex-column min-vh-100 ajanlat-page">
+    <!-- Háttérkép és ajánlatkérés -->
+    <div class="container-fluid">
       <h2 class="text-center">Ajánlatkérés</h2>
 
       <div class="form-container p-4 shadow-sm">
@@ -157,12 +177,7 @@
 
           <div class="mb-3">
             <label for="note" class="form-label">Üzenet</label>
-            <textarea
-              class="form-control"
-              id="note"
-              rows="3"
-              required
-            ></textarea>
+            <textarea class="form-control" id="note" rows="3" required></textarea>
           </div>
 
           <div class="row">
@@ -174,38 +189,24 @@
           </div>
         </form>
       </div>
-      <button id="backToTop" class="btn btn-primary" title="Ugrás az elejére">
-      ↑
-    </button>
+    </div>
 
-    <footer class="bg-dark container-fluid text-white text-center py-4">
+    <button id="backToTop" class="btn btn-primary" title="Ugrás az elejére">↑</button>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4 mt-auto">
       <p class="mb-2">&copy; 2024 Kata dekor és esküvőszervezés</p>
       <p class="mb-0">
         Cím: 2100 Gödöllő, Palotakert 16. fsz-3 | Telefon: +36 20 568 6018 |
-        E-mail: katadekoreskuvo@gmail.com
+        E-mail: <a href="mailto:katadekoreskuvo@gmail.com" class="text-white">katadekoreskuvo@gmail.com</a>
       </p>
       <div class="d-flex justify-content-center mt-3">
-        <a
-          href="https://www.facebook.com/katadekoreskuvo"
-          target="_blank"
-          class="text-white me-3"
-          >Facebook</a
-        >
-        <a
-          href="https://www.instagram.com/kata.dekor4/"
-          target="_blank"
-          class="text-white me-3"
-          >Instagram</a
-        >
-        <a
-          href="https://www.tiktok.com/@katadekoreskuvo"
-          target="_blank"
-          class="text-white"
-          >Tiktok</a
-        >
+        <a href="https://www.facebook.com/katadekoreskuvo" target="_blank" class="text-white me-3">Facebook</a>
+        <a href="https://www.instagram.com/kata.dekor4/" target="_blank" class="text-white me-3">Instagram</a>
+        <a href="https://www.tiktok.com/@katadekoreskuvo" target="_blank" class="text-white">Tiktok</a>
       </div>
     </footer>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script src="script.js"></script>
   </body>
 </html>

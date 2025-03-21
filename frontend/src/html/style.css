@@ -66,14 +66,6 @@ body, html {
   margin: 0;
 }
 
-.arbackground-img {
-  background-image: url("../img/eskuvoszervezes/FB_IMG_1729435523136.jpg");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  padding: 60px 0;
-}
-
 .form-container {
   background: rgba(255, 255, 255, 0.8); /* Fehér, 80%-os átlátszóság */
   border-radius: 10px;
@@ -271,4 +263,32 @@ body, html {
   color: gray !important;
 }
 
+/*ajánlat-page*/
+.ajanlat-page{
+  background-image: url("../img/eskuvoszervezes/FB_IMG_1729435523136.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
 
+/* Footer áttetsző háttere */
+.ajanlat-page footer {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  backdrop-filter: blur(5px);
+  padding: 10px 0;
+}
+
+/* Gombok üveghatású dizájnja */
+.ajanlat-page.btn {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #222 !important;
+}
+
+.ajanlat-page .btn:hover {
+  background: rgba(255, 255, 255, 0.4) !important;
+  color: gray !important;
+}
