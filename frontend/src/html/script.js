@@ -427,9 +427,11 @@ const termekKepek = {
 
 // Az összes kategória képeit hozzáadjuk az "Összes Termék" kategóriához
 termekKepek.osszes = [
-  ...termekKepek.koszoruk,
-  ...termekKepek.kopogtatok,
+  ...termekKepek.advent,
   ...termekKepek.csokrok,
+  ...termekKepek.szulokoszontok,
+  ...termekKepek.kulonleges,
+  ...termekKepek.papirviragok,
 ];
 
 function kepValt(kategoria) {
