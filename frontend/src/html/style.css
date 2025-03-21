@@ -162,6 +162,7 @@ body, html {
   max-width: 100%;
 }
 
+
 /* Csak a Home oldalon legyen háttérkép */
 .home-page {
   background-image: url("../img/egyeb/FB_IMG_1722459705900.jpg");
