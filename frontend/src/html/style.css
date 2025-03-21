@@ -155,9 +155,15 @@ body, html {
 }
 
 
+/*Az egyes oldalakra vonatkozó kép beállítások*/
+
+*{
+  font-family: Palace Script;
+}
+
 /* Csak a Home oldalon legyen háttérkép */
 .home-page {
-  background-image: url("../img/egyeb/FB_IMG_1722459705900.jpg");
+  background-image: url("../img/FB_IMG_1722459705900.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -173,30 +179,19 @@ body, html {
 }
 
 /* Gombok üveghatású dizájnja */
-.home-page .btn {
+.home-page .btn:not(#backToTop) {
   background: rgba(255, 255, 255, 0.2) !important;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.4);
-  color: #222 !important;
+  color: #222 !important; 
 }
 
-.home-page .btn:hover {
-  background: rgba(255, 255, 255, 0.4) !important;
-  color: #000 !important;
+.home-page .btn:not(#backToTop):hover {
+  background: rgba(13, 110, 253, 0.9) !important;
+  color: gray !important;
 }
 
-/* Hover effekt a kártyákra */
-.home-page .card:hover {
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(10px);
-  transform: scale(1.02);
-}
-
-*{
-  font-family: Palace Script;
-}
-
-/*fiokom page*/
+/* fiokom-page háttérkép beállítása */
 .fiokom-page {
   background-image: url("../img/Messenger_creation_C9D18658-0794-4BFD-8335-305911CE7741_17.jpeg");
   background-size: cover;
@@ -213,24 +208,42 @@ body, html {
   padding: 10px 0;
 }
 
-/* Gombok üveghatású dizájnja */
+/* Üveghatású gombok (KIVÉVE #backToTop) */
 .fiokom-page .btn {
-  background: rgba(255, 255, 255, 0.2) !important;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Alap gombszínek */
+.fiokom-page .btn-primary {
+  background: rgba(13, 110, 253, 0.7) !important; /* Kék gomb */
+  color: white !important;
+}
+
+.fiokom-page .btn-secondary {
+  background: rgba(108, 117, 125, 0.7) !important; /* Szürke gomb */
+  color: white !important;
+}
+
+/* Hover effektek */
+.fiokom-page .btn:not(#backToTop):hover{
+  background: rgba(255, 255, 255, 0.4) !important;
   color: #222 !important;
 }
 
-.fiokom-page .btn:hover {
-  background: rgba(255, 255, 255, 0.4) !important;
-  color: #000 !important;
+/* Speciális hover effektek a főbb gomboknak */
+.fiokom-page .btn-primary:hover {
+  background: rgba(13, 110, 253, 0.9) !important;
+}
+
+.fiokom-page .btn-secondary:hover {
+  background: rgba(108, 117, 125, 0.9) !important;
 }
 
 /* Hover effekt a kártyákra */
 .fiokom-page .card:hover {
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(10px);
-  transform: scale(1.02);
+  background: rgba(255, 255, 255, 0.4) !important;
+  color: gray !important;
 }
 
 /*eskuvoszervezes-page*/
@@ -251,14 +264,14 @@ body, html {
 }
 
 /* Gombok üveghatású dizájnja */
-.eskuvoszervezes-page .btn {
+.eskuvoszervezes-page .btn:not(#backToTop) {
   background: blue !important;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.4);
   color: #222 !important;
 }
 
-.eskuvoszervezes-page .btn:hover {
+.eskuvoszervezes-page .btn:not(#backToTop):hover {
   background: rgba(255, 255, 255, 0.4) !important;
   color: gray !important;
 }
@@ -281,14 +294,198 @@ body, html {
 }
 
 /* Gombok üveghatású dizájnja */
-.ajanlat-page.btn {
+.ajanlat-page .btn:not(#backToTop) {
   background: rgba(255, 255, 255, 0.2) !important;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.4);
   color: #222 !important;
 }
 
-.ajanlat-page .btn:hover {
+.ajanlat-page .btn:not(#backToTop):hover {
+  background: rgba(255, 255, 255, 0.4) !important;
+  color: gray !important;
+}
+
+
+/*car-page*/
+.car-page {
+  background-image: url("../img/autodekoracio/19.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Footer áttetsző háttere */
+.car-page footer {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  backdrop-filter: blur(5px);
+  padding: 10px 0;
+}
+
+/* Gombok üveghatású dizájnja */
+.car-page .btn:not(#backToTop) {
+  background: blue !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #222 !important;
+}
+
+.car-page .btn:not(#backToTop):hover {
+  background: rgba(255, 255, 255, 0.4) !important;
+  color: gray !important;
+}
+
+
+/*teremdiszítés-page*/
+.teremdiszites-page {
+  background-image: url("../img/teremdiszites/15.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Footer áttetsző háttere */
+.teremdiszites-page footer {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  backdrop-filter: blur(5px);
+  padding: 10px 0;
+}
+
+/* Gombok üveghatású dizájnja */
+.teremdiszites-page .btn:not(#backToTop) {
+  background: blue !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #222 !important;
+}
+
+.teremdiszites-page .btn:not(#backToTop):hover {
+  background: rgba(255, 255, 255, 0.4) !important;
+  color: gray !important;
+}
+
+/*rendezvenyszervezes-page*/
+.rendezvenyszervezes-page{
+  background-image: url("../img/rendezvenyszervezes/FB_IMG_1729435622478.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Footer áttetsző háttere */
+.rendezvenyszervezes-page footer {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  backdrop-filter: blur(5px);
+  padding: 10px 0;
+}
+
+/* Gombok üveghatású dizájnja */
+.rendezvenyszervezes-page .btn:not(#backToTop) {
+  background: blue !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #222 !important;
+}
+
+.rendezvenyszervezes-page .btn:not(#backToTop):hover {
+  background: rgba(255, 255, 255, 0.4) !important;
+  color: gray !important;
+}
+
+
+/*connection-page*/
+.connection-page{
+  background-image: url("../img/FB_IMG_1664739280958.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Footer áttetsző háttere */
+.connection-page footer {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  backdrop-filter: blur(5px);
+  padding: 10px 0;
+}
+
+/* Gombok üveghatású dizájnja */
+.connection-page .btn:not(#backToTop) {
+  background: blue !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #222 !important;
+}
+
+.connection-page .btn:not(#backToTop):hover{
+  background: rgba(255, 255, 255, 0.4) !important;
+  color: gray !important;
+}
+
+/*flower-page*/
+.flower-page{
+  background-image: url("../img/FB_IMG_1600308679181.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Footer áttetsző háttere */
+.flower-page footer {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  backdrop-filter: blur(5px);
+  padding: 10px 0;
+}
+
+/* Gombok üveghatású dizájnja */
+.flower-page .btn:not(#backToTop) {
+  background: blue !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #222 !important;
+}
+
+.flower-page .btn:not(#backToTop):hover{
+  background: rgba(255, 255, 255, 0.4) !important;
+  color: gray !important;
+}
+
+
+/*bemutatotermunk-page*/
+.bemutatotermunk-page {
+  background-image: url("../img/White\ and\ Pink\ Elegant\ Wedding\ Photography\ Price\ List\ Package\ Flyer_20250321_211753_0000.png");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Footer áttetsző háttere */
+.bemutatotermunk-page footer {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  backdrop-filter: blur(5px);
+  padding: 10px 0;
+}
+
+/* Gombok üveghatású dizájnja (KIVÉVE a backToTop gombot) */
+.bemutatotermunk-page .btn:not(#backToTop) {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #222 !important;
+}
+
+.bemutatotermunk-page .btn:not(#backToTop):hover {
   background: rgba(255, 255, 255, 0.4) !important;
   color: gray !important;
 }
