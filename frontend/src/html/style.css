@@ -214,30 +214,25 @@ body, html {
   border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
-/* Alap gombszínek */
+/* Bejelentkezés gomb - kék */
 .fiokom-page .btn-primary {
-  background: rgba(13, 110, 253, 0.7) !important; /* Kék gomb */
+  background: rgba(13, 110, 253, 0.7) !important; /* Alap kék */
   color: white !important;
 }
 
+/* Regisztrációs gomb - szürke */
 .fiokom-page .btn-secondary {
-  background: rgba(108, 117, 125, 0.7) !important; /* Szürke gomb */
+  background: rgba(108, 117, 125, 0.7) !important; /* Alap szürke */
   color: white !important;
 }
 
 /* Hover effektek */
-.fiokom-page .btn:not(#backToTop):hover{
-  background: rgba(255, 255, 255, 0.4) !important;
-  color: #222 !important;
-}
-
-/* Speciális hover effektek a főbb gomboknak */
 .fiokom-page .btn-primary:hover {
-  background: rgba(13, 110, 253, 0.9) !important;
+  background: rgba(13, 110, 253, 0.9) !important; /* Erősebb kék */
 }
 
 .fiokom-page .btn-secondary:hover {
-  background: rgba(108, 117, 125, 0.9) !important;
+  background: rgba(108, 117, 125, 0.9) !important; /* Erősebb szürke */
 }
 
 /* Hover effekt a kártyákra */
