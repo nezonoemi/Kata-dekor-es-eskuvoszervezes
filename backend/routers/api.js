@@ -637,7 +637,6 @@ apiRouter.post("/order", async (req, res) => {
         .json({ error: "Hiányzó vagy érvénytelen rendelési adatok!" });
     }
     
-
     const body = req.body;
     if (!body || typeof body !== "object" || Object.keys(body).length !== 2) {
       throw new Error("Invalid request body");
@@ -657,33 +656,22 @@ apiRouter.post("/order", async (req, res) => {
     ) {
       throw new Error("Invalid 'phone_number' field");
     }
-    
-    // Rendelés dátuma
     const orderDate = new Date();
-
     const orderIds = [];
 
-    // A kosár összes termékének mentése az order köztes táblába
     for (const item of cart) {
-      // Rendelés létrehozása az `order` táblában
       const [orderResult] = await pool.query(
         "INSERT INTO `orders` (user_id, rentable_id, phone_number, city, street, zip, order_date) VALUES (?, ?, ?, ?, ?, ?, ?);",
-        [decodedToken.userId, item.productId, body.userData.phone, body.userData.city, body.userData.street, body.userData.zip, orderDate],
+        [decodedToken.userId, item.productId, body.userData.phone, body.userData.city, body.userData.street, 
+        body.userData.zip, orderDate],
       );
       orderIds.push(orderResult.insertId);
     }
 
     try {
-      await sendEmail(
-        "katadekoreseskuvoszervezes@gmail.com",
-        "Rendelés érkezett",
-        "Egy újabb felhasználó leadta a rendelést!",
-      );
-      await sendEmail(
-        [decodedToken.email, userData.email],
-        "A rendelését sikeresen leadta!",
-        "A rendelés feldolgozás alatt van, hamarosan fel vesszük a kapcsolatot Önnel!",
-      );
+      await sendEmail("katadekoreseskuvoszervezes@gmail.com","Rendelés érkezett","Egy újabb felhasználó leadta a rendelést!",);
+      await sendEmail([decodedToken.email, userData.email],"A rendelését sikeresen leadta!",
+        "A rendelés feldolgozás alatt van, hamarosan fel vesszük a kapcsolatot Önnel!",);
     } catch (err) {
       console.error("Hiba történt az értesítés küldésekor:", err);
       return res
