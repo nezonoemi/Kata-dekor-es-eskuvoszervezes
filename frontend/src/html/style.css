@@ -269,12 +269,7 @@ body, html {
 
 .eskuvoszervezes-page .btn:hover {
   background: rgba(255, 255, 255, 0.4) !important;
-  color: #000 !important;
+  color: gray !important;
 }
 
-/* Hover effekt a kártyákra */
-.eskuvoszervezes-page .card:hover {
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(10px);
-  transform: scale(1.02);
-}
+
