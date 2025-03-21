@@ -211,3 +211,42 @@ body, html {
 *{
   font-family: Palace Script;
 }
+
+
+
+/*fiokom page*/
+.fiokom-page {
+  background-image: url("../img/egyeb/FB_IMG_1722459705900.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Footer áttetsző háttere */
+.fiokom-page footer {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  backdrop-filter: blur(5px);
+  padding: 10px 0;
+}
+
+/* Gombok üveghatású dizájnja */
+.fiokom-page .btn {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #222 !important;
+}
+
+.fiokom-page .btn:hover {
+  background: rgba(255, 255, 255, 0.4) !important;
+  color: #000 !important;
+}
+
+/* Hover effekt a kártyákra */
+.fiokom-page .card:hover {
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  transform: scale(1.02);
+}
