@@ -276,13 +276,13 @@ body, html {
   color: gray !important;
 }
 
-/*ajánlat-page*/
-.ajanlat-page{
+/* ajánlat-page háttérkép beállítása */
+.ajanlat-page {
   background-image: url("../img/eskuvoszervezes/FB_IMG_1729435523136.jpg");
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
   background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 /* Footer áttetsző háttere */
@@ -293,19 +293,19 @@ body, html {
   padding: 10px 0;
 }
 
-/* Gombok üveghatású dizájnja */
+/* Alap kék gombok üveghatással (KIVÉVE #backToTop) */
 .ajanlat-page .btn:not(#backToTop) {
-  background: rgba(255, 255, 255, 0.2) !important;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.4);
-  color: #222 !important;
+  background: rgba(13, 110, 253, 0.7) !important; /* Alap kék */
+  color: white !important;
 }
 
+/* Hover állapot - még sötétebb kék */
 .ajanlat-page .btn:not(#backToTop):hover {
-  background: rgba(255, 255, 255, 0.4) !important;
-  color: gray !important;
+  background: rgba(13, 110, 253, 0.9) !important; /* Erősebb kék */
+  color: white !important;
 }
-
 
 /*car-page*/
 .car-page {
