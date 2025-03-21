@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Már 19. 13:01
+-- Létrehozás ideje: 2025. Már 21. 12:32
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -31,8 +31,23 @@ CREATE TABLE `orders` (
   `order_id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
   `rentable_id` int(11) DEFAULT NULL,
+  `phone_number` int(11) NOT NULL,
+  `city` varchar(255) NOT NULL,
+  `street` varchar(255) NOT NULL,
+  `zip` int(11) NOT NULL,
   `order_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+--
+-- A tábla adatainak kiíratása `orders`
+--
+
+INSERT INTO `orders` (`order_id`, `user_id`, `rentable_id`, `phone_number`, `city`, `street`, `zip`, `order_date`) VALUES
+(1, 1, 2, 2147483647, 'vácszentlászló', 'petőfi', 1234, '2025-03-21 09:10:04'),
+(2, 1, 3, 2147483647, 'vácszentlászló', 'petőfi', 1234, '2025-03-21 09:10:04'),
+(3, 4, 2, 123456, 'asd', 'asd', 1111, '2025-03-21 09:50:01'),
+(4, 4, 5, 123456, 'asd', 'asd', 1111, '2025-03-21 09:50:01'),
+(5, 4, 6, 123456, 'asd', 'asd', 1111, '2025-03-21 09:50:01');
 
 -- --------------------------------------------------------
 
@@ -47,6 +62,13 @@ CREATE TABLE `quote_request` (
   `email` varchar(255) DEFAULT NULL,
   `note` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+--
+-- A tábla adatainak kiíratása `quote_request`
+--
+
+INSERT INTO `quote_request` (`quote_request_id`, `last_name`, `first_name`, `email`, `note`) VALUES
+(1, 'ttttthse', 'thrrs', 'kozmao2005@gmail.com', 'WEWEWEWEWEWE');
 
 -- --------------------------------------------------------
 
@@ -107,6 +129,15 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 --
+-- A tábla adatainak kiíratása `user`
+--
+
+INSERT INTO `user` (`user_id`, `last_name`, `first_name`, `email`, `phone_number`, `password`) VALUES
+(1, 'Kozma', 'Oliver', 'jel@gmail.com', 2323824, '$2a$14$hFnP1YPH5apgV01YGsweDOn4Z.BdPrzRkcrRDNS1.WJf6LnuUXvGq'),
+(2, 'reer', 'reepwefwe', 'kod@gmail.com', 23464334, '$2a$14$yxr6PHsUXAj76NQKVK5wyePfgrY3GshIkS40TIrW6GTnA0KXPVHM6'),
+(3, 'req', 'reepwefwe', 'pr@gmail.com', 23464334, '$2a$14$hYYJ6aTlOy2JN1w85TFvcOUKo/jYwrcOZ8drklp9HNCDeeH29A5Vq');
+
+--
 -- Indexek a kiírt táblákhoz
 --
 
@@ -143,13 +174,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT a táblához `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT a táblához `quote_request`
 --
 ALTER TABLE `quote_request`
-  MODIFY `quote_request_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `quote_request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT a táblához `rentable_products`
@@ -161,7 +192,7 @@ ALTER TABLE `rentable_products`
 -- AUTO_INCREMENT a táblához `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
