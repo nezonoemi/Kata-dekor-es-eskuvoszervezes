@@ -83,15 +83,6 @@ body, html {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.esbackground-img {
-  background-image: url("../img/eskuvoszervezes/Screenshot_20210911-201707_Facebook.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  height: 100%;
-  color: white;
-}
-
 .dijcard {
   border: 2px solid #ccc; /* Kép körüli keret */
   border-radius: 10px; /* Kerekített sarkok a keretnél */
@@ -216,7 +207,7 @@ body, html {
 
 /*fiokom page*/
 .fiokom-page {
-  background-image: url("../img/egyeb/FB_IMG_1722459705900.jpg");
+  background-image: url("../img/Messenger_creation_C9D18658-0794-4BFD-8335-305911CE7741_17.jpeg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -246,6 +237,43 @@ body, html {
 
 /* Hover effekt a kártyákra */
 .fiokom-page .card:hover {
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  transform: scale(1.02);
+}
+
+/*eskuvoszervezes-page*/
+.eskuvoszervezes-page {
+  background-image: url("../img/eskuvoszervezes/Screenshot_20210911-201707_Facebook.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* Footer áttetsző háttere */
+.eskuvoszervezes-page footer {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  backdrop-filter: blur(5px);
+  padding: 10px 0;
+}
+
+/* Gombok üveghatású dizájnja */
+.eskuvoszervezes-page .btn {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #222 !important;
+}
+
+.eskuvoszervezes-page .btn:hover {
+  background: rgba(255, 255, 255, 0.4) !important;
+  color: #000 !important;
+}
+
+/* Hover effekt a kártyákra */
+.eskuvoszervezes-page .card:hover {
   background: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
   transform: scale(1.02);
