@@ -636,7 +636,28 @@ apiRouter.post("/order", async (req, res) => {
         .status(400)
         .json({ error: "Hiányzó vagy érvénytelen rendelési adatok!" });
     }
+    
 
+    const body = req.body;
+    if (!body || typeof body !== "object" || Object.keys(body).length !== 2) {
+      throw new Error("Invalid request body");
+    }
+    if (!body.userData.city|| typeof body.userData.city !== "string") {
+      throw new Error("Invalid 'street' field");
+    }
+    if (!body.userData.street|| typeof body.userData.street !== "string") {
+      throw new Error("Invalid 'street' field");
+    }
+    if (!body.userData.zip || typeof body.userData.zip !== "number") {
+      throw new Error("Invalid 'zip' field");
+    }
+    if (
+      !body.userData.phone ||
+      typeof body.userData.phone !== "number"
+    ) {
+      throw new Error("Invalid 'phone_number' field");
+    }
+    
     // Rendelés dátuma
     const orderDate = new Date();
 
@@ -646,8 +667,8 @@ apiRouter.post("/order", async (req, res) => {
     for (const item of cart) {
       // Rendelés létrehozása az `order` táblában
       const [orderResult] = await pool.query(
-        "INSERT INTO `orders` (user_id, rentable_id, order_date) VALUES (?, ?, ?);",
-        [decodedToken.userId, item.productId, orderDate],
+        "INSERT INTO `orders` (user_id, rentable_id, phone_number, city, street, zip, order_date) VALUES (?, ?, ?, ?, ?, ?, ?);",
+        [decodedToken.userId, item.productId, body.userData.phone, body.userData.city, body.userData.street, body.userData.zip, orderDate],
       );
       orderIds.push(orderResult.insertId);
     }
@@ -672,6 +693,12 @@ apiRouter.post("/order", async (req, res) => {
 
     res.status(201).json({ message: "Sikeres rendelés!", items: orderIds });
   } catch (err) {
+    if (err.message.includes("Invalid")) {
+      res.status(400).json({
+        error: err.message,
+      });
+      return;
+    }
     console.error("Rendelés mentési hiba:", err);
     res.status(500).json({ error: "Nem sikerült menteni a rendelést!" });
   }

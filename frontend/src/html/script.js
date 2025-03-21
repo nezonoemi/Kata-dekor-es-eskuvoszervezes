@@ -103,7 +103,10 @@ document.addEventListener("DOMContentLoaded", function () {
           first_name: document.getElementById("firstname").value,
           last_name: document.getElementById("lastname").value,
           email: document.getElementById("email").value,
-          phone: document.getElementById("phone").value,
+          phone: parseInt(document.getElementById("phone").value),
+          city: document.getElementById("inputAddress").value,
+          street : document.getElementById("inputStreet").value,
+          zip : parseInt(document.getElementById("inputZip").value)
         },
       };
       const target = document.getElementById("target");
