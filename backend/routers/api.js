@@ -515,26 +515,19 @@ apiRouter.get("/profile", async (req, res) => {
     if (!authHeader) {
       return res.status(401).json({ error: "Authentication required." });
     }
-    
-    // Logoljuk az eredeti fejlécet
     console.log("Original Authorization header:", authHeader);
 
     // Kivesszük a tokent a "Bearer <token>" formátumból
-    let token = authHeader.split(" ")[1];
+    const token = authHeader.split(" ")[1];
     if (!token) {
       return res.status(401).json({ error: "Authentication required." });
     }
-    
-    // Eltávolítjuk az extra szóközöket és idézőjeleket
-    token = token.trim();
-    token = token.replace(/^"(.*)"$/, "$1");
-    
     console.log("Cleaned token:", token);
 
-    // Titkos kulcs
+    // Titkos kulcs: itt biztosan egységesen használjuk
     const secretKey = process.env.JWT_SECRET || "secret";
     console.log("Using secretKey for verify:", secretKey);
-    
+
     let decodedToken;
     try {
       decodedToken = jwt.verify(token, secretKey);
@@ -544,18 +537,20 @@ apiRouter.get("/profile", async (req, res) => {
       return res.status(401).json({ error: "Invalid token." });
     }
 
-    // A tokenben szereplő userId alapján lekérdezzük a felhasználót
+    // A token payload-jában várjuk a userId-t
     const userId = decodedToken.userId;
     if (!userId) {
       return res.status(400).json({ error: "Invalid token payload." });
     }
 
+    // Lekérdezzük a felhasználót az adatbázisból a userId alapján
     const [fetchedUsers] = await pool.query("SELECT * FROM user WHERE user_id = ?", [userId]);
     if (fetchedUsers.length !== 1) {
       return res.status(404).json({ error: "User not found." });
     }
-
     const fetchedUser = fetchedUsers[0];
+
+    // Visszaküldjük a felhasználó adatokat
     res.json({
       first_name: fetchedUser.first_name,
       last_name: fetchedUser.last_name,
@@ -567,5 +562,4 @@ apiRouter.get("/profile", async (req, res) => {
     res.status(500).json({ error: "Something went wrong." });
   }
 });
-
 export default apiRouter;
