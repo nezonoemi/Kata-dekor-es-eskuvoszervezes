@@ -297,12 +297,14 @@ apiRouter.post("/user", async (req, res) => {
         return res.status(400).json({ error: "❌ Hibás e-mail vagy jelszó!" });
       }
 
-      const token = jwt.sign(
-        { userId: user.user_id, email: user.email },
-        process.env.JWT_SECRET || "secret",
-        { expiresIn: "2h" },
-      );
+      console.log("User before token sign:", user);
 
+      const token = jwt.sign(
+      { userId: user.user_id, email: user.email, phone: user.phone_number},
+        process.env.JWT_SECRET || "secret",
+      { expiresIn: "2h" }
+      );
+      
       res.json({
         message: `✅ Sikeres bejelentkezés, ${user.first_name}!`,
         token,
@@ -503,6 +505,66 @@ apiRouter.post("/order", async (req, res) => {
     }
     console.error("Rendelés mentési hiba:", err);
     res.status(500).json({ error: "Nem sikerült menteni a rendelést!" });
+  }
+});
+
+apiRouter.get("/profile", async (req, res) => {
+  try {
+    // Ellenőrizzük az Authorization fejlécet
+    const authHeader = req.headers["authorization"];
+    if (!authHeader) {
+      return res.status(401).json({ error: "Authentication required." });
+    }
+    
+    // Logoljuk az eredeti fejlécet
+    console.log("Original Authorization header:", authHeader);
+
+    // Kivesszük a tokent a "Bearer <token>" formátumból
+    let token = authHeader.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ error: "Authentication required." });
+    }
+    
+    // Eltávolítjuk az extra szóközöket és idézőjeleket
+    token = token.trim();
+    token = token.replace(/^"(.*)"$/, "$1");
+    
+    console.log("Cleaned token:", token);
+
+    // Titkos kulcs
+    const secretKey = process.env.JWT_SECRET || "secret";
+    console.log("Using secretKey for verify:", secretKey);
+    
+    let decodedToken;
+    try {
+      decodedToken = jwt.verify(token, secretKey);
+      console.log("Decoded Token:", decodedToken);
+    } catch (err) {
+      console.error("Token verification error:", err);
+      return res.status(401).json({ error: "Invalid token." });
+    }
+
+    // A tokenben szereplő userId alapján lekérdezzük a felhasználót
+    const userId = decodedToken.userId;
+    if (!userId) {
+      return res.status(400).json({ error: "Invalid token payload." });
+    }
+
+    const [fetchedUsers] = await pool.query("SELECT * FROM user WHERE user_id = ?", [userId]);
+    if (fetchedUsers.length !== 1) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    const fetchedUser = fetchedUsers[0];
+    res.json({
+      first_name: fetchedUser.first_name,
+      last_name: fetchedUser.last_name,
+      email: fetchedUser.email,
+      phone: fetchedUser.phone_number,
+    });
+  } catch (err) {
+    console.error("Profile fetch error:", err);
+    res.status(500).json({ error: "Something went wrong." });
   }
 });
 
