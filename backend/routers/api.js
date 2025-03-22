@@ -6,91 +6,6 @@ import { pool } from "../config/db.js";
 
 const apiRouter = express.Router();
 
-// quote_request lekérdezése
-// get kérés ajánlat lekérdezése
-apiRouter.get("/quote_request/:id?", async (req, res) => {
-  try {
-    let id = req.params.id ? parseInt(req.params.id) : null;
-
-    if (id !== null && isNaN(id)) {
-      throw new Error("Parameter 'ajanlatkeres' must be a valid integer");
-    }
-    if (id !== null && id < 0) {
-      throw new Error("Parameter 'ajanlatkeres' must be greater than 0");
-    }
-
-    // Ha nincs id megadva, akkor az összes ajánlatot kérjük le
-    if (id === null) {
-      const [results] = await pool.query(`SELECT 
-                quote_request.quote_request_id,
-                quote_request.last_name,
-                quote_request.first_name,
-                quote_request.email,
-                quote_request.note
-                FROM quote_request;`);
-      res.json(results);
-    } else {
-      // Ha van id, akkor az adott rekordot kérjük le
-      const [results] = await pool.query(
-        `SELECT 
-                quote_request.quote_request_id,
-                quote_request.last_name,
-                quote_request.first_name,
-                quote_request.email,
-                quote_request.note
-                FROM quote_request
-                WHERE quote_request.quote_request_id = ?;`,
-        [id],
-      );
-      res.json(results);
-    }
-  } catch (err) {
-    res.status(500).json({
-      error: "Couldn't query offers",
-    });
-  }
-});
-
-// delete ajánlat törlése
-apiRouter.delete("/quote_request", async (req, res) => {
-  try {
-    const email = req.query.email;
-
-    if (!email || typeof email !== "string") {
-      throw new Error("Invalid 'email' must be a valid string");
-    }
-
-    // Törlés
-    const [result] = await pool.query(
-      "DELETE FROM quote_request WHERE email = ?;",
-      [email],
-    );
-
-    if (result.affectedRows === 0) {
-      throw new Error("No quote_request found with given email");
-    }
-
-    res.status(200).json({
-      message: "Ajánlat sikeresen törölve",
-      email,
-    });
-  } catch (err) {
-    if (err.message.includes("Invalid")) {
-      res.status(400).json({
-        error: err.message,
-      });
-      return;
-    }
-    if (err.message.includes("No quote_request")) {
-      res.status(404).json({
-        error: err.message,
-      });
-      return;
-    }
-    res.status(500).json({ error: "Couldn't delete from quote_request table" });
-  }
-});
-
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -118,7 +33,6 @@ const sendEmail = async (to, subject, text) => {
   }
 };
 
-// Quote request endpoint
 apiRouter.post("/quote_request", async (req, res) => {
   try {
     const { last_name, first_name, email, note } = req.body;
@@ -157,38 +71,6 @@ apiRouter.post("/quote_request", async (req, res) => {
 });
 
 // rentable_pruducts lekérdezése
-// get kérés
-apiRouter.get("/rentable_products/:id?", async (req, res) => {
-  try {
-    let id = req.params.id ? parseInt(req.params.id) : null;
-
-    if (id !== null && isNaN(id)) {
-      throw new Error("Parameter 'id' must be a valid integer");
-    }
-    if (id !== null && id < 1) {
-      throw new Error("Parameter 'id' must be greater than 0");
-    }
-
-    if (id === null) {
-      const [results] = await pool.query(`
-                SELECT * FROM rentable_products;
-            `);
-      res.json(results);
-    } else {
-      const [results] = await pool.query(
-        `
-                SELECT * FROM rentable_products WHERE rentable_products.rentable_id = ?;`,
-        [id],
-      );
-      res.json(results);
-    }
-  } catch (err) {
-    res.status(500).json({
-      error: "Couldn't query rentable_products",
-    });
-  }
-});
-
 // delet kérés
 apiRouter.delete("/rentable_products/:id", async (req, res) => {
   try {
@@ -321,35 +203,6 @@ apiRouter.put("/rentable_products/:id", async (req, res) => {
 });
 
 // user tábla lekérdezések
-// get kérés
-apiRouter.get("/user/:id?", async (req, res) => {
-  try {
-    let id = req.params.id ? parseInt(req.params.id) : null;
-
-    if (id !== null && isNaN(id)) {
-      throw new Error("Parameter 'id' must be a valid integer");
-    }
-    if (id !== null && id < 1) {
-      throw new Error("Parameter 'id' must be greater than 0");
-    }
-
-    if (id === null) {
-      const [results] = await pool.query("SELECT * FROM user;");
-      res.json(results);
-    } else {
-      const [results] = await pool.query(
-        "SELECT * FROM user WHERE user.user_id = ?;",
-        [id],
-      );
-      res.json(results);
-    }
-  } catch (err) {
-    res.status(500).json({
-      error: "Couldn't query user",
-    });
-  }
-});
-
 apiRouter.delete("/user/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -535,45 +388,6 @@ apiRouter.put("/user/:id", async (req, res) => {
 });
 
 //order tábla
-//get kérés
-
-apiRouter.get("/order/:id?", async (req, res) => {
-  try {
-    let id = req.params.id ? parseInt(req.params.id) : null;
-
-    if (id !== null && isNaN(id)) {
-      throw new Error("Parameter 'id' must be a valid integer");
-    }
-    if (id !== null && id < 1) {
-      throw new Error("Parameter 'id' must be greater than 0");
-    }
-
-    if (id === null) {
-      const [results] = await pool.query(`
-                SELECT o.order_id, u.last_name, u.first_name, u.email, u.phone_number, rp.product_name, 
-                rp.product_price, o.order_date FROM \`orders\` o 
-                JOIN user u ON o.user_id = u.user_id JOIN rentable_products rp ON o.rentable_id = rp.rentable_id;
-            `);
-      res.json(results);
-    } else {
-      const [results] = await pool.query(
-        `
-                SELECT o.order_id, u.last_name, u.first_name, u.email, u.phone_number, rp.product_name, 
-                rp.product_price, o.order_date FROM \`orders\` o 
-                JOIN user u ON o.user_id = u.user_id JOIN rentable_products rp ON o.rentable_id = rp.rentable_id
-                WHERE o.order_id = ?;
-            `,
-        [id],
-      );
-      res.json(results);
-    }
-  } catch (err) {
-    res.status(500).json({
-      error: "Couldn't query order",
-    });
-  }
-});
-
 //delete kérés
 apiRouter.delete("/order/:id", async (req, res) => {
   try {
