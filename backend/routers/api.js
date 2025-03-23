@@ -300,10 +300,13 @@ apiRouter.post("/user", async (req, res) => {
       console.log("User before token sign:", user);
 
       const token = jwt.sign(
-      { userId: user.user_id, email: user.email, phone: user.phone_number},
+        { userId: user.user_id, email: user.email, phone: user.phone_number },
         process.env.JWT_SECRET || "secret",
-      { expiresIn: "2h" }
+        { expiresIn: "2h" }
       );
+      
+      
+      
       
       res.json({
         message: `✅ Sikeres bejelentkezés, ${user.first_name}!`,
@@ -510,56 +513,45 @@ apiRouter.post("/order", async (req, res) => {
 
 apiRouter.get("/profile", async (req, res) => {
   try {
-    // Ellenőrizzük az Authorization fejlécet
     const authHeader = req.headers["authorization"];
-    if (!authHeader) {
-      return res.status(401).json({ error: "Authentication required." });
-    }
-    console.log("Original Authorization header:", authHeader);
 
-    // Kivesszük a tokent a "Bearer <token>" formátumból
+    if (!authHeader) {
+      return res.status(401).json({ error: "🔒 Hiányzó autentikációs fejléc!" });
+    }
+
     const token = authHeader.split(" ")[1];
     if (!token) {
-      return res.status(401).json({ error: "Authentication required." });
+      return res.status(401).json({ error: "🔒 Hiányzó token!" });
     }
-    console.log("Cleaned token:", token);
-
-    // Titkos kulcs: itt biztosan egységesen használjuk
-    const secretKey = process.env.JWT_SECRET || "secret";
-    console.log("Using secretKey for verify:", secretKey);
 
     let decodedToken;
     try {
-      decodedToken = jwt.verify(token, secretKey);
-      console.log("Decoded Token:", decodedToken);
+      decodedToken = jwt.verify(token, process.env.JWT_SECRET || "secret");
     } catch (err) {
-      console.error("Token verification error:", err);
-      return res.status(401).json({ error: "Invalid token." });
+      return res.status(401).json({ error: "❌ Érvénytelen vagy lejárt token!" });
     }
 
-    // A token payload-jában várjuk a userId-t
-    const userId = decodedToken.userId;
-    if (!userId) {
-      return res.status(400).json({ error: "Invalid token payload." });
+    const [users] = await pool.query("SELECT first_name, last_name, email FROM user WHERE user_id = ?", [
+      decodedToken.userId,
+    ]);
+
+    if (users.length === 0) {
+      return res.status(404).json({ error: "❌ Felhasználó nem található!" });
     }
 
-    // Lekérdezzük a felhasználót az adatbázisból a userId alapján
-    const [fetchedUsers] = await pool.query("SELECT * FROM user WHERE user_id = ?", [userId]);
-    if (fetchedUsers.length !== 1) {
-      return res.status(404).json({ error: "User not found." });
-    }
-    const fetchedUser = fetchedUsers[0];
+    const user = users[0];
 
-    // Visszaküldjük a felhasználó adatokat
     res.json({
-      first_name: fetchedUser.first_name,
-      last_name: fetchedUser.last_name,
-      email: fetchedUser.email,
-      phone: fetchedUser.phone_number,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
     });
   } catch (err) {
-    console.error("Profile fetch error:", err);
-    res.status(500).json({ error: "Something went wrong." });
+    console.error("Profil lekérdezési hiba:", err);
+    res.status(500).json({ error: "❌ Nem sikerült lekérni a felhasználói profilt!" });
   }
 });
+
+
+
 export default apiRouter;
