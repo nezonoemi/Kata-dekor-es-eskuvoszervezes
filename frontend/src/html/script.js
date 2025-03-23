@@ -238,7 +238,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
-
   // Ajánlatkérés
   const offerForm = document.getElementById("offerForm");
   const target = document.getElementById("target");
