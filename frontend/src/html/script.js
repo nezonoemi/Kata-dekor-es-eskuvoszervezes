@@ -1,3 +1,6 @@
+const BACKEND_LINK = "https://api.katadekoreskuvo.hu";
+// const BACKEND_LINK = "http://localhost:3443";
+
 document.addEventListener("DOMContentLoaded", function () {
   // Kosár tartalmának kezelése
   // Kosár kezelése
@@ -111,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
       };
       const target = document.getElementById("target");
       try {
-        const response = await fetch("http://localhost:3443/api/order", {
+        const response = await fetch(BACKEND_LINK + "/api/order", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -171,7 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // API hívás küldése
   async function sendRequest(data) {
     try {
-      const response = await fetch("http://localhost:3443/api/user", {
+      const response = await fetch(BACKEND_LINK + "/api/user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -258,7 +261,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       try {
         const response = await fetch(
-          "http://localhost:3443/api/quote_request",
+          BACKEND_LINK + "/api/quote_request",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
