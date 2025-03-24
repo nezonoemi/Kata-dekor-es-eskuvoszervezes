@@ -35,30 +35,6 @@ const sendEmail = async (to, subject, text) => {
 
 apiRouter.post("/quote_request", async (req, res) => {
   try {
-    const authHeader = req.headers["authorization"];
-    console.log("Authorization header:", authHeader); 
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      console.log("Hiányzó vagy hibás autentikációs fejléc"); 
-      return res.status(401).json({ error: "🔒 Hiányzó vagy hibás autentikációs fejléc!" });
-    }
-
-    const token = authHeader.split(" ")[1];
-    console.log("Token:", token); 
-
-    if (!token) {
-      console.log("Hiányzó token"); 
-      return res.status(401).json({ error: "🔒 Hiányzó token!" });
-    }
-
-    let decodedToken;
-    try {
-      decodedToken = jwt.verify(token, process.env.JWT_SECRET || "secret");
-      console.log("Dekódolt token:", decodedToken); 
-    } catch (err) {
-      console.log("Érvénytelen vagy lejárt token:", err); 
-      return res.status(401).json({ error: "❌ Érvénytelen vagy lejárt token!" });
-    }
     const { last_name, first_name, email, note } = req.body;
 
     if (!last_name || !first_name || !email || !note) {
