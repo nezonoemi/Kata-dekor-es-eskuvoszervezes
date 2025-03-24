@@ -35,6 +35,30 @@ const sendEmail = async (to, subject, text) => {
 
 apiRouter.post("/quote_request", async (req, res) => {
   try {
+    const authHeader = req.headers["authorization"];
+    console.log("Authorization header:", authHeader); 
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      console.log("Hiányzó vagy hibás autentikációs fejléc"); 
+      return res.status(401).json({ error: "🔒 Hiányzó vagy hibás autentikációs fejléc!" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    console.log("Token:", token); 
+
+    if (!token) {
+      console.log("Hiányzó token"); 
+      return res.status(401).json({ error: "🔒 Hiányzó token!" });
+    }
+
+    let decodedToken;
+    try {
+      decodedToken = jwt.verify(token, process.env.JWT_SECRET || "secret");
+      console.log("Dekódolt token:", decodedToken); 
+    } catch (err) {
+      console.log("Érvénytelen vagy lejárt token:", err); 
+      return res.status(401).json({ error: "❌ Érvénytelen vagy lejárt token!" });
+    }
     const { last_name, first_name, email, note } = req.body;
 
     if (!last_name || !first_name || !email || !note) {
@@ -74,6 +98,30 @@ apiRouter.post("/quote_request", async (req, res) => {
 // delet kérés
 apiRouter.delete("/rentable_products/:id", async (req, res) => {
   try {
+    const authHeader = req.headers["authorization"];
+    console.log("Authorization header:", authHeader); 
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      console.log("Hiányzó vagy hibás autentikációs fejléc"); 
+      return res.status(401).json({ error: "🔒 Hiányzó vagy hibás autentikációs fejléc!" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    console.log("Token:", token); 
+
+    if (!token) {
+      console.log("Hiányzó token"); 
+      return res.status(401).json({ error: "🔒 Hiányzó token!" });
+    }
+
+    let decodedToken;
+    try {
+      decodedToken = jwt.verify(token, process.env.JWT_SECRET || "secret");
+      console.log("Dekódolt token:", decodedToken); 
+    } catch (err) {
+      console.log("Érvénytelen vagy lejárt token:", err); 
+      return res.status(401).json({ error: "❌ Érvénytelen vagy lejárt token!" });
+    }
     const id = parseInt(req.params.id);
     if (isNaN(id)) {
       throw new Error("Invalid 'id' must be a valid integer");
@@ -112,6 +160,30 @@ apiRouter.delete("/rentable_products/:id", async (req, res) => {
 
 // post kérés
 apiRouter.post("/rentable_products", async (req, res) => {
+  const authHeader = req.headers["authorization"];
+    console.log("Authorization header:", authHeader); 
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      console.log("Hiányzó vagy hibás autentikációs fejléc"); 
+      return res.status(401).json({ error: "🔒 Hiányzó vagy hibás autentikációs fejléc!" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    console.log("Token:", token); 
+
+    if (!token) {
+      console.log("Hiányzó token"); 
+      return res.status(401).json({ error: "🔒 Hiányzó token!" });
+    }
+
+    let decodedToken;
+    try {
+      decodedToken = jwt.verify(token, process.env.JWT_SECRET || "secret");
+      console.log("Dekódolt token:", decodedToken); 
+    } catch (err) {
+      console.log("Érvénytelen vagy lejárt token:", err); 
+      return res.status(401).json({ error: "❌ Érvénytelen vagy lejárt token!" });
+    }
   try {
     const body = req.body;
     if (!body || typeof body !== "object" || Object.keys(body).length !== 2) {
@@ -150,6 +222,30 @@ apiRouter.post("/rentable_products", async (req, res) => {
 // put kérés
 apiRouter.put("/rentable_products/:id", async (req, res) => {
   try {
+    const authHeader = req.headers["authorization"];
+    console.log("Authorization header:", authHeader); 
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      console.log("Hiányzó vagy hibás autentikációs fejléc"); 
+      return res.status(401).json({ error: "🔒 Hiányzó vagy hibás autentikációs fejléc!" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    console.log("Token:", token); 
+
+    if (!token) {
+      console.log("Hiányzó token"); 
+      return res.status(401).json({ error: "🔒 Hiányzó token!" });
+    }
+
+    let decodedToken;
+    try {
+      decodedToken = jwt.verify(token, process.env.JWT_SECRET || "secret");
+      console.log("Dekódolt token:", decodedToken); 
+    } catch (err) {
+      console.log("Érvénytelen vagy lejárt token:", err); 
+      return res.status(401).json({ error: "❌ Érvénytelen vagy lejárt token!" });
+    }
     const id = parseInt(req.params.id);
     if (isNaN(id)) {
       throw new Error("Parameter 'id' must be a valid integer");
@@ -205,6 +301,30 @@ apiRouter.put("/rentable_products/:id", async (req, res) => {
 // user tábla lekérdezések
 apiRouter.delete("/user/:id", async (req, res) => {
   try {
+    const authHeader = req.headers["authorization"];
+    console.log("Authorization header:", authHeader); 
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      console.log("Hiányzó vagy hibás autentikációs fejléc"); 
+      return res.status(401).json({ error: "🔒 Hiányzó vagy hibás autentikációs fejléc!" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    console.log("Token:", token); 
+
+    if (!token) {
+      console.log("Hiányzó token"); 
+      return res.status(401).json({ error: "🔒 Hiányzó token!" });
+    }
+
+    let decodedToken;
+    try {
+      decodedToken = jwt.verify(token, process.env.JWT_SECRET || "secret");
+      console.log("Dekódolt token:", decodedToken); 
+    } catch (err) {
+      console.log("Érvénytelen vagy lejárt token:", err); 
+      return res.status(401).json({ error: "❌ Érvénytelen vagy lejárt token!" });
+    }
     const id = parseInt(req.params.id);
     if (isNaN(id)) {
       throw new Error("Invalid 'id' must be a valid integer");
@@ -304,10 +424,7 @@ apiRouter.post("/user", async (req, res) => {
         process.env.JWT_SECRET || "secret",
         { expiresIn: "2h" }
       );
-      
-      
-      
-      
+
       res.json({
         message: `✅ Sikeres bejelentkezés, ${user.first_name}!`,
         token,
@@ -328,6 +445,30 @@ apiRouter.post("/user", async (req, res) => {
 
 apiRouter.put("/user/:id", async (req, res) => {
   try {
+    const authHeader = req.headers["authorization"];
+    console.log("Authorization header:", authHeader); 
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      console.log("Hiányzó vagy hibás autentikációs fejléc"); 
+      return res.status(401).json({ error: "🔒 Hiányzó vagy hibás autentikációs fejléc!" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    console.log("Token:", token); 
+
+    if (!token) {
+      console.log("Hiányzó token"); 
+      return res.status(401).json({ error: "🔒 Hiányzó token!" });
+    }
+
+    let decodedToken;
+    try {
+      decodedToken = jwt.verify(token, process.env.JWT_SECRET || "secret");
+      console.log("Dekódolt token:", decodedToken); 
+    } catch (err) {
+      console.log("Érvénytelen vagy lejárt token:", err); 
+      return res.status(401).json({ error: "❌ Érvénytelen vagy lejárt token!" });
+    }
     const id = parseInt(req.params.id);
     if (isNaN(id)) {
       throw new Error("Parameter 'id' must be a valid integer");
@@ -396,6 +537,30 @@ apiRouter.put("/user/:id", async (req, res) => {
 //delete kérés
 apiRouter.delete("/order/:id", async (req, res) => {
   try {
+    const authHeader = req.headers["authorization"];
+    console.log("Authorization header:", authHeader); 
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      console.log("Hiányzó vagy hibás autentikációs fejléc"); 
+      return res.status(401).json({ error: "🔒 Hiányzó vagy hibás autentikációs fejléc!" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    console.log("Token:", token); 
+
+    if (!token) {
+      console.log("Hiányzó token"); 
+      return res.status(401).json({ error: "🔒 Hiányzó token!" });
+    }
+
+    let decodedToken;
+    try {
+      decodedToken = jwt.verify(token, process.env.JWT_SECRET || "secret");
+      console.log("Dekódolt token:", decodedToken); 
+    } catch (err) {
+      console.log("Érvénytelen vagy lejárt token:", err); 
+      return res.status(401).json({ error: "❌ Érvénytelen vagy lejárt token!" });
+    }
     const id = parseInt(req.params.id);
     if (isNaN(id)) {
       throw new Error("Invalid 'id' must be a valid integer");
@@ -455,15 +620,15 @@ apiRouter.post("/order", async (req, res) => {
         .status(400)
         .json({ error: "Hiányzó vagy érvénytelen rendelési adatok!" });
     }
-    
+
     const body = req.body;
     if (!body || typeof body !== "object" || Object.keys(body).length !== 2) {
       throw new Error("Invalid request body");
     }
-    if (!body.userData.city|| typeof body.userData.city !== "string") {
+    if (!body.userData.city || typeof body.userData.city !== "string") {
       throw new Error("Invalid 'street' field");
     }
-    if (!body.userData.street|| typeof body.userData.street !== "string") {
+    if (!body.userData.street || typeof body.userData.street !== "string") {
       throw new Error("Invalid 'street' field");
     }
     if (!body.userData.zip || typeof body.userData.zip !== "number") {
@@ -481,15 +646,15 @@ apiRouter.post("/order", async (req, res) => {
     for (const item of cart) {
       const [orderResult] = await pool.query(
         "INSERT INTO `orders` (user_id, rentable_id, phone_number, city, street, zip, order_date) VALUES (?, ?, ?, ?, ?, ?, ?);",
-        [decodedToken.userId, item.productId, body.userData.phone, body.userData.city, body.userData.street, 
+        [decodedToken.userId, item.productId, body.userData.phone, body.userData.city, body.userData.street,
         body.userData.zip, orderDate],
       );
       orderIds.push(orderResult.insertId);
     }
 
     try {
-      await sendEmail("katadekoreseskuvoszervezes@gmail.com","Rendelés érkezett","Egy újabb felhasználó leadta a rendelést!",);
-      await sendEmail([decodedToken.email, userData.email],"A rendelését sikeresen leadta!",
+      await sendEmail("katadekoreseskuvoszervezes@gmail.com", "Rendelés érkezett", "Egy újabb felhasználó leadta a rendelést!",);
+      await sendEmail([decodedToken.email, userData.email], "A rendelését sikeresen leadta!",
         "A rendelés feldolgozás alatt van, hamarosan fel vesszük a kapcsolatot Önnel!",);
     } catch (err) {
       console.error("Hiba történt az értesítés küldésekor:", err);
@@ -512,22 +677,30 @@ apiRouter.post("/order", async (req, res) => {
 });
 
 apiRouter.get("/profile", async (req, res) => {
+
   try {
     const authHeader = req.headers["authorization"];
+    console.log("Authorization header:", authHeader); 
 
-    if (!authHeader) {
-      return res.status(401).json({ error: "🔒 Hiányzó autentikációs fejléc!" });
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      console.log("Hiányzó vagy hibás autentikációs fejléc"); 
+      return res.status(401).json({ error: "🔒 Hiányzó vagy hibás autentikációs fejléc!" });
     }
 
     const token = authHeader.split(" ")[1];
+    console.log("Token:", token); 
+
     if (!token) {
+      console.log("Hiányzó token"); 
       return res.status(401).json({ error: "🔒 Hiányzó token!" });
     }
 
     let decodedToken;
     try {
       decodedToken = jwt.verify(token, process.env.JWT_SECRET || "secret");
+      console.log("Dekódolt token:", decodedToken); 
     } catch (err) {
+      console.log("Érvénytelen vagy lejárt token:", err); 
       return res.status(401).json({ error: "❌ Érvénytelen vagy lejárt token!" });
     }
 
@@ -536,22 +709,23 @@ apiRouter.get("/profile", async (req, res) => {
     ]);
 
     if (users.length === 0) {
+      console.log("Felhasználó nem található"); s
       return res.status(404).json({ error: "❌ Felhasználó nem található!" });
     }
 
     const user = users[0];
+    console.log("Felhasználói adatok:", user); 
 
     res.json({
       first_name: user.first_name,
       last_name: user.last_name,
       email: user.email,
     });
+    console.log("Válasz elküldve"); 
   } catch (err) {
     console.error("Profil lekérdezési hiba:", err);
     res.status(500).json({ error: "❌ Nem sikerült lekérni a felhasználói profilt!" });
   }
 });
-
-
 
 export default apiRouter;
