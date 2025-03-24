@@ -304,7 +304,7 @@ body, html {
 
 /*car-page*/
 .car-page {
-  background-image: url("../img/autodekoracio/19.jpg");
+  background-image: url("../img/FB_IMG_1599590361183.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -335,7 +335,7 @@ body, html {
 
 /*teremdiszítés-page*/
 .teremdiszites-page {
-  background-image: url("../img/teremdiszites/15.jpg");
+  background-image: url("../img/FB_IMG_1599590361183.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -365,7 +365,7 @@ body, html {
 
 /*rendezvenyszervezes-page*/
 .rendezvenyszervezes-page{
-  background-image: url("../img/rendezvenyszervezes/FB_IMG_1729435622478.jpg");
+  background-image: url("../img/FB_IMG_1599590361183.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -426,7 +426,7 @@ body, html {
 
 /*flower-page*/
 .flower-page{
-  background-image: url("../img/FB_IMG_1600308679181.jpg");
+  background-image: url("../img/FB_IMG_1599590361183.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -483,4 +483,20 @@ body, html {
 .bemutatotermunk-page .btn:not(#backToTop):hover {
   background: rgba(255, 255, 255, 0.4) !important;
   color: gray !important;
+}
+
+/*szezonalis-page*/
+.szezonalis-page {
+  background-image: url("../img/20191008_103855.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+.szezonalis-page footer {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  backdrop-filter: blur(5px);
+  padding: 10px 0;
 }
