@@ -488,3 +488,7 @@ document.addEventListener("DOMContentLoaded", function () {
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 });
+
+document.addEventListener("DOMContentLoaded",function(){
+  document.getElementById("year").textContent=new Date().getFullYear();
+});
