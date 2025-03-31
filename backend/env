@@ -1,8 +1,0 @@
-DB_HOST = s3.mcitomi.hu
-DB_USER = katadekor
-DB_PASSWORD = jUrk3MW8Yg9wLFBTNVtaC5
-DB_NAME = kata_dekor
-PORT = 3443
-JWT_SECRET=my_secret_key
-EMAIL_USER = katadekoreseskuvoszervezes@gmail.com
-EMAIL_PASSWORD = pkpv anyu zpma hmvy
