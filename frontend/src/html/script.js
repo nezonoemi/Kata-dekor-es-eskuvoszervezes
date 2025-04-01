@@ -1,9 +1,8 @@
-const BACKEND_LINK = "https://api.katadekoreskuvo.hu";
-// const BACKEND_LINK = "http://localhost:3443";
-
 document.addEventListener("DOMContentLoaded", function () {
+  const BACKEND_LINK = "https://api.katadekoreskuvo.hu";
+  //const BACKEND_LINK = "http://localhost:3443";
+
   // Kosár tartalmának kezelése
-  // Kosár kezelése
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   const cartCountElement = document.getElementById("cart-count");
   const user = JSON.parse(localStorage.getItem("user")); // Felhasználó adatai
@@ -108,8 +107,8 @@ document.addEventListener("DOMContentLoaded", function () {
           email: document.getElementById("email").value,
           phone: parseInt(document.getElementById("phone").value),
           city: document.getElementById("inputAddress").value,
-          street : document.getElementById("inputStreet").value,
-          zip : parseInt(document.getElementById("inputZip").value)
+          street: document.getElementById("inputStreet").value,
+          zip: parseInt(document.getElementById("inputZip").value)
         },
       };
       const target = document.getElementById("target");
@@ -147,10 +146,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Oldal betöltésekor frissítés
-  updateCartCount();
-  loadOrderCart();
-
   // Fiókkezelés: bejelentkezés és regisztráció váltás
   window.toggleForm = function (formType) {
     const loginForm = document.getElementById("login-form");
@@ -161,15 +156,6 @@ document.addEventListener("DOMContentLoaded", function () {
       registerForm.classList.toggle("d-none", formType !== "register");
     }
   };
-  // Üzenet megjelenítése
-  const userDisplay = document.getElementById("user");
-
-  function showMessage(message, type = "danger") {
-    if (userDisplay) {
-      userDisplay.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
-      setTimeout(() => (userDisplay.innerHTML = ""), 5000);
-    }
-  }
 
   // API hívás küldése
   async function sendRequest(data) {
@@ -241,6 +227,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+
   // Ajánlatkérés
   const offerForm = document.getElementById("offerForm");
   const target = document.getElementById("target");
@@ -310,170 +297,165 @@ document.addEventListener("DOMContentLoaded", function () {
     alert("Sikeresen kijelentkeztél!");
     location.reload(); 
   }
-  // Oldal betöltésekor frissítések
-  updateCartCount();
-  loadOrderCart();
-  updateNavBarProfile(); 
 
-});
+  // Képgaléria kezelése
+  const termekKepek = {
+    advent: [
+      "../img/Advent/1.jpg",
+      "../img/Advent/2.jpg",
+      "../img/Advent/3.jpg",
+      "../img/Advent/4.jpg",
+      "../img/Advent/5.jpg",
+      "../img/Advent/6.jpg",
+      "../img/Advent/7.jpg",
+      "../img/Advent/8.jpg",
+      "../img/Advent/9.jpg",
+      "../img/Advent/10.jpg",
+      "../img/Advent/11.jpg",
+      "../img/Advent/15.jpg",
+      "../img/Advent/19.jpg",
+      "../img/Advent/23.jpg",
+      "../img/Advent/25.jpg",
+      "../img/Advent/26.jpg",
+      "../img/Advent/27.jpg",
+      "../img/Advent/28.jpg",
+      "../img/Advent/30.jpg",
+      "../img/Advent/31.jpg",
+      "../img/Advent/32.jpg",
+      "../img/Advent/33.jpg",
+      "../img/Advent/34.jpg",
+      "../img/Advent/35.jpg",
+      "../img/Advent/36.jpg",
+      "../img/Advent/37.jpg",
+      "../img/Advent/38.jpg",
+      "../img/Advent/39.jpg",
+      "../img/Advent/40.jpg",
+      "../img/Advent/43.jpg",
+      "../img/Advent/44.jpg",
+      "../img/Advent/45.jpg",
+      "../img/Advent/47.jpg",
+      "../img/Advent/50.jpg",
+    ],
+    csokrok: [
+      "../img/csokrok/1.jpg",
+      "../img/csokrok/2.jpg",
+      "../img/csokrok/3.jpg",
+      "../img/csokrok/4.jpg",
+      "../img/csokrok/5.jpg",
+      "../img/csokrok/6.jpg",
+      "../img/csokrok/7.jpg",
+      "../img/csokrok/9.jpg",
+      "../img/csokrok/10.jpg",
+      "../img/csokrok/11.jpg",
+      "../img/csokrok/12.jpg",
+      "../img/csokrok/13.jpg",
+      "../img/csokrok/14.jpg",
+      "../img/csokrok/15.jpg",
+      "../img/csokrok/17.jpg",
+      "../img/csokrok/19.jpg",
+      "../img/csokrok/22.jpg",
+      "../img/csokrok/24.jpg",
+      "../img/csokrok/25.jpg",
+      "../img/csokrok/26.jpg",
+      "../img/csokrok/27.jpg",
+      "../img/csokrok/29.jpg",
+      "../img/csokrok/30.jpg",
+      "../img/csokrok/33.jpg",
+      "../img/csokrok/35.jpg",
+      "../img/csokrok/37.jpg",
+      "../img/csokrok/40.jpg",
+      "../img/csokrok/42.jpg",
+      "../img/csokrok/45.jpg",
+      "../img/csokrok/46.jpg",
+      "../img/csokrok/47.jpg",
+      "../img/csokrok/48.jpg",
+      "../img/csokrok/50.jpg",
+    ],
+    szulokoszontok: [
+      "../img/szulokoszontok/1.jpg",
+      "../img/szulokoszontok/2.jpg",
+      "../img/szulokoszontok/3.jpg",
+      "../img/szulokoszontok/4.jpg",
+      "../img/szulokoszontok/5.jpg",
+      "../img/szulokoszontok/6.jpg",
+      "../img/szulokoszontok/7.jpg",
+      "../img/szulokoszontok/8.jpg",
+      "../img/szulokoszontok/9.jpg",
+      "../img/szulokoszontok/10.jpg",
+      "../img/szulokoszontok/11.jpg",
+      "../img/szulokoszontok/12.jpg",
+      "../img/szulokoszontok/16.jpg",
+      "../img/szulokoszontok/17.jpg",
+      "../img/szulokoszontok/18.jpg",
+      "../img/szulokoszontok/19.jpg",
+      "../img/szulokoszontok/20.jpg",
+      "../img/szulokoszontok/21.jpg",
+      "../img/szulokoszontok/22.jpg",
+      "../img/szulokoszontok/23.jpg",
+      "../img/szulokoszontok/24.jpg",
+      "../img/szulokoszontok/25.jpg",
+      "../img/szulokoszontok/26.jpg",
+      "../img/szulokoszontok/27.jpg",
+      "../img/szulokoszontok/28.jpg",
+      "../img/szulokoszontok/29.jpg",
+      "../img/szulokoszontok/30.jpg",
+      "../img/szulokoszontok/31.jpg",
+      "../img/szulokoszontok/32.jpg",
+      "../img/szulokoszontok/33.jpg",
+      "../img/szulokoszontok/34.jpg",
+      "../img/szulokoszontok/35.jpg",
+      "../img/szulokoszontok/36.jpg",
+      "../img/szulokoszontok/37.jpg",
+      "../img/szulokoszontok/38.jpg",
+      "../img/szulokoszontok/39.jpg",
+      "../img/szulokoszontok/40.jpg",
+    ],
+    kulonleges: [
+      "../img/Kulonleges csokrok boxok/1.jpg",
+      "../img/Kulonleges csokrok boxok/4.jpg",
+      "../img/Kulonleges csokrok boxok/5.jpg",
+      "../img/Kulonleges csokrok boxok/8.jpg",
+      "../img/Kulonleges csokrok boxok/10.jpg",
+      "../img/Kulonleges csokrok boxok/12.jpg",
+      "../img/Kulonleges csokrok boxok/14.jpg",
+      "../img/Kulonleges csokrok boxok/16.jpg",
+      "../img/Kulonleges csokrok boxok/17.jpg",
+      "../img/Kulonleges csokrok boxok/18.jpg",
+    ],
+    papirviragok: [
+      "../img/Papirvirag dekoracio/1.jpg",
+      "../img/Papirvirag dekoracio/2.jpg",
+      "../img/Papirvirag dekoracio/3.jpg",
+      "../img/Papirvirag dekoracio/4.jpg",
+      "../img/Papirvirag dekoracio/5.jpg",
+      "../img/Papirvirag dekoracio/6.jpg",
+      "../img/Papirvirag dekoracio/7.jpg",
+      "../img/Papirvirag dekoracio/8.jpg",
+    ],
+  };
 
-const termekKepek = {
-  advent: [
-    "../img/Advent/1.jpg",
-    "../img/Advent/2.jpg",
-    "../img/Advent/3.jpg",
-    "../img/Advent/4.jpg",
-    "../img/Advent/5.jpg",
-    "../img/Advent/6.jpg",
-    "../img/Advent/7.jpg",
-    "../img/Advent/8.jpg",
-    "../img/Advent/9.jpg",
-    "../img/Advent/10.jpg",
-    "../img/Advent/11.jpg",
-    "../img/Advent/15.jpg",
-    "../img/Advent/19.jpg",
-    "../img/Advent/23.jpg",
-    "../img/Advent/25.jpg",
-    "../img/Advent/26.jpg",
-    "../img/Advent/27.jpg",
-    "../img/Advent/28.jpg",
-    "../img/Advent/30.jpg",
-    "../img/Advent/31.jpg",
-    "../img/Advent/32.jpg",
-    "../img/Advent/33.jpg",
-    "../img/Advent/34.jpg",
-    "../img/Advent/35.jpg",
-    "../img/Advent/36.jpg",
-    "../img/Advent/37.jpg",
-    "../img/Advent/38.jpg",
-    "../img/Advent/39.jpg",
-    "../img/Advent/40.jpg",
-    "../img/Advent/43.jpg",
-    "../img/Advent/44.jpg",
-    "../img/Advent/45.jpg",
-    "../img/Advent/47.jpg",
-    "../img/Advent/50.jpg",
-  ],
-  csokrok: [
-    "../img/csokrok/1.jpg",
-    "../img/csokrok/2.jpg",
-    "../img/csokrok/3.jpg",
-    "../img/csokrok/4.jpg",
-    "../img/csokrok/5.jpg",
-    "../img/csokrok/6.jpg",
-    "../img/csokrok/7.jpg",
-    "../img/csokrok/9.jpg",
-    "../img/csokrok/10.jpg",
-    "../img/csokrok/11.jpg",
-    "../img/csokrok/12.jpg",
-    "../img/csokrok/13.jpg",
-    "../img/csokrok/14.jpg",
-    "../img/csokrok/15.jpg",
-    "../img/csokrok/17.jpg",
-    "../img/csokrok/19.jpg",
-    "../img/csokrok/22.jpg",
-    "../img/csokrok/24.jpg",
-    "../img/csokrok/25.jpg",
-    "../img/csokrok/26.jpg",
-    "../img/csokrok/27.jpg",
-    "../img/csokrok/29.jpg",
-    "../img/csokrok/30.jpg",
-    "../img/csokrok/33.jpg",
-    "../img/csokrok/35.jpg",
-    "../img/csokrok/37.jpg",
-    "../img/csokrok/40.jpg",
-    "../img/csokrok/42.jpg",
-    "../img/csokrok/45.jpg",
-    "../img/csokrok/46.jpg",
-    "../img/csokrok/47.jpg",
-    "../img/csokrok/48.jpg",
-    "../img/csokrok/50.jpg",
-  ],
-  szulokoszontok: [
-    "../img/szulokoszontok/1.jpg",
-    "../img/szulokoszontok/2.jpg",
-    "../img/szulokoszontok/3.jpg",
-    "../img/szulokoszontok/4.jpg",
-    "../img/szulokoszontok/5.jpg",
-    "../img/szulokoszontok/6.jpg",
-    "../img/szulokoszontok/7.jpg",
-    "../img/szulokoszontok/8.jpg",
-    "../img/szulokoszontok/9.jpg",
-    "../img/szulokoszontok/10.jpg",
-    "../img/szulokoszontok/11.jpg",
-    "../img/szulokoszontok/12.jpg",
-    "../img/szulokoszontok/16.jpg",
-    "../img/szulokoszontok/17.jpg",
-    "../img/szulokoszontok/18.jpg",
-    "../img/szulokoszontok/19.jpg",
-    "../img/szulokoszontok/20.jpg",
-    "../img/szulokoszontok/21.jpg",
-    "../img/szulokoszontok/22.jpg",
-    "../img/szulokoszontok/23.jpg",
-    "../img/szulokoszontok/24.jpg",
-    "../img/szulokoszontok/25.jpg",
-    "../img/szulokoszontok/26.jpg",
-    "../img/szulokoszontok/27.jpg",
-    "../img/szulokoszontok/28.jpg",
-    "../img/szulokoszontok/29.jpg",
-    "../img/szulokoszontok/30.jpg",
-    "../img/szulokoszontok/31.jpg",
-    "../img/szulokoszontok/32.jpg",
-    "../img/szulokoszontok/33.jpg",
-    "../img/szulokoszontok/34.jpg",
-    "../img/szulokoszontok/35.jpg",
-    "../img/szulokoszontok/36.jpg",
-    "../img/szulokoszontok/37.jpg",
-    "../img/szulokoszontok/38.jpg",
-    "../img/szulokoszontok/39.jpg",
-    "../img/szulokoszontok/40.jpg",
-  ],
-  kulonleges: [
-    "../img/Kulonleges csokrok boxok/1.jpg",
-    "../img/Kulonleges csokrok boxok/4.jpg",
-    "../img/Kulonleges csokrok boxok/5.jpg",
-    "../img/Kulonleges csokrok boxok/8.jpg",
-    "../img/Kulonleges csokrok boxok/10.jpg",
-    "../img/Kulonleges csokrok boxok/12.jpg",
-    "../img/Kulonleges csokrok boxok/14.jpg",
-    "../img/Kulonleges csokrok boxok/16.jpg",
-    "../img/Kulonleges csokrok boxok/17.jpg",
-    "../img/Kulonleges csokrok boxok/18.jpg",
-  ],
-  papirviragok: [
-    "../img/Papirvirag dekoracio/1.jpg",
-    "../img/Papirvirag dekoracio/2.jpg",
-    "../img/Papirvirag dekoracio/3.jpg",
-    "../img/Papirvirag dekoracio/4.jpg",
-    "../img/Papirvirag dekoracio/5.jpg",
-    "../img/Papirvirag dekoracio/6.jpg",
-    "../img/Papirvirag dekoracio/7.jpg",
-    "../img/Papirvirag dekoracio/8.jpg",
-  ],
-};
+  // Az összes kategória képeit hozzáadjuk az "Összes Termék" kategóriához
+  termekKepek.osszes = [
+    ...termekKepek.advent,
+    ...termekKepek.csokrok,
+    ...termekKepek.szulokoszontok,
+    ...termekKepek.kulonleges,
+    ...termekKepek.papirviragok,
+  ];
 
-// Az összes kategória képeit hozzáadjuk az "Összes Termék" kategóriához
-termekKepek.osszes = [
-  ...termekKepek.advent,
-  ...termekKepek.csokrok,
-  ...termekKepek.szulokoszontok,
-  ...termekKepek.kulonleges,
-  ...termekKepek.papirviragok,
-];
+  function kepValt(kategoria) {
+    const galeriaElem = document.getElementById("kep-galeria");
+    galeriaElem.innerHTML = ""; // Előző képek eltávolítása
 
-function kepValt(kategoria) {
-  const galeriaElem = document.getElementById("kep-galeria");
-  galeriaElem.innerHTML = ""; // Előző képek eltávolítása
+    termekKepek[kategoria].forEach((kep) => {
+      const kepElem = document.createElement("div");
+      kepElem.classList.add("col-3", "mb-4");
+      kepElem.innerHTML = `<img src="${kep}" class="img-fluid" alt="${kategoria}">`;
+      galeriaElem.appendChild(kepElem);
+    });
+  }
 
-  termekKepek[kategoria].forEach((kep) => {
-    const kepElem = document.createElement("div");
-    kepElem.classList.add("col-3", "mb-4");
-    kepElem.innerHTML = `<img src="${kep}" class="img-fluid" alt="${kategoria}">`;
-    galeriaElem.appendChild(kepElem);
-  });
-}
-
-document.addEventListener("DOMContentLoaded", function () {
+  // Vissza a tetejére gomb
   let backToTopButton = document.getElementById("backToTop");
 
   window.addEventListener("scroll", function () {
@@ -487,8 +469,12 @@ document.addEventListener("DOMContentLoaded", function () {
   backToTopButton.addEventListener("click", function () {
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
-});
 
-document.addEventListener("DOMContentLoaded",function(){
-  document.getElementById("year").textContent=new Date().getFullYear();
+  // Évszám frissítése
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  // Oldal betöltésekor frissítések
+  updateCartCount();
+  loadOrderCart();
+  updateNavBarProfile();
 });
