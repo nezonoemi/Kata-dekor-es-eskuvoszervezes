@@ -6,7 +6,7 @@ import apiRoutes from "./routers/api.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3443;
+const PORT = process.env.PORT || 3306;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
