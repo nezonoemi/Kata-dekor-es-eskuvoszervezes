@@ -1,0 +1,8 @@
+DB_HOST = mysql.nethely.hu
+DB_USER = kata_dekor
+DB_PASSWORD = Kata2025
+DB_NAME = kata_dekor
+PORT = 3306
+JWT_SECRET=my_secret_key
+EMAIL_USER = katadekoreseskuvoszervezes@gmail.com
+EMAIL_PASSWORD = pkpv anyu zpma hmvy
