@@ -14,7 +14,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Send email function
+// Segédfüggvények
+
 const sendEmail = async (to, subject, text) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
@@ -33,6 +34,28 @@ const sendEmail = async (to, subject, text) => {
   }
 };
 
+const authenticateUser = async (req, res, next) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "🔒 Hiányzó vagy hibás autentikációs fejléc!" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ error: "🔒 Hiányzó token!" });
+    }
+
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET || "secret");
+    req.user = decodedToken;
+    next();
+  } catch (err) {
+    console.log("Hitelesítési hiba:", err);
+    return res.status(401).json({ error: "❌ Érvénytelen vagy lejárt token!" });
+  }
+};
+
+
 apiRouter.post("/quote_request", async (req, res) => {
   try {
     const { last_name, first_name, email, note } = req.body;
@@ -50,12 +73,11 @@ apiRouter.post("/quote_request", async (req, res) => {
     const emailText = `Kedves Admin!\n\nÚj ajánlatkérés érkezett:\nNév: ${last_name} ${first_name}\nEmail: ${email}\nÜzenet: ${note}`;
 
     try {
-      await sendEmail(email, emailSubject, emailText);
+      await sendEmail(process.env.ADMIN_EMAIL, emailSubject, emailText);
+      await sendEmail(email, "Ajánlatkérését megkaptuk", "Köszönjük ajánlatkérését! Hamarosan felvesszük Önnel a kapcsolatot.");
     } catch (err) {
       console.error("Hiba történt az értesítés küldésekor:", err);
-      return res
-        .status(500)
-        .json({ error: "Nem sikerült az értesítést elküldeni." });
+      return res.status(500).json({ error: "Nem sikerült az értesítést elküldeni." });
     }
 
     const [result] = await pool.query(
@@ -70,277 +92,12 @@ apiRouter.post("/quote_request", async (req, res) => {
   }
 });
 
-// rentable_pruducts lekérdezése
-// delet kérés
-apiRouter.delete("/rentable_products/:id", async (req, res) => {
-  try {
-    const authHeader = req.headers["authorization"];
-    console.log("Authorization header:", authHeader); 
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      console.log("Hiányzó vagy hibás autentikációs fejléc"); 
-      return res.status(401).json({ error: "🔒 Hiányzó vagy hibás autentikációs fejléc!" });
-    }
-
-    const token = authHeader.split(" ")[1];
-    console.log("Token:", token); 
-
-    if (!token) {
-      console.log("Hiányzó token"); 
-      return res.status(401).json({ error: "🔒 Hiányzó token!" });
-    }
-
-    let decodedToken;
-    try {
-      decodedToken = jwt.verify(token, process.env.JWT_SECRET || "secret");
-      console.log("Dekódolt token:", decodedToken); 
-    } catch (err) {
-      console.log("Érvénytelen vagy lejárt token:", err); 
-      return res.status(401).json({ error: "❌ Érvénytelen vagy lejárt token!" });
-    }
-    const id = parseInt(req.params.id);
-    if (isNaN(id)) {
-      throw new Error("Invalid 'id' must be a valid integer");
-    }
-    if (id < 1) {
-      throw new Error("Invalid 'id' must be greater than 1");
-    }
-    const [result] = await pool.query(
-      "DELETE FROM rentable_products WHERE rentable_products.rentable_id = ?;",
-      [id],
-    );
-    if (result.affectedRows < 1) {
-      throw new Error("No rentable_products found with given id");
-    }
-    res.status(200).json({
-      id: id,
-    });
-  } catch (err) {
-    if (err.message.includes("Invalid")) {
-      res.status(400).json({
-        error: err.message,
-      });
-      return;
-    }
-    if (err.message.includes("No rentable_products")) {
-      res.status(404).json({
-        error: err.message,
-      });
-      return;
-    }
-    res.status(500).json({
-      error: "Couldn't delete from rentable_products table",
-    });
-  }
-});
-
-// post kérés
-apiRouter.post("/rentable_products", async (req, res) => {
-  const authHeader = req.headers["authorization"];
-    console.log("Authorization header:", authHeader); 
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      console.log("Hiányzó vagy hibás autentikációs fejléc"); 
-      return res.status(401).json({ error: "🔒 Hiányzó vagy hibás autentikációs fejléc!" });
-    }
-
-    const token = authHeader.split(" ")[1];
-    console.log("Token:", token); 
-
-    if (!token) {
-      console.log("Hiányzó token"); 
-      return res.status(401).json({ error: "🔒 Hiányzó token!" });
-    }
-
-    let decodedToken;
-    try {
-      decodedToken = jwt.verify(token, process.env.JWT_SECRET || "secret");
-      console.log("Dekódolt token:", decodedToken); 
-    } catch (err) {
-      console.log("Érvénytelen vagy lejárt token:", err); 
-      return res.status(401).json({ error: "❌ Érvénytelen vagy lejárt token!" });
-    }
-  try {
-    const body = req.body;
-    if (!body || typeof body !== "object" || Object.keys(body).length !== 2) {
-      throw new Error("Invalid request body");
-    }
-    if (!body.product_name || typeof body.product_name !== "string") {
-      throw new Error("Invalid 'product_name' field");
-    }
-    if (
-      body.product_price === undefined ||
-      typeof body.product_price !== "number"
-    ) {
-      throw new Error("Invalid 'product_price' field");
-    }
-
-    const { product_name, product_price } = body;
-    const [result] = await pool.query(
-      "INSERT INTO rentable_products (rentable_products.product_name, rentable_products.product_price) VALUES (?, ?);",
-      [product_name, product_price],
-    );
-
-    res.status(201).json(result);
-  } catch (err) {
-    if (err.message.includes("Invalid")) {
-      res.status(400).json({
-        error: err.message,
-      });
-      return;
-    }
-    res.status(500).json({
-      error: "Couldn't insert into rentable_products table",
-    });
-  }
-});
-
-// put kérés
-apiRouter.put("/rentable_products/:id", async (req, res) => {
-  try {
-    const authHeader = req.headers["authorization"];
-    console.log("Authorization header:", authHeader); 
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      console.log("Hiányzó vagy hibás autentikációs fejléc"); 
-      return res.status(401).json({ error: "🔒 Hiányzó vagy hibás autentikációs fejléc!" });
-    }
-
-    const token = authHeader.split(" ")[1];
-    console.log("Token:", token); 
-
-    if (!token) {
-      console.log("Hiányzó token"); 
-      return res.status(401).json({ error: "🔒 Hiányzó token!" });
-    }
-
-    let decodedToken;
-    try {
-      decodedToken = jwt.verify(token, process.env.JWT_SECRET || "secret");
-      console.log("Dekódolt token:", decodedToken); 
-    } catch (err) {
-      console.log("Érvénytelen vagy lejárt token:", err); 
-      return res.status(401).json({ error: "❌ Érvénytelen vagy lejárt token!" });
-    }
-    const id = parseInt(req.params.id);
-    if (isNaN(id)) {
-      throw new Error("Parameter 'id' must be a valid integer");
-    }
-    if (id < 1) {
-      throw new Error("Parameter 'id' must be greater than 0");
-    }
-
-    const body = req.body;
-    if (!body || typeof body !== "object" || Object.keys(body).length !== 2) {
-      throw new Error("Invalid request body");
-    }
-    if (!body.product_name || typeof body.product_name !== "string") {
-      throw new Error("Invalid 'product_name' field");
-    }
-    if (
-      body.product_price === undefined ||
-      typeof body.product_price !== "number"
-    ) {
-      throw new Error("Invalid 'product_price' field");
-    }
-
-    const { product_name, product_price } = body;
-    const [result] = await pool.query(
-      "UPDATE rentable_products SET rentable_products.product_name = ?, rentable_products.product_price = ? WHERE rentable_products.rentable_product_id = ?;",
-      [product_name, product_price, id],
-    );
-    if (result.affectedRows < 1) {
-      throw new Error("No rentable_products found with given id");
-    }
-    res.status(200).json({
-      id: id,
-    });
-  } catch (err) {
-    if (err.message.includes("Invalid")) {
-      res.status(400).json({
-        error: err.message,
-      });
-      return;
-    }
-    if (err.message.includes("No rentable_products")) {
-      res.status(404).json({
-        error: err.message,
-      });
-      return;
-    }
-    res.status(500).json({
-      error: "Couldn't update rentable_products table",
-    });
-  }
-});
-
-// user tábla lekérdezések
-apiRouter.delete("/user/:id", async (req, res) => {
-  try {
-    const authHeader = req.headers["authorization"];
-    console.log("Authorization header:", authHeader); 
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      console.log("Hiányzó vagy hibás autentikációs fejléc"); 
-      return res.status(401).json({ error: "🔒 Hiányzó vagy hibás autentikációs fejléc!" });
-    }
-
-    const token = authHeader.split(" ")[1];
-    console.log("Token:", token); 
-
-    if (!token) {
-      console.log("Hiányzó token"); 
-      return res.status(401).json({ error: "🔒 Hiányzó token!" });
-    }
-
-    let decodedToken;
-    try {
-      decodedToken = jwt.verify(token, process.env.JWT_SECRET || "secret");
-      console.log("Dekódolt token:", decodedToken); 
-    } catch (err) {
-      console.log("Érvénytelen vagy lejárt token:", err); 
-      return res.status(401).json({ error: "❌ Érvénytelen vagy lejárt token!" });
-    }
-    const id = parseInt(req.params.id);
-    if (isNaN(id)) {
-      throw new Error("Invalid 'id' must be a valid integer");
-    }
-    if (id < 1) {
-      throw new Error("Invalid 'id' must be greater than 0");
-    }
-
-    const [result] = await pool.query(
-      "DELETE FROM user WHERE user.user_id = ?;",
-      [id],
-    );
-
-    if (result.affectedRows < 1) {
-      throw new Error("No user found with given id");
-    }
-
-    res.status(200).json({ id: id });
-  } catch (err) {
-    if (err.message.includes("Invalid")) {
-      res.status(400).json({
-        error: err.message,
-      });
-      return;
-    }
-    if (err.message.includes("No user")) {
-      res.status(404).json({
-        error: err.message,
-      });
-      return;
-    }
-    res.status(500).json({
-      error: "Couldn't delete from user table",
-    });
-  }
-});
+// Felhasználó kezelés
 
 apiRouter.post("/user", async (req, res) => {
   try {
     const body = req.body;
+    
     if (body.action === "register") {
       if (!body || typeof body !== "object" || Object.keys(body).length !== 6) {
         throw new Error("Invalid request body");
@@ -362,7 +119,6 @@ apiRouter.post("/user", async (req, res) => {
       }
 
       const { first_name, last_name, password, email, phone } = body;
-
       const hashedPassword = await bcrypt.hash(password, 14);
 
       const [result] = await pool.query(
@@ -371,40 +127,36 @@ apiRouter.post("/user", async (req, res) => {
       );
 
       res.status(201).json(result);
-    }
-
-    if (body.action === "login") {
-      const [users] = await pool.query("SELECT * FROM user WHERE email = ?", [
-        body.email,
-      ]);
+    } else if (body.action === "login") {
+      const [users] = await pool.query("SELECT * FROM user WHERE email = ?", [body.email]);
 
       if (users.length === 0) {
         return res.status(400).json({ error: "❌ Hibás e-mail vagy jelszó!" });
       }
 
       const user = users[0];
-
-      const isPasswordValid = await bcrypt.compare(
-        body.password,
-        user.password,
-      );
+      const isPasswordValid = await bcrypt.compare(body.password, user.password);
 
       if (!isPasswordValid) {
         return res.status(400).json({ error: "❌ Hibás e-mail vagy jelszó!" });
       }
 
-      console.log("User before token sign:", user);
-
       const token = jwt.sign(
-        { userId: user.user_id, email: user.email, phone: user.phone_number },
+        { 
+          userId: user.user_id, 
+          email: user.email, 
+          phone: user.phone_number
+        },
         process.env.JWT_SECRET || "secret",
         { expiresIn: "2h" }
       );
 
       res.json({
         message: `✅ Sikeres bejelentkezés, ${user.first_name}!`,
-        token,
+        token
       });
+    } else {
+      return res.status(400).json({ error: "Érvénytelen művelet!" });
     }
   } catch (err) {
     if (err.message.includes("Invalid")) {
@@ -413,233 +165,122 @@ apiRouter.post("/user", async (req, res) => {
       });
       return;
     }
+    console.error("Hiba a felhasználó kezelése közben:", err);
     res.status(500).json({
-      error: "Couldn't insert into user table",
+      error: "Szerverhiba történt a felhasználó kezelése közben",
     });
   }
 });
 
-apiRouter.put("/user/:id", async (req, res) => {
+apiRouter.get("/profile", authenticateUser, async (req, res) => {
   try {
-    const authHeader = req.headers["authorization"];
-    console.log("Authorization header:", authHeader); 
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      console.log("Hiányzó vagy hibás autentikációs fejléc"); 
-      return res.status(401).json({ error: "🔒 Hiányzó vagy hibás autentikációs fejléc!" });
-    }
-
-    const token = authHeader.split(" ")[1];
-    console.log("Token:", token); 
-
-    if (!token) {
-      console.log("Hiányzó token"); 
-      return res.status(401).json({ error: "🔒 Hiányzó token!" });
-    }
-
-    let decodedToken;
-    try {
-      decodedToken = jwt.verify(token, process.env.JWT_SECRET || "secret");
-      console.log("Dekódolt token:", decodedToken); 
-    } catch (err) {
-      console.log("Érvénytelen vagy lejárt token:", err); 
-      return res.status(401).json({ error: "❌ Érvénytelen vagy lejárt token!" });
-    }
-    const id = parseInt(req.params.id);
-    if (isNaN(id)) {
-      throw new Error("Parameter 'id' must be a valid integer");
-    }
-    if (id < 1) {
-      throw new Error("Parameter 'id' must be greater than 0");
-    }
-
-    const body = req.body;
-    if (!body || typeof body !== "object" || Object.keys(body).length !== 5) {
-      throw new Error("Invalid request body");
-    }
-    if (!body.last_name || typeof body.last_name !== "string") {
-      throw new Error("Invalid 'last_name' field");
-    }
-    if (!body.first_name || typeof body.first_name !== "string") {
-      throw new Error("Invalid 'first_name' field");
-    }
-    if (!body.email || typeof body.email !== "string") {
-      throw new Error("Invalid 'email' field");
-    }
-    if (!body.password || typeof body.password !== "string") {
-      throw new Error("Invalid 'password' field");
-    }
-    if (
-      !body.phone_number ||
-      (typeof body.phone_number !== "string" &&
-        typeof body.phone_number !== "number")
-    ) {
-      throw new Error("Invalid 'phone_number' field");
-    }
-
-    const { first_name, last_name, password, email, phone_number } = body;
-    const [result] = await pool.query(
-      "UPDATE user SET first_name = ?, last_name = ?, password = ?, email = ?, phone_number = ? WHERE user_id = ?;",
-      [first_name, last_name, password, email, phone_number, id],
+    const [users] = await pool.query(
+      "SELECT user_id, first_name, last_name, email, phone_number FROM user WHERE user_id = ?", 
+      [req.user.userId]
     );
 
-    if (result.affectedRows < 1) {
-      throw new Error("No user found with given id");
+    if (users.length === 0) {
+      return res.status(404).json({ error: "❌ Felhasználó nem található!" });
     }
 
-    res.status(200).json({
-      id: id,
+    const user = users[0];
+    res.json({
+      userId: user.user_id,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+      phone_number: user.phone_number
     });
   } catch (err) {
-    if (err.message.includes("Invalid")) {
-      res.status(400).json({
-        error: err.message,
-      });
-      return;
-    }
-    if (err.message.includes("No user")) {
-      res.status(404).json({
-        error: err.message,
-      });
-      return;
-    }
-    res.status(500).json({
-      error: "Couldn't update user table",
-    });
+    console.error("Profil lekérdezési hiba:", err);
+    res.status(500).json({ error: "❌ Nem sikerült lekérni a felhasználói profilt!" });
   }
 });
 
-//order tábla
-//delete kérés
-apiRouter.delete("/order/:id", async (req, res) => {
+// Termékek kezelése (csak bejelentkezett felhasználóknak)
+
+apiRouter.get("/rentable_products", async (req, res) => {
   try {
-    const authHeader = req.headers["authorization"];
-    console.log("Authorization header:", authHeader); 
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      console.log("Hiányzó vagy hibás autentikációs fejléc"); 
-      return res.status(401).json({ error: "🔒 Hiányzó vagy hibás autentikációs fejléc!" });
-    }
-
-    const token = authHeader.split(" ")[1];
-    console.log("Token:", token); 
-
-    if (!token) {
-      console.log("Hiányzó token"); 
-      return res.status(401).json({ error: "🔒 Hiányzó token!" });
-    }
-
-    let decodedToken;
-    try {
-      decodedToken = jwt.verify(token, process.env.JWT_SECRET || "secret");
-      console.log("Dekódolt token:", decodedToken); 
-    } catch (err) {
-      console.log("Érvénytelen vagy lejárt token:", err); 
-      return res.status(401).json({ error: "❌ Érvénytelen vagy lejárt token!" });
-    }
-    const id = parseInt(req.params.id);
-    if (isNaN(id)) {
-      throw new Error("Invalid 'id' must be a valid integer");
-    }
-    if (id < 1) {
-      throw new Error("Invalid 'id' must be greater than 1");
-    }
-    const [result] = await pool.query(
-      "DELETE FROM `orders` WHERE `orders`.order_id = ?;",
-      [id],
-    );
-    if (result.affectedRows < 1) {
-      throw new Error("No order found with given id");
-    }
-    res.status(200).json({
-      id: id,
-    });
+    const [products] = await pool.query("SELECT * FROM rentable_products");
+    res.status(200).json(products);
   } catch (err) {
-    if (err.message.includes("Invalid")) {
-      res.status(400).json({
-        error: err.message,
-      });
-      return;
-    }
-    if (err.message.includes("No order")) {
-      res.status(404).json({
-        error: err.message,
-      });
-      return;
-    }
-    res.status(500).json({
-      error: "Couldn't delete from order table",
-    });
+    console.error("Hiba a termékek lekérdezése közben:", err);
+    res.status(500).json({ error: "Nem sikerült lekérdezni a termékeket" });
   }
 });
 
-//post kérés
-apiRouter.post("/order", async (req, res) => {
+// Rendelések kezelése
+
+apiRouter.post("/order", authenticateUser, async (req, res) => {
   try {
     const { cart, userData } = req.body;
 
-    const authHeader = req.headers["authorization"];
-
-    if (!authHeader) {
-      throw new Error("Authentication required.");
+    if (!Array.isArray(cart) || cart.length === 0 || !userData) {
+      return res.status(400).json({ error: "Hiányzó vagy érvénytelen rendelési adatok!" });
     }
 
-    const token = authHeader.split(" ")[1];
-    if (!token) {
-      throw new Error("Authentication required.");
+    if (!userData.city || typeof userData.city !== "string") {
+      throw new Error("Invalid 'city' field");
     }
-
-    const decodedToken = jwt.decode(token, "secret");
-
-    if (!decodedToken.userId || !Array.isArray(cart) || cart.length === 0) {
-      return res
-        .status(400)
-        .json({ error: "Hiányzó vagy érvénytelen rendelési adatok!" });
-    }
-
-    const body = req.body;
-    if (!body || typeof body !== "object" || Object.keys(body).length !== 2) {
-      throw new Error("Invalid request body");
-    }
-    if (!body.userData.city || typeof body.userData.city !== "string") {
+    if (!userData.street || typeof userData.street !== "string") {
       throw new Error("Invalid 'street' field");
     }
-    if (!body.userData.street || typeof body.userData.street !== "string") {
-      throw new Error("Invalid 'street' field");
-    }
-    if (!body.userData.zip || typeof body.userData.zip !== "number") {
+    if (!userData.zip || typeof userData.zip !== "number") {
       throw new Error("Invalid 'zip' field");
     }
-    if (
-      !body.userData.phone ||
-      typeof body.userData.phone !== "number"
-    ) {
-      throw new Error("Invalid 'phone_number' field");
+    if (!userData.phone || typeof userData.phone !== "string") {
+      throw new Error("Invalid 'phone' field");
     }
+
     const orderDate = new Date();
     const orderIds = [];
 
-    for (const item of cart) {
-      const [orderResult] = await pool.query(
-        "INSERT INTO `orders` (user_id, rentable_id, phone_number, city, street, zip, order_date) VALUES (?, ?, ?, ?, ?, ?, ?);",
-        [decodedToken.userId, item.productId, body.userData.phone, body.userData.city, body.userData.street,
-        body.userData.zip, orderDate],
-      );
-      orderIds.push(orderResult.insertId);
-    }
+    // Tranzakció kezdése
+    await pool.query("START TRANSACTION");
 
     try {
-      await sendEmail("katadekoreseskuvoszervezes@gmail.com", "Rendelés érkezett", "Egy újabb felhasználó leadta a rendelést!",);
-      await sendEmail([decodedToken.email, userData.email], "A rendelését sikeresen leadta!",
-        "A rendelés feldolgozás alatt van, hamarosan fel vesszük a kapcsolatot Önnel!",);
-    } catch (err) {
-      console.error("Hiba történt az értesítés küldésekor:", err);
-      return res
-        .status(500)
-        .json({ error: "Nem sikerült az értesítést elküldeni." });
-    }
+      for (const item of cart) {
+        // Ellenőrizzük, hogy létezik-e a termék
+        const [products] = await pool.query(
+          "SELECT * FROM rentable_products WHERE rentable_product_id = ?",
+          [item.productId]
+        );
+        
+        if (products.length === 0) {
+          throw new Error(`Nem található termék a következő ID-val: ${item.productId}`);
+        }
 
-    res.status(201).json({ message: "Sikeres rendelés!", items: orderIds });
+        const [orderResult] = await pool.query(
+          "INSERT INTO orders (user_id, rentable_id, phone_number, city, street, zip, order_date) VALUES (?, ?, ?, ?, ?, ?, ?);",
+          [req.user.userId, item.productId, userData.phone, userData.city, userData.street, userData.zip, orderDate]
+        );
+        orderIds.push(orderResult.insertId);
+      }
+
+      // Tranzakció commit
+      await pool.query("COMMIT");
+
+      // Email küldése
+      try {
+        const adminEmailText = `Új rendelés érkezett a következő felhasználótól: ${req.user.email}\nRendelés azonosítók: ${orderIds.join(", ")}`;
+        await sendEmail(process.env.ADMIN_EMAIL, "Új rendelés érkezett", adminEmailText);
+        
+        const userEmailText = `Köszönjük rendelését!\nRendelése azonosítói: ${orderIds.join(", ")}\nA rendelés állapota: Feldolgozás alatt`;
+        await sendEmail(req.user.email, "Rendelését megkaptuk", userEmailText);
+      } catch (emailErr) {
+        console.error("Hiba az email küldésekor:", emailErr);
+      }
+
+      res.status(201).json({ 
+        message: "Sikeres rendelés!", 
+        orderIds,
+        count: orderIds.length
+      });
+    } catch (err) {
+      // Tranzakció visszagörgetése hiba esetén
+      await pool.query("ROLLBACK");
+      throw err;
+    }
   } catch (err) {
     if (err.message.includes("Invalid")) {
       res.status(400).json({
@@ -649,58 +290,6 @@ apiRouter.post("/order", async (req, res) => {
     }
     console.error("Rendelés mentési hiba:", err);
     res.status(500).json({ error: "Nem sikerült menteni a rendelést!" });
-  }
-});
-
-apiRouter.get("/profile", async (req, res) => {
-
-  try {
-    const authHeader = req.headers["authorization"];
-    console.log("Authorization header:", authHeader); 
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      console.log("Hiányzó vagy hibás autentikációs fejléc"); 
-      return res.status(401).json({ error: "🔒 Hiányzó vagy hibás autentikációs fejléc!" });
-    }
-
-    const token = authHeader.split(" ")[1];
-    console.log("Token:", token); 
-
-    if (!token) {
-      console.log("Hiányzó token"); 
-      return res.status(401).json({ error: "🔒 Hiányzó token!" });
-    }
-
-    let decodedToken;
-    try {
-      decodedToken = jwt.verify(token, process.env.JWT_SECRET || "secret");
-      console.log("Dekódolt token:", decodedToken); 
-    } catch (err) {
-      console.log("Érvénytelen vagy lejárt token:", err); 
-      return res.status(401).json({ error: "❌ Érvénytelen vagy lejárt token!" });
-    }
-
-    const [users] = await pool.query("SELECT first_name, last_name, email FROM user WHERE user_id = ?", [
-      decodedToken.userId,
-    ]);
-
-    if (users.length === 0) {
-      console.log("Felhasználó nem található"); s
-      return res.status(404).json({ error: "❌ Felhasználó nem található!" });
-    }
-
-    const user = users[0];
-    console.log("Felhasználói adatok:", user); 
-
-    res.json({
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email,
-    });
-    console.log("Válasz elküldve"); 
-  } catch (err) {
-    console.error("Profil lekérdezési hiba:", err);
-    res.status(500).json({ error: "❌ Nem sikerült lekérni a felhasználói profilt!" });
   }
 });
 
